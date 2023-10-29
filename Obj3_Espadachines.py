@@ -3,6 +3,7 @@ def ventana1_programa():
     ventana= Tk()
     ventana.title("TP Grupal Parte 1 - Grupo: ESPADACHINES ")
     ventana.resizable(0,0)
+    ventana.iconbitmap("espadachines.ico")
     miFrame=Frame(ventana, width=500, height=500)
     miFrame.pack()
     texto1era_ventana(miFrame,ventana)
