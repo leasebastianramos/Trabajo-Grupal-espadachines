@@ -6,7 +6,7 @@ def ventana1_programa():
     ventana.iconbitmap("espadachines.ico")
     miFrame=Frame(ventana, width=600, height=350)
     miFrame.pack()
-    miFrame.config(bg="LightCyan")
+    miFrame.config(bg="LightSeaGreen")
     miImagen=PhotoImage(file="mensajeoculto.png")
     posicionimagen=Label(miFrame,image=miImagen).place(x=380,y=200)
     texto1era_ventana(miFrame,ventana)
@@ -14,19 +14,19 @@ def ventana1_programa():
     
 
 def texto1era_ventana(miFrame,ventana):
-    texto_bienvenida= Label(miFrame, text="Bienvenido a la aplicación de mensajes secretos del grupo Espadachines.",font= ("Comic Sans MS",13))
+    texto_bienvenida= Label(miFrame, text="Bienvenido a la aplicación de mensajes secretos del grupo Espadachines.",bg="LightSeaGreen",font= ("Comic Sans MS",13))
     texto_bienvenida.place(x=0, y=50)
-    texto_para_cerrar= Label(miFrame, text="Para continuar presione continuar, de lo contrario cierre la ventana.",font= ("Comic Sans MS",13))
+    texto_para_cerrar= Label(miFrame, text="Para continuar presione continuar, de lo contrario cierre la ventana.",bg="LightSeaGreen",font= ("Comic Sans MS",13))
     texto_para_cerrar.place(x=0, y=80)
     botonEnviar = Button(ventana,text="continuar", command=cifrados)
     botonEnviar.place (x=250, y=125)
-    texto= Label(miFrame, text="Construido por : Leandro Sebastian Ramos",font= ("Comic Sans MS",13))
+    texto= Label(miFrame, text="Construido por : Leandro Sebastian Ramos",bg="LightSeaGreen",font= ("Comic Sans MS",13))
     texto.place(x=20, y=170)
-    nombre2= Label(miFrame, text="Juan Martin Diaz",font= ("Comic Sans MS",13))
+    nombre2= Label(miFrame, text="Juan Martin Diaz",bg="LightSeaGreen",font= ("Comic Sans MS",13))
     nombre2.place(x=150, y=195)
-    nombre3= Label(miFrame, text="Ruth Giselle Duarte Orue",font= ("Comic Sans MS",13))
+    nombre3= Label(miFrame, text="Ruth Giselle Duarte Orue",bg="LightSeaGreen",font= ("Comic Sans MS",13))
     nombre3.place(x=150, y=225)
-    nombre4= Label(miFrame, text="Iñaki Vydra",font= ("Comic Sans MS",13))
+    nombre4= Label(miFrame, text="Iñaki Vydra",bg="LightSeaGreen",font= ("Comic Sans MS",13))
     nombre4.place(x=150, y=255)
 
 def cifrados():
