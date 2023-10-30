@@ -29,6 +29,7 @@ def texto1era_ventana(miFrame,ventana):
     nombre4= Label(miFrame, text="Iñaki Vydra",bg="LightSeaGreen",font= ("Comic Sans MS",13))
     nombre4.place(x=150, y=255)
 
+
 def cifrados():
     nuevaVentana = Toplevel()
     nuevaVentana.title("Opciones de Cifrado")
@@ -37,26 +38,25 @@ def cifrados():
     marcoOpciones = Frame(nuevaVentana, width=300, height=300)
     marcoOpciones.pack()
     texto_mensaje = Label(marcoOpciones, text="Ingrese un mensaje")
-    texto_mensaje.grid(row=0, column=0)
+    texto_mensaje.grid(row=0, column=0, padx=5, pady=5)
     entrada_mensaje = Entry(marcoOpciones)
-    entrada_mensaje.grid(row=0, column=1)
+    entrada_mensaje.grid(row=0, column=1, padx=5, pady=5)
     texto_clave = Label(marcoOpciones, text='Clave')
-    texto_clave.grid(row=1, column=0)
+    texto_clave.grid(row=1, column=0, padx=5, pady=5)
     entrada_clave = Entry(marcoOpciones)
-    entrada_clave.grid(row=1, column=1)
-    boton_cifrado_cesar = Button(marcoOpciones, text="Cifrar mensaje César")
-    boton_cifrado_cesar.grid(row=2, column=0)
-    boton_descifrado_cesar = Button(marcoOpciones, text="Descifrar mensaje César")
-    boton_descifrado_cesar.grid(row=3, column=0)
-    boton_cifrado_atbash = Button(marcoOpciones, text="Cifrar mensaje Atbash")
-    boton_cifrado_atbash.grid(row=2, column=1)
-    texto_vacio = Label(marcoOpciones)
-    boton_descifrado_atbash = Button(marcoOpciones, text="Descifrar mensaje Atbash")
-    boton_descifrado_atbash.grid(row=3, column=1)
-
-def mensaje_atbash(mensaje, frame):
-    texto = Label(frame, texto=cifrado_atbash(mensaje))
-    texto.grid(row=4, column=0)
+    entrada_clave.grid(row=1, column=1, padx=5, pady=5)
+    mensaje_resultado = Label(marcoOpciones, text="Mensaje resultado:")
+    mensaje_resultado.grid(row=4, column=0, padx=5, pady=5)
+    texto_resultado = Label(marcoOpciones)
+    texto_resultado.grid(row=4, column=1, padx=5, pady=5)
+    boton_cifrado_cesar = Button(marcoOpciones, text="Cifrar mensaje César", command= lambda : texto_resultado.configure(text=cifrado_cesar(entrada_mensaje.get(), int(entrada_clave.get()))))
+    boton_cifrado_cesar.grid(row=2, column=0, padx=5, pady=5)
+    boton_descifrado_cesar = Button(marcoOpciones, text="Descifrar mensaje César", command= lambda : texto_resultado.configure(text=cifrado_cesar(entrada_mensaje.get(), -int(entrada_clave.get()))))
+    boton_descifrado_cesar.grid(row=3, column=0, padx=5, pady=5)
+    boton_cifrado_atbash = Button(marcoOpciones, text="Cifrar mensaje Atbash", command= lambda : texto_resultado.configure(text=cifrado_atbash(entrada_mensaje.get())))
+    boton_cifrado_atbash.grid(row=2, column=1, padx=5, pady=5)
+    boton_descifrado_atbash = Button(marcoOpciones, text="Descifrar mensaje Atbash", command= lambda : texto_resultado.configure(text=cifrado_atbash(entrada_mensaje.get())))
+    boton_descifrado_atbash.grid(row=3, column=1, padx=5, pady=5)
 
 
 def cifrado_cesar(cadena, clave):
@@ -87,6 +87,7 @@ def cifrado_cesar(cadena, clave):
         mensaje_cifrado += caracter_nuevo
     return mensaje_cifrado
 
+
 def cifrado_atbash(cadena):
     """
     Función que recibe una cadena y devuelve el mensaje codficado mediante el cifrado atbash.
@@ -105,8 +106,10 @@ def cifrado_atbash(cadena):
         mensaje_cifrado += caracter_nuevo
     return mensaje_cifrado
 
+
 def main():
     ventana1_programa()
+
 
 if __name__=='__main__':
     main()
