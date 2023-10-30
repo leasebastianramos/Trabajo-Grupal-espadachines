@@ -54,6 +54,57 @@ def cifrados():
     boton_descifrado_atbash = Button(marcoOpciones, text="Descifrar mensaje Atbash")
     boton_descifrado_atbash.grid(row=3, column=1)
 
+def mensaje_atbash(mensaje, frame):
+    texto = Label(frame, texto=cifrado_atbash(mensaje))
+    texto.grid(row=4, column=0)
+
+
+def cifrado_cesar(cadena, clave):
+    """
+    Esta función recibe una cadena de caracteres y una clave numérica entera y devuelva la cadena cifrada mediante el cifrado cesar.
+    Letras con tildes, ñ y otros símbolos se mantienen igual.
+    """
+    mensaje_cifrado = ""
+    inicio_numeros = ord('0')
+    fin_numeros = ord('9')
+    inicio_mayusculas = ord('A')
+    fin_mayusculas = ord('Z')
+    inicio_minusculas = ord('a')
+    fin_minusculas = ord('z')
+    rango_numeros = 10
+    rango_letras = 26
+
+    for caracter in cadena:
+        codigo_unicode = ord(caracter)
+        if codigo_unicode>=inicio_numeros and codigo_unicode<=fin_numeros:
+            caracter_nuevo = chr(inicio_numeros+(codigo_unicode-inicio_numeros+clave)%rango_numeros)
+        elif codigo_unicode>=inicio_mayusculas and codigo_unicode<=fin_mayusculas:
+            caracter_nuevo = chr(inicio_mayusculas+(codigo_unicode-inicio_mayusculas+clave)%rango_letras)
+        elif codigo_unicode>=inicio_minusculas and codigo_unicode<=fin_minusculas:
+            caracter_nuevo = chr(inicio_minusculas+(codigo_unicode-inicio_minusculas+clave)%rango_letras)
+        else:
+            caracter_nuevo = caracter
+        mensaje_cifrado += caracter_nuevo
+    return mensaje_cifrado
+
+def cifrado_atbash(cadena):
+    """
+    Función que recibe una cadena y devuelve el mensaje codficado mediante el cifrado atbash.
+    Letras con tildes, ñ y otros símbolos se mantienen igual.
+    """
+    letras = 'abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ'
+    numeros = '0123456789'
+    mensaje_cifrado = ""
+    for caracter in cadena:
+        if caracter in numeros:
+            caracter_nuevo = numeros[(len(numeros)-1)-int(caracter)]
+        elif caracter in letras:
+            caracter_nuevo = letras[(len(letras)-1)-letras.index(caracter)]
+        else:
+            caracter_nuevo = caracter
+        mensaje_cifrado += caracter_nuevo
+    return mensaje_cifrado
+
 def main():
     ventana1_programa()
 
