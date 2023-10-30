@@ -65,27 +65,30 @@ def cifrado_cesar(cadena, clave):
     Letras con tildes, ñ y otros símbolos se mantienen igual.
     """
     mensaje_cifrado = ""
-    inicio_numeros = ord('0')
-    fin_numeros = ord('9')
-    inicio_mayusculas = ord('A')
-    fin_mayusculas = ord('Z')
-    inicio_minusculas = ord('a')
-    fin_minusculas = ord('z')
-    rango_numeros = 10
-    rango_letras = 26
+    
+    INICIO_NUMEROS = ord('0')
+    FIN_NUMEROS = ord('9')
+    INICIO_MAYUSCULAS = ord('A')
+    FIN_MAYUSCULAS = ord('Z')
+    INICIO_MINUSCULAS = ord('a')
+    FIN_MINUSCULAS = ord('z')
+    RANGO_NUMEROS = 10
+    RANGO_LETRAS = 26
 
     for caracter in cadena:
         codigo_unicode = ord(caracter)
-        if codigo_unicode>=inicio_numeros and codigo_unicode<=fin_numeros:
-            caracter_nuevo = chr(inicio_numeros+(codigo_unicode-inicio_numeros+clave)%rango_numeros)
-        elif codigo_unicode>=inicio_mayusculas and codigo_unicode<=fin_mayusculas:
-            caracter_nuevo = chr(inicio_mayusculas+(codigo_unicode-inicio_mayusculas+clave)%rango_letras)
-        elif codigo_unicode>=inicio_minusculas and codigo_unicode<=fin_minusculas:
-            caracter_nuevo = chr(inicio_minusculas+(codigo_unicode-inicio_minusculas+clave)%rango_letras)
+        if codigo_unicode >= INICIO_NUMEROS and codigo_unicode <= FIN_NUMEROS:
+            caracter_nuevo = chr(INICIO_NUMEROS+(codigo_unicode-INICIO_NUMEROS+clave)%RANGO_NUMEROS)
+        elif codigo_unicode >= INICIO_MAYUSCULAS and codigo_unicode <= FIN_MAYUSCULAS:
+            caracter_nuevo = chr(INICIO_MAYUSCULAS+(codigo_unicode-INICIO_MAYUSCULAS+clave)%RANGO_LETRAS)
+        elif codigo_unicode >= INICIO_MINUSCULAS and codigo_unicode <= FIN_MINUSCULAS:
+            caracter_nuevo = chr(INICIO_MINUSCULAS+(codigo_unicode-INICIO_MINUSCULAS+clave)%RANGO_LETRAS)
         else:
             caracter_nuevo = caracter
         mensaje_cifrado += caracter_nuevo
+        
     return mensaje_cifrado
+
 
 
 def cifrado_atbash(cadena):
