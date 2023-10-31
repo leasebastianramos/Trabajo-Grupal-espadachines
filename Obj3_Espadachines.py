@@ -42,92 +42,107 @@ def reiniciar_ventana2(texto1, texto2, texto3):
     texto2.delete(1.0, END)
     texto2.insert(END, cadena_vacia)
     texto2.config(state=DISABLED)
-
     texto3.delete(0, END)
     texto3.insert(0, cadena_vacia)
 
-    
 
 def ventana2():
     
     raiz_ventana2 = Toplevel()
     raiz_ventana2.title("Opciones de Cifrado")
-    #raiz_ventana2.iconbitmap("espadachines.ico")  # NO TE OLVIDES DE  DESCOMENTAR
-    raiz_ventana2.geometry("752x525")
-    raiz_ventana2.resizable(0,0)
+    raiz_ventana2.geometry("790x560")
+    raiz_ventana2.resizable(0, 0)
     raiz_ventana2.config(bg=COLOR)
+    raiz_ventana2.iconbitmap("espadachines.ico")
 
-    frame_mensaje=Frame(raiz_ventana2, width=450, height=250)
-    frame_mensaje.grid(row=0,column=0,sticky="nsew")
-    frame_mensaje.config(bd=10,relief=SUNKEN,bg=COLOR)
+
+    frame_mensaje = Frame(raiz_ventana2, bg=COLOR,relief=SUNKEN,bd=10)
+    frame_mensaje.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+     
 
     texto_mensaje = Label(frame_mensaje, text="Mensaje:   ",bg=COLOR)
     texto_mensaje.grid(row=0, column=0, padx=5, pady=5)
 
 
-
     entrada_mensaje = Text(frame_mensaje,width=33, height=12)
     entrada_mensaje.grid(row=1, column=1, padx=5, pady=5)
-    
     
 
     scroll=Scrollbar(frame_mensaje,command=entrada_mensaje.yview)
     scroll.grid(row=1, column=2, padx=5, pady=5,sticky="nsew")
     entrada_mensaje.config(yscrollcommand=scroll.set)
     
+    frame_modos = Frame(raiz_ventana2, bg=COLOR,relief=SUNKEN,bd=10)
+    frame_modos.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
 
-    frame_modos=Frame(raiz_ventana2, width=350, height=250)
-    frame_modos.grid(row=0,column=1,sticky="nsew")
-    frame_modos.config(bd=10,relief=SUNKEN,bg=COLOR)
 
-    variable_modo=IntVar()
-
-    texto_modo = Label(frame_modos, text="Elige el modo:",bg=COLOR).grid(row=0, column=0, padx=5, pady=5)
+    texto_modo = Label(frame_modos, text="Elige el tipo de cifrado:",bg=COLOR)
+    texto_modo.grid(row=0, column=0, columnspan=2, padx=5, pady=5)
         
 
-    Radiobutton(frame_modos,text="Cifrar",bg=COLOR,variable=variable_modo,value=1).grid(row=4, column=0, padx=5, pady=5)
+    boton_cifrar = Button(frame_modos,text="Cifrar", command= lambda: verificar_cifrado(variable_caja_cesar, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado))
+    boton_cifrar.grid(row=10, column=4, padx=5, pady=5)
 
-    Radiobutton(frame_modos,text="Descifrar",bg=COLOR,variable=variable_modo,value=0).grid(row=12, column=0, padx=5, pady=5)
+    boton_descifrar = Button(frame_modos,text="Descifrar", command= lambda: verificar_cifrado(variable_caja_cesar, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado, -1))
+    boton_descifrar.grid(row=10, column=5, padx=5, pady=5)
 
-    
-    variable_cifrado=IntVar()
-
-    texto_cifrado = Label(frame_modos, text="Elige el cifrado:",bg=COLOR).grid(row=0, column=3, padx=5, pady=5)
-        
-
-    Radiobutton(frame_modos,text="Cesar",bg=COLOR,variable=variable_cifrado,value=1).grid(row=4, column=3, padx=5, pady=5)
-
-    texto_clave = Label(frame_modos, text="Clave del cifrado Cesar:",bg=COLOR).grid(row=4, column=4, padx=5, pady=5)
-    entrad_clave=Entry(frame_modos)
-    entrad_clave.grid(row=8, column=4, padx=5, pady=5)
-
-    Radiobutton(frame_modos,text="Atbash",bg=COLOR,variable=variable_cifrado,value=0).grid(row=12, column=3, padx=5, pady=5)
+    boton_reiniciar = Button(frame_modos, text="Cifrar otro mensaje", command=lambda: reiniciar_ventana2(entrada_mensaje,resultado,entrada_clave))
+    boton_reiniciar.grid(row=16, column=0,padx=5, pady=5)
 
 
-    frame_resultado=Frame(raiz_ventana2,width=350, height=250)
-    frame_resultado.config(bd=15,relief=SUNKEN,bg=COLOR)
-    frame_resultado.grid(row=1,column=0,sticky="nsew")
+    variable_caja_cesar = IntVar()
+    caja_cesar = Checkbutton(frame_modos,text="Cesar", variable=variable_caja_cesar, bg=COLOR,command=lambda: caja_atbash.deselect())
+    caja_cesar.grid(row=4, column=0, padx=5, pady=5, sticky='w')
+    caja_cesar.select()
+
+
+    caja_atbash = Checkbutton(frame_modos,text="Atbash",bg=COLOR,command=lambda: caja_cesar.deselect())
+    caja_atbash.grid(row=4, column=3, padx=5, pady=5, sticky='w')
+
+
+    texto_clave = Label(frame_modos, text="Clave del cifrado Cesar:",bg=COLOR)
+    texto_clave.grid(row=8, column=0, padx=5, pady=5)
+    entrada_clave=Entry(frame_modos)
+    entrada_clave.grid(row=10, column=0, padx=5, pady=5)
+
+
+    frame_resultado = Frame(raiz_ventana2, bg=COLOR,relief=SUNKEN,bd=10)
+    frame_resultado.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+
 
     texto_mensaje = Label(frame_resultado, text="Resultado:",bg=COLOR)
     texto_mensaje.grid(row=0, column=0, padx=5, pady=5)
 
-    resultado = Text(frame_resultado,width=33, height=12, state=DISABLED) #ahi que  cambiar esto que  no sea  un entry que   sea una pantalla  donde  mostrar el resultado
+    resultado = Text(frame_resultado,width=73, height=12, state=DISABLED)
     resultado.grid(row=2, column=1, padx=5, pady=5)
 
     scroll=Scrollbar(frame_resultado,command=resultado.yview)
     scroll.grid(row=2, column=2, padx=5, pady=5,sticky="nsew")
     resultado.config(yscrollcommand=scroll.set)
 
+    raiz_ventana2.mainloop()
 
-    frame_control=Frame(raiz_ventana2, width=350, height=100)
-    frame_control.config(bd=15,relief=SUNKEN,bg=COLOR)
-    frame_control.grid(row=1,column=1,sticky="nsew")
-    
-    info_iniciar=Label(frame_control,text="Procesar el mensaje:",bg=COLOR).grid(row=0, column=0, padx=5, pady=5)
-    boton_iniciar=Button(frame_control,text="Iniciar").grid(row=1, column=0, padx=5, pady=5)   #falta hacerlo funcional
+def verificar_cifrado(caja_cesar, entrada, clave, salida, descifrar=1):
+    if caja_cesar.get()==1:
+        if validar_clave(clave):
+            salida.config(state=NORMAL)
+            salida.delete(1.0, END)
+            salida.insert(END, cifrado_cesar(entrada, descifrar*int(clave)))
+            salida.config(state=DISABLED)
+        else:
+            messagebox.showwarning("Clave Inválida", "La clave debe ser un número entero.")
+    else:
+        salida.config(state=NORMAL)
+        salida.delete(1.0, END)
+        salida.insert(END, cifrado_atbash(entrada))
+        salida.config(state=DISABLED)
 
-    info_reiniciar=Label(frame_control,text="Limpiar las pantallas para ingresar otro mensaje:",bg=COLOR).grid(row=2, column=0, padx=5, pady=5)
-    boton_reiniciar=Button(frame_control, text="Reiniciar", command=lambda : reiniciar_ventana2(entrada_mensaje, resultado, entrad_clave)).grid(row=3, column=0, padx=5, pady=5)#command=)
+
+def validar_clave(clave):
+    valida = False
+    if clave.isnumeric() or (clave[0]=='-' and clave[1:].isnumeric()):
+        valida = True
+    return valida
 
 
 def cifrado_cesar(cadena, clave):
