@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 import doctest
 
-COLOR = "#47A2AF"
+COLOR = "#79c4ae"
 FUENTE=("Comic Sans MS",12)
 
 def ventana1_programa():
@@ -18,16 +18,9 @@ def ventana1_programa():
     miFrame.config(bg=COLOR)
     miImagen=PhotoImage(file="mensajeoculto.png")
     posicionimagen=Label(miFrame,image=miImagen)
-    posicionimagen.place(x=380,y=200)
+    posicionimagen.place(x=380,y=210)
     texto1era_ventana(miFrame,ventana)
     ventana.mainloop()
-    
-def abrir_ventana2(ventana):
-    """
-    Esta funcion hace que se cierre la primera ventana luego de apretar continuar.
-    """
-    ventana.destroy()
-    ventana2()
     
 def texto1era_ventana(miFrame,ventana):
     """
@@ -35,34 +28,33 @@ def texto1era_ventana(miFrame,ventana):
     lo desplaze a la segunda ventana.
     """
     texto_bienvenida= Label(miFrame, text="Bienvenido a la aplicación de mensajes secretos del grupo Espadachines.",bg=COLOR,font= (FUENTE))
-    texto_bienvenida.place(x=0, y=50)
+    texto_bienvenida.place(x=25, y=50)
     texto_para_cerrar= Label(miFrame, text="Para continuar presione continuar, de lo contrario cierre la ventana.",bg=COLOR,font= (FUENTE))
-    texto_para_cerrar.place(x=0, y=80)
-    botonEnviar = Button(ventana,text="Continuar",font= ("Comic Sans MS",13), command=lambda:abrir_ventana2(ventana))
+    texto_para_cerrar.place(x=35, y=80)
+    botonEnviar = Button(ventana,text="Continuar",font= ("Comic Sans MS",13), relief=RAISED, bd=5, command=lambda:abrir_ventana2(ventana))
     botonEnviar.place (x=250, y=125)
     texto= Label(miFrame, text="Construido por : Leandro Sebastian Ramos",bg=COLOR,font= (FUENTE))
-    texto.place(x=20, y=170)
+    texto.place(x=20, y=200)
     nombre2= Label(miFrame, text="Juan Martin Diaz",bg=COLOR,font= (FUENTE))
-    nombre2.place(x=150, y=195)
+    nombre2.place(x=150, y=230)
     nombre3= Label(miFrame, text="Ruth Giselle Duarte Orue",bg=COLOR,font= (FUENTE))
-    nombre3.place(x=150, y=225)
+    nombre3.place(x=150, y=260)
     nombre4= Label(miFrame, text="Iñaki Vydra",bg=COLOR,font= (FUENTE))
-    nombre4.place(x=150, y=255)
+    nombre4.place(x=150, y=290)
 
+def abrir_ventana2(ventana):
+    """
+    Esta funcion hace que se cierre la primera ventana luego de apretar continuar.
+    """
+    ventana.destroy()
+    ventana2()
 
-def reiniciar_ventana2(texto1, texto2, texto3):
+def reiniciar_ventana2(ventana):
     """
     Esta funcion reinicia la ventana 2.
     """
-    cadena_vacia = ''
-    texto1.delete(1.0, END)
-    texto1.insert(END, cadena_vacia)
-    texto2.config(state=NORMAL)
-    texto2.delete(1.0, END)
-    texto2.insert(END, cadena_vacia)
-    texto2.config(state=DISABLED)
-    texto3.delete(0, END)
-    texto3.insert(0, cadena_vacia)
+    ventana.destroy
+    ventana2()
 
 
 def ventana2():
@@ -81,20 +73,20 @@ def ventana2_mensaje(raiz_ventana2):
     """
     Esta funcion sirve para mostrar la entrada de los mensajes y mostrarlos.
     """
-    frame_mensaje = Frame(raiz_ventana2, bg=COLOR,relief=SUNKEN,bd=10)
-    frame_mensaje.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+    frame_mensaje = Frame(raiz_ventana2, bg=COLOR, relief=SUNKEN, bd=10)
+    frame_mensaje.grid(row=0, column=0, sticky="nsew")
     texto_mensaje = Label(frame_mensaje, text="Mensaje:",bg=COLOR,font= FUENTE)
     texto_mensaje.grid(row=0, column=0, padx=5, pady=5,sticky='w')
-    entrada_mensaje = Text(frame_mensaje,width=33, height=12)
+    entrada_mensaje = Text(frame_mensaje,width=33, height=12, relief=SUNKEN, bd=2)
     entrada_mensaje.grid(row=1, column=1, padx=5, pady=5)
     scroll=Scrollbar(frame_mensaje,command=entrada_mensaje.yview)
     scroll.grid(row=1, column=2, padx=5, pady=5,sticky="nsew")
     entrada_mensaje.config(yscrollcommand=scroll.set)
     frame_resultado = Frame(raiz_ventana2, bg=COLOR,relief=SUNKEN,bd=10)
-    frame_resultado.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+    frame_resultado.grid(row=1, column=0, columnspan=2, sticky="nsew")
     texto_mensaje = Label(frame_resultado, text="Resultado:",bg=COLOR,font= FUENTE)
     texto_mensaje.grid(row=0, column=0, padx=5, pady=5, sticky='w')
-    resultado = Text(frame_resultado,width=73, height=12, state=DISABLED)
+    resultado = Text(frame_resultado,width=73, height=12, relief=SUNKEN, bd=2, state=DISABLED)
     resultado.grid(row=2, column=1, padx=5, pady=5)
     scroll=Scrollbar(frame_resultado,command=resultado.yview)
     scroll.grid(row=2, column=2, padx=5, pady=5,sticky="nsew")
@@ -106,12 +98,12 @@ def usuario_conf_ventana2(raiz_ventana2,entrada_mensaje,resultado):
     Esta funcion sirve para que el usuario pueda configurar el programa.
     """
     frame_modos = Frame(raiz_ventana2, bg=COLOR,relief=SUNKEN,bd=10)
-    frame_modos.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+    frame_modos.grid(row=0, column=1, sticky="nsew")
     texto_modo = Label(frame_modos, text="Elige el tipo de cifrado:",bg=COLOR,font= FUENTE)
     texto_modo.grid(row=0, column=0, columnspan=2, padx=5, pady=5)  
-    boton_cifrar = Button(frame_modos,text="Cifrar",font= FUENTE, command= lambda: verificar_cifrado(variable_caja_cesar, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado))
+    boton_cifrar = Button(frame_modos,text="Cifrar",font= FUENTE, relief=RAISED, bd=5, command= lambda: verificar_cifrado(variable_caja_cesar, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado))
     boton_cifrar.grid(row=10, column=4, padx=5, pady=5)
-    boton_descifrar = Button(frame_modos,text="Descifrar",font= FUENTE, command= lambda: verificar_cifrado(variable_caja_cesar, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado, -1))
+    boton_descifrar = Button(frame_modos,text="Descifrar",font= FUENTE, relief=RAISED, bd=5, command= lambda: verificar_cifrado(variable_caja_cesar, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado, -1))
     boton_descifrar.grid(row=10, column=5, padx=5, pady=5)
     variable_caja_cesar = IntVar()
     caja_cesar = Checkbutton(frame_modos,text="Cesar",font= FUENTE, variable=variable_caja_cesar, bg=COLOR,command=lambda: caja_atbash.deselect())
@@ -120,20 +112,20 @@ def usuario_conf_ventana2(raiz_ventana2,entrada_mensaje,resultado):
     caja_atbash = Checkbutton(frame_modos,text="Atbash",font= FUENTE,bg=COLOR,command=lambda: caja_cesar.deselect())
     caja_atbash.grid(row=4, column=3, padx=5, pady=5, sticky='w')
     texto_clave = Label(frame_modos, text="Clave del cifrado Cesar:",font= FUENTE,bg=COLOR)
-    texto_clave.grid(row=8, column=0, padx=5, pady=5)
-    entrada_clave=Entry(frame_modos)
-    entrada_clave.grid(row=10, column=0, padx=5, pady=5)
+    texto_clave.grid(row=9, column=0, padx=5, sticky='s')
+    entrada_clave=Entry(frame_modos, relief=SUNKEN, bd=2)
+    entrada_clave.grid(row=10, column=0, padx=5, pady=10, sticky='n')
     opciones_finales_ventana2(frame_modos,raiz_ventana2,entrada_mensaje,entrada_clave,resultado)
 
 def opciones_finales_ventana2(frame_modos,raiz_ventana2,entrada_mensaje,entrada_clave,resultado):
     """
     Esta funcion sirve para que te limpie la pantalla del programa y para cerrarlo si apretan sus respectivos botones.
     """
-    frame_opciones_extra=Frame(frame_modos,bg="blue",relief=SUNKEN,bd=5)
+    frame_opciones_extra=Frame(frame_modos,bg=COLOR)
     frame_opciones_extra.place(x=0, y=190)
-    boton_reiniciar = Button(frame_opciones_extra, text="Cifrar otro mensaje",font= FUENTE, command=lambda: reiniciar_ventana2(entrada_mensaje,resultado,entrada_clave))
+    boton_reiniciar = Button(frame_opciones_extra, text="Cifrar otro mensaje", relief=RAISED, bd=5, font= FUENTE, command=lambda: reiniciar_ventana2(entrada_mensaje,resultado,entrada_clave))
     boton_reiniciar.grid(row=16, column=0,padx=5, pady=5)
-    boton_salir = Button(frame_opciones_extra, text='Salir',font= FUENTE, command=raiz_ventana2.destroy)
+    boton_salir = Button(frame_opciones_extra, text='Salir', relief=RAISED, bd=5, font= FUENTE, command=raiz_ventana2.destroy)
     boton_salir.grid(row=16, column=3, padx=5, pady=5)
     
   
