@@ -18,13 +18,16 @@ def ventana1_programa():
     texto1era_ventana(miFrame,ventana)
     ventana.mainloop()
     
-
+def abrir_ventana2(ventana):
+    ventana.destroy()
+    ventana2()
+    
 def texto1era_ventana(miFrame,ventana):
     texto_bienvenida= Label(miFrame, text="Bienvenido a la aplicación de mensajes secretos del grupo Espadachines.",bg=COLOR,font= ("Comic Sans MS",13))
     texto_bienvenida.place(x=0, y=50)
     texto_para_cerrar= Label(miFrame, text="Para continuar presione continuar, de lo contrario cierre la ventana.",bg=COLOR,font= ("Comic Sans MS",13))
     texto_para_cerrar.place(x=0, y=80)
-    botonEnviar = Button(ventana,text="Continuar", command=lambda:ventana2(ventana))
+    botonEnviar = Button(ventana,text="Continuar", command=lambda:abrir_ventana2(ventana))
     botonEnviar.place (x=250, y=125)
     texto= Label(miFrame, text="Construido por : Leandro Sebastian Ramos",bg=COLOR,font= ("Comic Sans MS",13))
     texto.place(x=20, y=170)
@@ -48,10 +51,10 @@ def reiniciar_ventana2(texto1, texto2, texto3):
     texto3.insert(0, cadena_vacia)
 
 
-def ventana2(ventana_root):
+def ventana2():
     
     
-    raiz_ventana2 = Toplevel()
+    raiz_ventana2 = Tk()
     raiz_ventana2.title("Opciones de Cifrado")
     raiz_ventana2.resizable(0, 0)
     raiz_ventana2.config(bg=COLOR)
@@ -97,7 +100,7 @@ def ventana2(ventana_root):
     frame_opciones_extra.place(x=0, y=190)
     boton_reiniciar = Button(frame_opciones_extra, text="Cifrar otro mensaje",font= FUENTE, command=lambda: reiniciar_ventana2(entrada_mensaje,resultado,entrada_clave))
     boton_reiniciar.grid(row=16, column=0,padx=5, pady=5)
-    boton_salir = Button(frame_opciones_extra, text='Salir',font= FUENTE, command=ventana_root.destroy)
+    boton_salir = Button(frame_opciones_extra, text='Salir',font= FUENTE, command=raiz_ventana2.destroy)
     boton_salir.grid(row=16, column=3, padx=5, pady=5)
     
 
