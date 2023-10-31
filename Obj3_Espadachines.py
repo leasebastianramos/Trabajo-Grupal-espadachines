@@ -134,7 +134,10 @@ def verificar_cifrado(caja_cesar, entrada, clave, salida, descifrar=1):
             salida.insert(END, cifrado_cesar(entrada, descifrar*int(clave)))
             salida.config(state=DISABLED)
         else:
-            messagebox.showwarning("Clave Inválida", "La clave debe ser un número entero.")
+            if len(clave)==0:
+                messagebox.showwarning("Clave Inválida", "Debe ingresar una clave para el cifrado César.")
+            else:
+                messagebox.showwarning("Clave Inválida", "La clave debe ser un número entero.")
 
     else:
         salida.config(state=NORMAL)
@@ -145,7 +148,7 @@ def verificar_cifrado(caja_cesar, entrada, clave, salida, descifrar=1):
 
 def validar_clave(clave):
     valida = False
-    if clave.isnumeric() or (clave[0]=='-' and clave[1:].isnumeric()):
+    if len(clave)>0 and (clave.isnumeric() or (clave[0]=='-' and clave[1:].isnumeric())):
         valida = True
     return valida
 
