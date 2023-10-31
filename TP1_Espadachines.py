@@ -114,21 +114,18 @@ def usuario_conf_ventana2(raiz_ventana2,entrada_mensaje,resultado):
     
     boton_cifrar = Button(frame_modos,text="Cifrar",font= FUENTE, relief=RAISED, bd=5, command= lambda: verificar_cifrado(variable_radiobuttons, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado))
     boton_cifrar.grid(row=10, column=4, padx=5, pady=5)
-    def pasa_boton_cifrar(_):
-        boton_cifrar["bg"] = "#FFFFFF"
-    def sale_boton_cifrar(_):
-        boton_cifrar["bg"] = "SystemButtonFace"
-    boton_cifrar.bind("<Enter>", pasa_boton_cifrar)
-    boton_cifrar.bind("<Leave>", sale_boton_cifrar)
-    
+
+    def entra_boton(boton):
+        boton.widget["bg"] = "#FFFFFF"
+    def sale_boton(boton):
+        boton.widget["bg"] = "SystemButtonFace"
+   
+    boton_cifrar.bind("<Enter>", entra_boton)
+    boton_cifrar.bind("<Leave>", sale_boton)
     boton_descifrar = Button(frame_modos,text="Descifrar",font= FUENTE, relief=RAISED, bd=5, command= lambda: verificar_cifrado(variable_radiobuttons, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado, -1))
     boton_descifrar.grid(row=10, column=5, padx=5, pady=5)
-    def pasa_boton_descifrar(_):
-        boton_descifrar["bg"] = "#FFFFFF"
-    def sale_boton_descifrar(_):
-        boton_descifrar["bg"] = "SystemButtonFace"
-    boton_descifrar.bind("<Enter>", pasa_boton_descifrar)
-    boton_descifrar.bind("<Leave>", sale_boton_descifrar)
+    boton_descifrar.bind("<Enter>", entra_boton)
+    boton_descifrar.bind("<Leave>", sale_boton)
 
     variable_radiobuttons = IntVar()
     variable_radiobuttons.set(-1)
@@ -152,21 +149,16 @@ def opciones_finales_ventana2(frame_modos,raiz_ventana2,entrada_mensaje,entrada_
 
     boton_reiniciar = Button(frame_opciones_extra, text="Cifrar otro mensaje", relief=RAISED, bd=5, font= FUENTE, command=lambda: reiniciar_ventana2(entrada_mensaje,resultado,entrada_clave))
     boton_reiniciar.grid(row=16, column=0,padx=5, pady=5)
-    def pasa_boton_reiniciar(_):
-        boton_reiniciar["bg"] = "#FFFFFF"
-    def sale_boton_reiniciar(_):
-        boton_reiniciar["bg"] = "SystemButtonFace"
-    boton_reiniciar.bind("<Enter>", pasa_boton_reiniciar)
-    boton_reiniciar.bind("<Leave>", sale_boton_reiniciar)
-
+    def entra_boton(boton):
+        boton.widget["bg"] = "#FFFFFF"
+    def sale_boton(boton):
+        boton.widget["bg"] = "SystemButtonFace"
+    boton_reiniciar.bind("<Enter>", entra_boton)
+    boton_reiniciar.bind("<Leave>", sale_boton)
     boton_salir = Button(frame_opciones_extra, text='Salir', relief=RAISED, bd=5, font= FUENTE, command=raiz_ventana2.destroy)
     boton_salir.grid(row=16, column=3, padx=5, pady=5)
-    def pasa_boton_salir(_):
-        boton_salir["bg"] = "#FFFFFF"
-    def sale_boton_salir(_):
-        boton_salir["bg"] = "SystemButtonFace"
-    boton_salir.bind("<Enter>", pasa_boton_salir)
-    boton_salir.bind("<Leave>", sale_boton_salir)
+    boton_salir.bind("<Enter>", entra_boton)
+    boton_salir.bind("<Leave>", sale_boton)
     
 
 def verificar_cifrado(variable_radiobuttons, entrada, clave, salida, descifrar=1):
