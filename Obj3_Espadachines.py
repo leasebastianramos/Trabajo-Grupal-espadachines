@@ -1,4 +1,8 @@
 from tkinter import *
+from tkinter import messagebox
+
+COLOR = "#47A2AF"
+
 def ventana1_programa():
     ventana= Tk()
     ventana.title("TP Grupal Parte 1 - Grupo: ESPADACHINES ")
@@ -6,7 +10,7 @@ def ventana1_programa():
     ventana.iconbitmap("espadachines.ico")
     miFrame=Frame(ventana, width=600, height=350)
     miFrame.pack()
-    miFrame.config(bg="LightSeaGreen")
+    miFrame.config(bg=COLOR)
     miImagen=PhotoImage(file="mensajeoculto.png")
     posicionimagen=Label(miFrame,image=miImagen).place(x=380,y=200)
     texto1era_ventana(miFrame,ventana)
@@ -14,21 +18,35 @@ def ventana1_programa():
     
 
 def texto1era_ventana(miFrame,ventana):
-    texto_bienvenida= Label(miFrame, text="Bienvenido a la aplicación de mensajes secretos del grupo Espadachines.",bg="LightSeaGreen",font= ("Comic Sans MS",13))
+    texto_bienvenida= Label(miFrame, text="Bienvenido a la aplicación de mensajes secretos del grupo Espadachines.",bg=COLOR,font= ("Comic Sans MS",13))
     texto_bienvenida.place(x=0, y=50)
-    texto_para_cerrar= Label(miFrame, text="Para continuar presione continuar, de lo contrario cierre la ventana.",bg="LightSeaGreen",font= ("Comic Sans MS",13))
+    texto_para_cerrar= Label(miFrame, text="Para continuar presione continuar, de lo contrario cierre la ventana.",bg=COLOR,font= ("Comic Sans MS",13))
     texto_para_cerrar.place(x=0, y=80)
-    botonEnviar = Button(ventana,text="continuar", command=cifrados)
+    botonEnviar = Button(ventana,text="Continuar", command=ventana2)
     botonEnviar.place (x=250, y=125)
-    texto= Label(miFrame, text="Construido por : Leandro Sebastian Ramos",bg="LightSeaGreen",font= ("Comic Sans MS",13))
+    texto= Label(miFrame, text="Construido por : Leandro Sebastian Ramos",bg=COLOR,font= ("Comic Sans MS",13))
     texto.place(x=20, y=170)
-    nombre2= Label(miFrame, text="Juan Martin Diaz",bg="LightSeaGreen",font= ("Comic Sans MS",13))
+    nombre2= Label(miFrame, text="Juan Martin Diaz",bg=COLOR,font= ("Comic Sans MS",13))
     nombre2.place(x=150, y=195)
-    nombre3= Label(miFrame, text="Ruth Giselle Duarte Orue",bg="LightSeaGreen",font= ("Comic Sans MS",13))
+    nombre3= Label(miFrame, text="Ruth Giselle Duarte Orue",bg=COLOR,font= ("Comic Sans MS",13))
     nombre3.place(x=150, y=225)
-    nombre4= Label(miFrame, text="Iñaki Vydra",bg="LightSeaGreen",font= ("Comic Sans MS",13))
+    nombre4= Label(miFrame, text="Iñaki Vydra",bg=COLOR,font= ("Comic Sans MS",13))
     nombre4.place(x=150, y=255)
 
+
+def reiniciar_ventana2(texto1, texto2, texto3):
+    cadena_vacia = ''
+    texto1.delete(1.0, END)
+    texto1.insert(END, cadena_vacia)
+    texto2.config(state=NORMAL)
+    texto2.delete(1.0, END)
+    texto2.insert(END, cadena_vacia)
+    texto2.config(state=DISABLED)
+
+    texto3.delete(0, END)
+    texto3.insert(0, cadena_vacia)
+
+    
 
 def ventana2():
     
@@ -37,13 +55,13 @@ def ventana2():
     #raiz_ventana2.iconbitmap("espadachines.ico")  # NO TE OLVIDES DE  DESCOMENTAR
     raiz_ventana2.geometry("752x525")
     raiz_ventana2.resizable(0,0)
-    raiz_ventana2.config(bg="LightSeaGreen")
+    raiz_ventana2.config(bg=COLOR)
 
     frame_mensaje=Frame(raiz_ventana2, width=450, height=250)
     frame_mensaje.grid(row=0,column=0,sticky="nsew")
-    frame_mensaje.config(bd=10,relief=SUNKEN,bg="LightSeaGreen")
+    frame_mensaje.config(bd=10,relief=SUNKEN,bg=COLOR)
 
-    texto_mensaje = Label(frame_mensaje, text="Mensaje:   ",bg="LightSeaGreen")
+    texto_mensaje = Label(frame_mensaje, text="Mensaje:   ",bg=COLOR)
     texto_mensaje.grid(row=0, column=0, padx=5, pady=5)
 
 
@@ -60,55 +78,56 @@ def ventana2():
 
     frame_modos=Frame(raiz_ventana2, width=350, height=250)
     frame_modos.grid(row=0,column=1,sticky="nsew")
-    frame_modos.config(bd=10,relief=SUNKEN,bg="LightSeaGreen")
+    frame_modos.config(bd=10,relief=SUNKEN,bg=COLOR)
 
     variable_modo=IntVar()
 
-    texto_modo = Label(frame_modos, text="Elige el modo:",bg="LightSeaGreen").grid(row=0, column=0, padx=5, pady=5)
+    texto_modo = Label(frame_modos, text="Elige el modo:",bg=COLOR).grid(row=0, column=0, padx=5, pady=5)
         
 
-    Radiobutton(frame_modos,text="Cifrar",bg="LightSeaGreen",variable=variable_modo,value=1).grid(row=4, column=0, padx=5, pady=5)
+    Radiobutton(frame_modos,text="Cifrar",bg=COLOR,variable=variable_modo,value=1).grid(row=4, column=0, padx=5, pady=5)
 
-    Radiobutton(frame_modos,text="Descifrar",bg="LightSeaGreen",variable=variable_modo,value=0).grid(row=12, column=0, padx=5, pady=5)
+    Radiobutton(frame_modos,text="Descifrar",bg=COLOR,variable=variable_modo,value=0).grid(row=12, column=0, padx=5, pady=5)
 
     
     variable_cifrado=IntVar()
 
-    texto_cifrado = Label(frame_modos, text="Elige el cifrado:",bg="LightSeaGreen").grid(row=0, column=3, padx=5, pady=5)
+    texto_cifrado = Label(frame_modos, text="Elige el cifrado:",bg=COLOR).grid(row=0, column=3, padx=5, pady=5)
         
 
-    Radiobutton(frame_modos,text="Cesar",bg="LightSeaGreen",variable=variable_cifrado,value=1).grid(row=4, column=3, padx=5, pady=5)
+    Radiobutton(frame_modos,text="Cesar",bg=COLOR,variable=variable_cifrado,value=1).grid(row=4, column=3, padx=5, pady=5)
 
-    texto_clave = Label(frame_modos, text="Clave del cifrado Cesar:",bg="LightSeaGreen").grid(row=4, column=4, padx=5, pady=5)
-    entrad_clave=Entry(frame_modos).grid(row=8, column=4, padx=5, pady=5)
+    texto_clave = Label(frame_modos, text="Clave del cifrado Cesar:",bg=COLOR).grid(row=4, column=4, padx=5, pady=5)
+    entrad_clave=Entry(frame_modos)
+    entrad_clave.grid(row=8, column=4, padx=5, pady=5)
 
-    Radiobutton(frame_modos,text="Atbash",bg="LightSeaGreen",variable=variable_cifrado,value=0).grid(row=12, column=3, padx=5, pady=5)
+    Radiobutton(frame_modos,text="Atbash",bg=COLOR,variable=variable_cifrado,value=0).grid(row=12, column=3, padx=5, pady=5)
 
 
     frame_resultado=Frame(raiz_ventana2,width=350, height=250)
-    frame_resultado.config(bd=15,relief=SUNKEN,bg="LightSeaGreen")
+    frame_resultado.config(bd=15,relief=SUNKEN,bg=COLOR)
     frame_resultado.grid(row=1,column=0,sticky="nsew")
 
-    texto_mensaje = Label(frame_resultado, text="Resultado:",bg="LightSeaGreen")
+    texto_mensaje = Label(frame_resultado, text="Resultado:",bg=COLOR)
     texto_mensaje.grid(row=0, column=0, padx=5, pady=5)
 
-    Resultado = Text(frame_resultado,width=33, height=12) #ahi que  cambiar esto que  no sea  un entry que   sea una pantalla  donde  mostrar el resultado
-    Resultado.grid(row=2, column=1, padx=5, pady=5)
+    resultado = Text(frame_resultado,width=33, height=12, state=DISABLED) #ahi que  cambiar esto que  no sea  un entry que   sea una pantalla  donde  mostrar el resultado
+    resultado.grid(row=2, column=1, padx=5, pady=5)
 
-    scroll=Scrollbar(frame_resultado,command=Resultado.yview)
+    scroll=Scrollbar(frame_resultado,command=resultado.yview)
     scroll.grid(row=2, column=2, padx=5, pady=5,sticky="nsew")
-    Resultado.config(yscrollcommand=scroll.set)
+    resultado.config(yscrollcommand=scroll.set)
 
 
     frame_control=Frame(raiz_ventana2, width=350, height=100)
-    frame_control.config(bd=15,relief=SUNKEN,bg="LightSeaGreen")
+    frame_control.config(bd=15,relief=SUNKEN,bg=COLOR)
     frame_control.grid(row=1,column=1,sticky="nsew")
     
-    info_iniciar=Label(frame_control,text="Procesar el mensaje:",bg="LightSeaGreen").grid(row=0, column=0, padx=5, pady=5)
+    info_iniciar=Label(frame_control,text="Procesar el mensaje:",bg=COLOR).grid(row=0, column=0, padx=5, pady=5)
     boton_iniciar=Button(frame_control,text="Iniciar").grid(row=1, column=0, padx=5, pady=5)   #falta hacerlo funcional
 
-    info_reiniciar=Label(frame_control,text="Limpiar las pantallas para ingresar otro mensaje:",bg="LightSeaGreen").grid(row=2, column=0, padx=5, pady=5)
-    boton_reiniciar=Button(frame_control, text="Reiniciar").grid(row=3, column=0, padx=5, pady=5)#command=)
+    info_reiniciar=Label(frame_control,text="Limpiar las pantallas para ingresar otro mensaje:",bg=COLOR).grid(row=2, column=0, padx=5, pady=5)
+    boton_reiniciar=Button(frame_control, text="Reiniciar", command=lambda : reiniciar_ventana2(entrada_mensaje, resultado, entrad_clave)).grid(row=3, column=0, padx=5, pady=5)#command=)
 
 
 def cifrado_cesar(cadena, clave):
