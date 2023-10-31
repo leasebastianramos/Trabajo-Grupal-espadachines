@@ -112,7 +112,7 @@ def usuario_conf_ventana2(raiz_ventana2,entrada_mensaje,resultado):
     texto_modo = Label(frame_modos, text="Elige el tipo de cifrado:",bg=COLOR,font= FUENTE)
     texto_modo.grid(row=0, column=0, columnspan=2, padx=5, pady=5)  
     
-    boton_cifrar = Button(frame_modos,text="Cifrar",font= FUENTE, relief=RAISED, bd=5, command= lambda: verificar_cifrado(variable_caja_cesar, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado))
+    boton_cifrar = Button(frame_modos,text="Cifrar",font= FUENTE, relief=RAISED, bd=5, command= lambda: verificar_cifrado(variable_radiobuttons, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado))
     boton_cifrar.grid(row=10, column=4, padx=5, pady=5)
     def pasa_boton_cifrar(_):
         boton_cifrar["bg"] = "#FFFFFF"
@@ -121,7 +121,7 @@ def usuario_conf_ventana2(raiz_ventana2,entrada_mensaje,resultado):
     boton_cifrar.bind("<Enter>", pasa_boton_cifrar)
     boton_cifrar.bind("<Leave>", sale_boton_cifrar)
     
-    boton_descifrar = Button(frame_modos,text="Descifrar",font= FUENTE, relief=RAISED, bd=5, command= lambda: verificar_cifrado(variable_caja_cesar, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado, -1))
+    boton_descifrar = Button(frame_modos,text="Descifrar",font= FUENTE, relief=RAISED, bd=5, command= lambda: verificar_cifrado(variable_radiobuttons, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado, -1))
     boton_descifrar.grid(row=10, column=5, padx=5, pady=5)
     def pasa_boton_descifrar(_):
         boton_descifrar["bg"] = "#FFFFFF"
@@ -130,11 +130,11 @@ def usuario_conf_ventana2(raiz_ventana2,entrada_mensaje,resultado):
     boton_descifrar.bind("<Enter>", pasa_boton_descifrar)
     boton_descifrar.bind("<Leave>", sale_boton_descifrar)
 
-    variable_caja_cesar = IntVar()
-    caja_cesar = Checkbutton(frame_modos,text="Cesar",font= FUENTE, variable=variable_caja_cesar, bg=COLOR,command=lambda: caja_atbash.deselect())
+    variable_radiobuttons = IntVar()
+    variable_radiobuttons.set(-1)
+    caja_cesar = Radiobutton(frame_modos,text="Cesar",font= FUENTE, variable=variable_radiobuttons, value=1, bg=COLOR)
     caja_cesar.grid(row=4, column=0, padx=5, pady=5, sticky='w')
-    caja_cesar.select()
-    caja_atbash = Checkbutton(frame_modos,text="Atbash",font= FUENTE,bg=COLOR,command=lambda: caja_cesar.deselect())
+    caja_atbash = Radiobutton(frame_modos,text="Atbash",font= FUENTE, variable=variable_radiobuttons, value=2, bg=COLOR)
     caja_atbash.grid(row=4, column=3, padx=5, pady=5, sticky='w')
     texto_clave = Label(frame_modos, text="Clave del cifrado Cesar:",font= FUENTE,bg=COLOR)
     texto_clave.grid(row=9, column=0, padx=5, sticky='s')
@@ -169,11 +169,11 @@ def opciones_finales_ventana2(frame_modos,raiz_ventana2,entrada_mensaje,entrada_
     boton_salir.bind("<Leave>", sale_boton_salir)
     
 
-def verificar_cifrado(caja_cesar, entrada, clave, salida, descifrar=1):
+def verificar_cifrado(variable_radiobuttons, entrada, clave, salida, descifrar=1):
     """
     Esta funcion verifica lo que escribio el usuario en caso de no haber escrito algo le saltara un mensaje de advertencia.
     """
-    if caja_cesar.get()==1:
+    if variable_radiobuttons.get()==1:
         if validar_clave(clave):
             salida.config(state=NORMAL)
             salida.delete(1.0, END)
@@ -184,12 +184,14 @@ def verificar_cifrado(caja_cesar, entrada, clave, salida, descifrar=1):
                 messagebox.showwarning("Clave Inválida", "Debe ingresar una clave para el cifrado César.")
             else:
                 messagebox.showwarning("Clave Inválida", "La clave debe ser un número entero.")
-
-    else:
+    elif variable_radiobuttons.get()==2:
         salida.config(state=NORMAL)
         salida.delete(1.0, END)
         salida.insert(END, cifrado_atbash(entrada))
         salida.config(state=DISABLED)
+    else:
+        messagebox.showwarning("Seleccione Opción", "Debe seleccionar una de las opciones para realizar el cifrado.")
+
 
 
 def validar_clave(clave):
