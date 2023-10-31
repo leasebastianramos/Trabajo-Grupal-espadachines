@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 
 COLOR = "#47A2AF"
+FUENTE=("Comic Sans MS",12)
 
 def ventana1_programa():
     ventana= Tk()
@@ -57,69 +58,57 @@ def ventana2(ventana_root):
     raiz_ventana2.iconbitmap("espadachines.ico")
     raiz_ventana2.grab_set()
 
+    #En este frame se encuentra la entrada del mensaje
+    
     frame_mensaje = Frame(raiz_ventana2, bg=COLOR,relief=SUNKEN,bd=10)
     frame_mensaje.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-     
-
-    texto_mensaje = Label(frame_mensaje, text="Mensaje:",bg=COLOR)
+    texto_mensaje = Label(frame_mensaje, text="Mensaje:",bg=COLOR,font= FUENTE)
     texto_mensaje.grid(row=0, column=0, padx=5, pady=5,sticky='w')
-
-
     entrada_mensaje = Text(frame_mensaje,width=33, height=12)
     entrada_mensaje.grid(row=1, column=1, padx=5, pady=5)
-    
-
     scroll=Scrollbar(frame_mensaje,command=entrada_mensaje.yview)
     scroll.grid(row=1, column=2, padx=5, pady=5,sticky="nsew")
     entrada_mensaje.config(yscrollcommand=scroll.set)
+
+
+    #Frame modos es la zona donde el usuario va a configurar el programa
     
     frame_modos = Frame(raiz_ventana2, bg=COLOR,relief=SUNKEN,bd=10)
     frame_modos.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
-
-
-    texto_modo = Label(frame_modos, text="Elige el tipo de cifrado:",bg=COLOR)
-    texto_modo.grid(row=0, column=0, columnspan=2, padx=5, pady=5)
-        
-
-    boton_cifrar = Button(frame_modos,text="Cifrar", command= lambda: verificar_cifrado(variable_caja_cesar, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado))
+    texto_modo = Label(frame_modos, text="Elige el tipo de cifrado:",bg=COLOR,font= FUENTE)
+    texto_modo.grid(row=0, column=0, columnspan=2, padx=5, pady=5)  
+    boton_cifrar = Button(frame_modos,text="Cifrar",font= FUENTE, command= lambda: verificar_cifrado(variable_caja_cesar, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado))
     boton_cifrar.grid(row=10, column=4, padx=5, pady=5)
-
-    boton_descifrar = Button(frame_modos,text="Descifrar", command= lambda: verificar_cifrado(variable_caja_cesar, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado, -1))
+    boton_descifrar = Button(frame_modos,text="Descifrar",font= FUENTE, command= lambda: verificar_cifrado(variable_caja_cesar, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado, -1))
     boton_descifrar.grid(row=10, column=5, padx=5, pady=5)
-
-    boton_reiniciar = Button(frame_modos, text="Cifrar otro mensaje", command=lambda: reiniciar_ventana2(entrada_mensaje,resultado,entrada_clave))
-    boton_reiniciar.grid(row=16, column=0,padx=5, pady=5)
-
-    boton_salir = Button(frame_modos, text='Salir', command=ventana_root.destroy)
-    boton_salir.grid(row=16, column=3, padx=5, pady=5)
-
-
     variable_caja_cesar = IntVar()
-    caja_cesar = Checkbutton(frame_modos,text="Cesar", variable=variable_caja_cesar, bg=COLOR,command=lambda: caja_atbash.deselect())
+    caja_cesar = Checkbutton(frame_modos,text="Cesar",font= FUENTE, variable=variable_caja_cesar, bg=COLOR,command=lambda: caja_atbash.deselect())
     caja_cesar.grid(row=4, column=0, padx=5, pady=5, sticky='w')
     caja_cesar.select()
-
-
-    caja_atbash = Checkbutton(frame_modos,text="Atbash",bg=COLOR,command=lambda: caja_cesar.deselect())
+    caja_atbash = Checkbutton(frame_modos,text="Atbash",font= FUENTE,bg=COLOR,command=lambda: caja_cesar.deselect())
     caja_atbash.grid(row=4, column=3, padx=5, pady=5, sticky='w')
-
-
-    texto_clave = Label(frame_modos, text="Clave del cifrado Cesar:",bg=COLOR)
+    texto_clave = Label(frame_modos, text="Clave del cifrado Cesar:",font= FUENTE,bg=COLOR)
     texto_clave.grid(row=8, column=0, padx=5, pady=5)
     entrada_clave=Entry(frame_modos)
     entrada_clave.grid(row=10, column=0, padx=5, pady=5)
 
+    #es un frame adentro de Frame modos para separar las opciones finales de la configuracion
+    frame_opciones_extra=Frame(frame_modos,bg="blue",relief=SUNKEN,bd=5)
+    frame_opciones_extra.place(x=0, y=190)
+    boton_reiniciar = Button(frame_opciones_extra, text="Cifrar otro mensaje",font= FUENTE, command=lambda: reiniciar_ventana2(entrada_mensaje,resultado,entrada_clave))
+    boton_reiniciar.grid(row=16, column=0,padx=5, pady=5)
+    boton_salir = Button(frame_opciones_extra, text='Salir',font= FUENTE, command=ventana_root.destroy)
+    boton_salir.grid(row=16, column=3, padx=5, pady=5)
+    
 
+    #En  este frame se muestra el mensaje luego de ser procesaddo
+    
     frame_resultado = Frame(raiz_ventana2, bg=COLOR,relief=SUNKEN,bd=10)
     frame_resultado.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
-
-
-    texto_mensaje = Label(frame_resultado, text="Resultado:",bg=COLOR)
+    texto_mensaje = Label(frame_resultado, text="Resultado:",bg=COLOR,font= FUENTE)
     texto_mensaje.grid(row=0, column=0, padx=5, pady=5, sticky='w')
-
     resultado = Text(frame_resultado,width=73, height=12, state=DISABLED)
     resultado.grid(row=2, column=1, padx=5, pady=5)
-
     scroll=Scrollbar(frame_resultado,command=resultado.yview)
     scroll.grid(row=2, column=2, padx=5, pady=5,sticky="nsew")
     resultado.config(yscrollcommand=scroll.set)
