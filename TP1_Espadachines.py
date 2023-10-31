@@ -192,17 +192,27 @@ def verificar_cifrado(variable_radiobuttons, entrada, clave, salida, descifrar=1
     else:
         messagebox.showwarning("Seleccione Opción", "Debe seleccionar una de las opciones para realizar el cifrado.")
 
-
-
 def validar_clave(clave):
     """
-    Esta funcion valida que la clave que el ususario escribio sea un numero, devuelve un valor booleano.
+    Esta funcion valida que la clave que el ususario escribió sea un numero y devuelve un valor booleano.
+    
+    >>> validar_clave(''):
+    False
+    >>> validar_clave('a'):
+    False
+    >>> validar_clave('0'):
+    True
+    >>> validar_clave('1'):
+    True
+    >>> validar_clave('-1'):
+    True
     """
-    valida = False
-    if len(clave)>0 and (clave.isnumeric() or (clave[0]=='-' and clave[1:].isnumeric())):
+    try:
+        int(clave)
         valida = True
+    except ValueError:
+        valida = False
     return valida
-
 
 def cifrado_cesar(cadena, clave):
     """
