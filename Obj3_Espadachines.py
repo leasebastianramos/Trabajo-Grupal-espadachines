@@ -27,7 +27,7 @@ def texto1era_ventana(miFrame,ventana):
     texto_bienvenida.place(x=0, y=50)
     texto_para_cerrar= Label(miFrame, text="Para continuar presione continuar, de lo contrario cierre la ventana.",bg=COLOR,font= (FUENTE))
     texto_para_cerrar.place(x=0, y=80)
-    botonEnviar = Button(ventana,text="Continuar", command=lambda:abrir_ventana2(ventana))
+    botonEnviar = Button(ventana,text="Continuar",font= ("Comic Sans MS",13), command=lambda:abrir_ventana2(ventana))
     botonEnviar.place (x=250, y=125)
     texto= Label(miFrame, text="Construido por : Leandro Sebastian Ramos",bg=COLOR,font= (FUENTE))
     texto.place(x=20, y=170)
