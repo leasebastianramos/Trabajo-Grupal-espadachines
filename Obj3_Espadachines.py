@@ -12,7 +12,8 @@ def ventana1_programa():
     miFrame.pack()
     miFrame.config(bg=COLOR)
     miImagen=PhotoImage(file="mensajeoculto.png")
-    posicionimagen=Label(miFrame,image=miImagen).place(x=380,y=200)
+    posicionimagen=Label(miFrame,image=miImagen)
+    posicionimagen.place(x=380,y=200)
     texto1era_ventana(miFrame,ventana)
     ventana.mainloop()
     
@@ -22,7 +23,7 @@ def texto1era_ventana(miFrame,ventana):
     texto_bienvenida.place(x=0, y=50)
     texto_para_cerrar= Label(miFrame, text="Para continuar presione continuar, de lo contrario cierre la ventana.",bg=COLOR,font= ("Comic Sans MS",13))
     texto_para_cerrar.place(x=0, y=80)
-    botonEnviar = Button(ventana,text="Continuar", command=ventana2)
+    botonEnviar = Button(ventana,text="Continuar", command=lambda:ventana2(ventana))
     botonEnviar.place (x=250, y=125)
     texto= Label(miFrame, text="Construido por : Leandro Sebastian Ramos",bg=COLOR,font= ("Comic Sans MS",13))
     texto.place(x=20, y=170)
@@ -46,22 +47,22 @@ def reiniciar_ventana2(texto1, texto2, texto3):
     texto3.insert(0, cadena_vacia)
 
 
-def ventana2():
+def ventana2(ventana_root):
+    
     
     raiz_ventana2 = Toplevel()
     raiz_ventana2.title("Opciones de Cifrado")
-    raiz_ventana2.geometry("790x560")
     raiz_ventana2.resizable(0, 0)
     raiz_ventana2.config(bg=COLOR)
     raiz_ventana2.iconbitmap("espadachines.ico")
-
+    raiz_ventana2.grab_set()
 
     frame_mensaje = Frame(raiz_ventana2, bg=COLOR,relief=SUNKEN,bd=10)
     frame_mensaje.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
      
 
-    texto_mensaje = Label(frame_mensaje, text="Mensaje:   ",bg=COLOR)
-    texto_mensaje.grid(row=0, column=0, padx=5, pady=5)
+    texto_mensaje = Label(frame_mensaje, text="Mensaje:",bg=COLOR)
+    texto_mensaje.grid(row=0, column=0, padx=5, pady=5,sticky='w')
 
 
     entrada_mensaje = Text(frame_mensaje,width=33, height=12)
@@ -89,6 +90,9 @@ def ventana2():
     boton_reiniciar = Button(frame_modos, text="Cifrar otro mensaje", command=lambda: reiniciar_ventana2(entrada_mensaje,resultado,entrada_clave))
     boton_reiniciar.grid(row=16, column=0,padx=5, pady=5)
 
+    boton_salir = Button(frame_modos, text='Salir', command=ventana_root.destroy)
+    boton_salir.grid(row=16, column=3, padx=5, pady=5)
+
 
     variable_caja_cesar = IntVar()
     caja_cesar = Checkbutton(frame_modos,text="Cesar", variable=variable_caja_cesar, bg=COLOR,command=lambda: caja_atbash.deselect())
@@ -111,7 +115,7 @@ def ventana2():
 
 
     texto_mensaje = Label(frame_resultado, text="Resultado:",bg=COLOR)
-    texto_mensaje.grid(row=0, column=0, padx=5, pady=5)
+    texto_mensaje.grid(row=0, column=0, padx=5, pady=5, sticky='w')
 
     resultado = Text(frame_resultado,width=73, height=12, state=DISABLED)
     resultado.grid(row=2, column=1, padx=5, pady=5)
@@ -131,6 +135,7 @@ def verificar_cifrado(caja_cesar, entrada, clave, salida, descifrar=1):
             salida.config(state=DISABLED)
         else:
             messagebox.showwarning("Clave Inválida", "La clave debe ser un número entero.")
+
     else:
         salida.config(state=NORMAL)
         salida.delete(1.0, END)
