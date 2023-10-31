@@ -23,19 +23,19 @@ def abrir_ventana2(ventana):
     ventana2()
     
 def texto1era_ventana(miFrame,ventana):
-    texto_bienvenida= Label(miFrame, text="Bienvenido a la aplicación de mensajes secretos del grupo Espadachines.",bg=COLOR,font= ("Comic Sans MS",13))
+    texto_bienvenida= Label(miFrame, text="Bienvenido a la aplicación de mensajes secretos del grupo Espadachines.",bg=COLOR,font= (FUENTE))
     texto_bienvenida.place(x=0, y=50)
-    texto_para_cerrar= Label(miFrame, text="Para continuar presione continuar, de lo contrario cierre la ventana.",bg=COLOR,font= ("Comic Sans MS",13))
+    texto_para_cerrar= Label(miFrame, text="Para continuar presione continuar, de lo contrario cierre la ventana.",bg=COLOR,font= (FUENTE))
     texto_para_cerrar.place(x=0, y=80)
     botonEnviar = Button(ventana,text="Continuar", command=lambda:abrir_ventana2(ventana))
     botonEnviar.place (x=250, y=125)
-    texto= Label(miFrame, text="Construido por : Leandro Sebastian Ramos",bg=COLOR,font= ("Comic Sans MS",13))
+    texto= Label(miFrame, text="Construido por : Leandro Sebastian Ramos",bg=COLOR,font= (FUENTE))
     texto.place(x=20, y=170)
-    nombre2= Label(miFrame, text="Juan Martin Diaz",bg=COLOR,font= ("Comic Sans MS",13))
+    nombre2= Label(miFrame, text="Juan Martin Diaz",bg=COLOR,font= (FUENTE))
     nombre2.place(x=150, y=195)
-    nombre3= Label(miFrame, text="Ruth Giselle Duarte Orue",bg=COLOR,font= ("Comic Sans MS",13))
+    nombre3= Label(miFrame, text="Ruth Giselle Duarte Orue",bg=COLOR,font= (FUENTE))
     nombre3.place(x=150, y=225)
-    nombre4= Label(miFrame, text="Iñaki Vydra",bg=COLOR,font= ("Comic Sans MS",13))
+    nombre4= Label(miFrame, text="Iñaki Vydra",bg=COLOR,font= (FUENTE))
     nombre4.place(x=150, y=255)
 
 
@@ -59,8 +59,6 @@ def ventana2():
     raiz_ventana2.resizable(0, 0)
     raiz_ventana2.config(bg=COLOR)
     raiz_ventana2.iconbitmap("espadachines.ico")
-    raiz_ventana2.grab_set()
-
     #En este frame se encuentra la entrada del mensaje
     
     frame_mensaje = Frame(raiz_ventana2, bg=COLOR,relief=SUNKEN,bd=10)
