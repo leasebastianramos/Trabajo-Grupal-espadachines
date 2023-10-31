@@ -92,6 +92,9 @@ def ventana2_mensaje(raiz_ventana2):
     scroll=Scrollbar(frame_mensaje,command=entrada_mensaje.yview)
     scroll.grid(row=1, column=2, padx=5, pady=5,sticky="nsew")
     entrada_mensaje.config(yscrollcommand=scroll.set)
+    boton_abrir = Button(frame_mensaje, text="Abrir Archivo '.txt'",font= FUENTE,relief=RAISED, bd=5, command=lambda:abrir_archivo(entrada_mensaje))
+    boton_abrir.grid(row=0, column=1)
+    
     frame_resultado = Frame(raiz_ventana2, bg=COLOR,relief=SUNKEN,bd=10)
     frame_resultado.grid(row=1, column=0, columnspan=2, sticky="nsew")
     texto_mensaje = Label(frame_resultado, text="Resultado:",bg=COLOR,font= FUENTE)
@@ -103,6 +106,13 @@ def ventana2_mensaje(raiz_ventana2):
     resultado.config(yscrollcommand=scroll.set)
     usuario_conf_ventana2(raiz_ventana2,entrada_mensaje,resultado)
 
+def abrir_archivo(entrada_mensaje):
+    archivo = filedialog.askopenfile(initialdir="/", title="Seleccionar un archivo de texto", filetypes=(("Archivos de texto", "*.txt"), ("Todos los archivos", "*.*")))
+    if archivo:
+        contenido = archivo.read()
+        entrada_mensaje.delete(1.0, END)
+        entrada_mensaje.insert(END, contenido)
+        
 def usuario_conf_ventana2(raiz_ventana2,entrada_mensaje,resultado):
     """
     Esta funcion sirve para que el usuario pueda configurar el programa.
