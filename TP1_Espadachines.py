@@ -1,13 +1,15 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter import filedialog
 import doctest
 
 COLOR = "#79c4ae"
-FUENTE=("Comic Sans MS",12)
+FUENTE=("Calibri",14)
 
 def ventana1_programa():
     """
     Esta funcion se encarga de crear la primera ventana.
+    Responsable=Sebastian
     """
     ventana= Tk()
     ventana.title("TP Grupal Parte 1 - Grupo: ESPADACHINES ")
@@ -26,12 +28,13 @@ def texto1era_ventana(miFrame,ventana):
     """
     Esta funcion muestra los mensajes de la primera ventana que ve el usuario y tiene el boton para despues de apretarlo
     lo desplaze a la segunda ventana.
+    Responsable=Sebastian
     """
     texto_bienvenida= Label(miFrame, text="Bienvenido a la aplicación de mensajes secretos del grupo Espadachines.",bg=COLOR,font= (FUENTE))
     texto_bienvenida.place(x=25, y=50)
     texto_para_cerrar= Label(miFrame, text="Para continuar presione continuar, de lo contrario cierre la ventana.",bg=COLOR,font= (FUENTE))
     texto_para_cerrar.place(x=35, y=80)
-    botonEnviar = Button(ventana,text="Continuar",font= ("Comic Sans MS",13), relief=RAISED, bd=5, command=lambda:abrir_ventana2(ventana))
+    botonEnviar = Button(ventana,text="Continuar",font= FUENTE, relief=RAISED, bd=5, command=lambda:abrir_ventana2(ventana))
     botonEnviar.place (x=250, y=125)
     def pasa_botonEnviar(_):
         botonEnviar["bg"] = "#FFFFFF"
@@ -51,11 +54,16 @@ def texto1era_ventana(miFrame,ventana):
 def abrir_ventana2(ventana):
     """
     Esta funcion hace que se cierre la primera ventana luego de apretar continuar.
+    Responsable=Juan Martin
     """
     ventana.destroy()
     ventana2()
 
 def reiniciar_ventana2(texto1, texto2, texto3):
+    """
+    Esta funcion borra los campos llenados por el ususario
+    Responsable= Ruth
+    """
     cadena_vacia = ''
     texto1.delete(1.0, END)
     texto1.insert(END, cadena_vacia)
@@ -70,6 +78,7 @@ def reiniciar_ventana2(texto1, texto2, texto3):
 def ventana2():
     """
     Funcion que crea la segunda ventana luego de apretar continuar.
+    Responsable= Iñaki
     """
     raiz_ventana2 = Tk()
     raiz_ventana2.title("Opciones de Cifrado")
@@ -82,6 +91,7 @@ def ventana2():
 def ventana2_mensaje(raiz_ventana2):
     """
     Esta funcion sirve para mostrar la entrada de los mensajes y mostrarlos.
+    Responsable= Iñaki
     """
     frame_mensaje = Frame(raiz_ventana2, bg=COLOR, relief=SUNKEN, bd=10)
     frame_mensaje.grid(row=0, column=0, sticky="nsew")
@@ -107,6 +117,10 @@ def ventana2_mensaje(raiz_ventana2):
     usuario_conf_ventana2(raiz_ventana2,entrada_mensaje,resultado)
 
 def abrir_archivo(entrada_mensaje):
+    """
+    Esta funcion te permite abrir un archivo de texto para usar en el cifrado y la imprime en el texto de entrada
+    Responsable= Iñaki
+    """
     archivo = filedialog.askopenfile(initialdir="/", title="Seleccionar un archivo de texto", filetypes=(("Archivos de texto", "*.txt"), ("Todos los archivos", "*.*")))
     if archivo:
         contenido = archivo.read()
@@ -116,6 +130,7 @@ def abrir_archivo(entrada_mensaje):
 def usuario_conf_ventana2(raiz_ventana2,entrada_mensaje,resultado):
     """
     Esta funcion sirve para que el usuario pueda configurar el programa.
+    Responsable= Iñaki
     """
     frame_modos = Frame(raiz_ventana2, bg=COLOR,relief=SUNKEN,bd=10)
     frame_modos.grid(row=0, column=1, sticky="nsew")
@@ -153,6 +168,7 @@ def usuario_conf_ventana2(raiz_ventana2,entrada_mensaje,resultado):
 def opciones_finales_ventana2(frame_modos,raiz_ventana2,entrada_mensaje,entrada_clave,resultado):
     """
     Esta funcion sirve para que te limpie la pantalla del programa y para cerrarlo si apretan sus respectivos botones.
+    Responsable= Iñaki
     """
     frame_opciones_extra=Frame(frame_modos,bg=COLOR)
     frame_opciones_extra.place(x=0, y=190)
@@ -173,7 +189,8 @@ def opciones_finales_ventana2(frame_modos,raiz_ventana2,entrada_mensaje,entrada_
 
 def verificar_cifrado(variable_radiobuttons, entrada, clave, salida, descifrar=1):
     """
-    Esta funcion verifica lo que escribio el usuario en caso de no haber escrito algo le saltara un mensaje de advertencia.
+    Esta funcion imprime el mensaje segun las opcines de cifrado elegido, en caso de no elgir uno o ingresar una clave invalida muestra un mensaje de advertencia.
+    Responsable= Sebastian
     """
     if variable_radiobuttons.get()==1:
         if validar_clave(clave):
@@ -197,7 +214,7 @@ def verificar_cifrado(variable_radiobuttons, entrada, clave, salida, descifrar=1
 def validar_clave(clave):
     """
     Esta funcion valida que la clave que el ususario escribió sea un numero y devuelve un valor booleano.
-    
+    Responsable= Juan Martin 
     >>> validar_clave(''):
     False
     >>> validar_clave('a'):
@@ -220,7 +237,7 @@ def cifrado_cesar(cadena, clave):
     """
     Esta función recibe una cadena de caracteres y una clave numérica entera y devuelva la cadena cifrada mediante el cifrado cesar.
     Letras con tildes, ñ y otros símbolos se mantienen igual.
-    
+    Responsable= Juan Martin
     >>> cifrado_cesar('az09', 0)
     'az09'
     >>> cifrado_cesar('abc0123', 1)
@@ -241,7 +258,6 @@ def cifrado_cesar(cadena, clave):
     'ñ!"·$%&/()áèü'
     >>> cifrado_cesar(cifrado_cesar('abcñ$0123', 31), -31)
     'abcñ$0123'
-    
     """
     mensaje_cifrado = ""
     
@@ -274,6 +290,7 @@ def cifrado_atbash(cadena):
     """
     Función que recibe una cadena y devuelve el mensaje codficado mediante el cifrado atbash.
     Letras con tildes, ñ y otros símbolos se mantienen igual.
+    Responsable= Ruth
     >>> cifrado_atbash('hola mundo')
     'SLOZ ÑFNWL'
     >>> cifrado_atbash('SLOZ ÑFNWL')
