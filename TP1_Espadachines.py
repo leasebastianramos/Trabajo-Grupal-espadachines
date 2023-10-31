@@ -33,6 +33,12 @@ def texto1era_ventana(miFrame,ventana):
     texto_para_cerrar.place(x=35, y=80)
     botonEnviar = Button(ventana,text="Continuar",font= ("Comic Sans MS",13), relief=RAISED, bd=5, command=lambda:abrir_ventana2(ventana))
     botonEnviar.place (x=250, y=125)
+    def pasa_botonEnviar(_):
+        botonEnviar["bg"] = "#FFFFFF"
+    def sale_botonEnviar(_):
+        botonEnviar["bg"] = "SystemButtonFace"
+    botonEnviar.bind("<Enter>", pasa_botonEnviar)
+    botonEnviar.bind("<Leave>", sale_botonEnviar)
     texto= Label(miFrame, text="Construido por : Leandro Sebastian Ramos",bg=COLOR,font= (FUENTE))
     texto.place(x=20, y=200)
     nombre2= Label(miFrame, text="Juan Martin Diaz",bg=COLOR,font= (FUENTE))
@@ -49,12 +55,16 @@ def abrir_ventana2(ventana):
     ventana.destroy()
     ventana2()
 
-def reiniciar_ventana2(ventana):
-    """
-    Esta funcion reinicia la ventana 2.
-    """
-    ventana.destroy
-    ventana2()
+def reiniciar_ventana2(texto1, texto2, texto3):
+    cadena_vacia = ''
+    texto1.delete(1.0, END)
+    texto1.insert(END, cadena_vacia)
+    texto2.config(state=NORMAL)
+    texto2.delete(1.0, END)
+    texto2.insert(END, cadena_vacia)
+    texto2.config(state=DISABLED)
+    texto3.delete(0, END)
+    texto3.insert(0, cadena_vacia)
 
 
 def ventana2():
@@ -101,10 +111,25 @@ def usuario_conf_ventana2(raiz_ventana2,entrada_mensaje,resultado):
     frame_modos.grid(row=0, column=1, sticky="nsew")
     texto_modo = Label(frame_modos, text="Elige el tipo de cifrado:",bg=COLOR,font= FUENTE)
     texto_modo.grid(row=0, column=0, columnspan=2, padx=5, pady=5)  
+    
     boton_cifrar = Button(frame_modos,text="Cifrar",font= FUENTE, relief=RAISED, bd=5, command= lambda: verificar_cifrado(variable_caja_cesar, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado))
     boton_cifrar.grid(row=10, column=4, padx=5, pady=5)
+    def pasa_boton_cifrar(_):
+        boton_cifrar["bg"] = "#FFFFFF"
+    def sale_boton_cifrar(_):
+        boton_cifrar["bg"] = "SystemButtonFace"
+    boton_cifrar.bind("<Enter>", pasa_boton_cifrar)
+    boton_cifrar.bind("<Leave>", sale_boton_cifrar)
+    
     boton_descifrar = Button(frame_modos,text="Descifrar",font= FUENTE, relief=RAISED, bd=5, command= lambda: verificar_cifrado(variable_caja_cesar, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado, -1))
     boton_descifrar.grid(row=10, column=5, padx=5, pady=5)
+    def pasa_boton_descifrar(_):
+        boton_descifrar["bg"] = "#FFFFFF"
+    def sale_boton_descifrar(_):
+        boton_descifrar["bg"] = "SystemButtonFace"
+    boton_descifrar.bind("<Enter>", pasa_boton_descifrar)
+    boton_descifrar.bind("<Leave>", sale_boton_descifrar)
+
     variable_caja_cesar = IntVar()
     caja_cesar = Checkbutton(frame_modos,text="Cesar",font= FUENTE, variable=variable_caja_cesar, bg=COLOR,command=lambda: caja_atbash.deselect())
     caja_cesar.grid(row=4, column=0, padx=5, pady=5, sticky='w')
@@ -117,18 +142,33 @@ def usuario_conf_ventana2(raiz_ventana2,entrada_mensaje,resultado):
     entrada_clave.grid(row=10, column=0, padx=5, pady=10, sticky='n')
     opciones_finales_ventana2(frame_modos,raiz_ventana2,entrada_mensaje,entrada_clave,resultado)
 
+
 def opciones_finales_ventana2(frame_modos,raiz_ventana2,entrada_mensaje,entrada_clave,resultado):
     """
     Esta funcion sirve para que te limpie la pantalla del programa y para cerrarlo si apretan sus respectivos botones.
     """
     frame_opciones_extra=Frame(frame_modos,bg=COLOR)
     frame_opciones_extra.place(x=0, y=190)
+
     boton_reiniciar = Button(frame_opciones_extra, text="Cifrar otro mensaje", relief=RAISED, bd=5, font= FUENTE, command=lambda: reiniciar_ventana2(entrada_mensaje,resultado,entrada_clave))
     boton_reiniciar.grid(row=16, column=0,padx=5, pady=5)
+    def pasa_boton_reiniciar(_):
+        boton_reiniciar["bg"] = "#FFFFFF"
+    def sale_boton_reiniciar(_):
+        boton_reiniciar["bg"] = "SystemButtonFace"
+    boton_reiniciar.bind("<Enter>", pasa_boton_reiniciar)
+    boton_reiniciar.bind("<Leave>", sale_boton_reiniciar)
+
     boton_salir = Button(frame_opciones_extra, text='Salir', relief=RAISED, bd=5, font= FUENTE, command=raiz_ventana2.destroy)
     boton_salir.grid(row=16, column=3, padx=5, pady=5)
+    def pasa_boton_salir(_):
+        boton_salir["bg"] = "#FFFFFF"
+    def sale_boton_salir(_):
+        boton_salir["bg"] = "SystemButtonFace"
+    boton_salir.bind("<Enter>", pasa_boton_salir)
+    boton_salir.bind("<Leave>", sale_boton_salir)
     
-  
+
 def verificar_cifrado(caja_cesar, entrada, clave, salida, descifrar=1):
     """
     Esta funcion verifica lo que escribio el usuario en caso de no haber escrito algo le saltara un mensaje de advertencia.
@@ -154,7 +194,7 @@ def verificar_cifrado(caja_cesar, entrada, clave, salida, descifrar=1):
 
 def validar_clave(clave):
     """
-    Esta funcion valida que la clave que el ususario escribio sea un numero.
+    Esta funcion valida que la clave que el ususario escribio sea un numero, devuelve un valor booleano.
     """
     valida = False
     if len(clave)>0 and (clave.isnumeric() or (clave[0]=='-' and clave[1:].isnumeric())):
