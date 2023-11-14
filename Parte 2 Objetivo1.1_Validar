@@ -1,0 +1,113 @@
+import doctest
+
+def validar_usuario(usuario):
+    #la variable usuario debe ser un str, devuelve una advertencia para mostrar al usuario o True en caso de estar validada
+    """
+    >>> validar_usuario("Lucas97*###")
+    'Solo se permiten letras(a-z),numeros(0-9) y “_” “-” “.” '
+    >>> validar_usuario("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    'Se excedio el limite de caracteres(15)'
+    >>> validar_usuario("Iña")
+    'Usa como minimo 5 caracteres'
+    >>> validar_usuario("Iñaki12345")
+    True
+    >>> validar_usuario("Iñaki")
+    True
+    """
+    caracteres_validos=["_","-","."]
+    if 5<=len(usuario)<=15:
+        i=0
+        respuesta=True
+
+        while respuesta==True and i<len(usuario):  #le puse respuesta==True por que quiero que para cuando respuesta es un texto 
+            if not usuario[i].isalnum() and not usuario[i] in caracteres_validos:
+                respuesta="Solo se permiten letras(a-z),numeros(0-9) y “_” “-” “.” " 
+
+            else:
+                i+=1
+    else:
+        if 15<len(usuario):
+            respuesta="Se excedio el limite de caracteres(15)"   #La idea es mostrar esto en rojo en la interfaz
+        else:
+            respuesta="Usa como minimo 5 caracteres"
+
+    return respuesta
+    
+def validar_contraseña(contraseña):
+    #la variable contraseña debe ser un str, devuelve una advertencia para mostrar al usuario o True en caso de estar validada
+    """
+    >>> validar_contraseña("a1")
+    'Usa como minimo 4 caracteres'
+    >>> validar_contraseña("aaaaaaaaaaaaaaa")
+    'Se excedio el limite de caracteres(8)'
+    >>> validar_contraseña("aaaa")
+    'No puede haber caracteres repetidos adyacentes'
+    >>> validar_contraseña("abcd")
+    'Debe contener por lo menos una mayuscula'
+    >>> validar_contraseña("ABCD")
+    'Debe contener por lo menos una minuscula'
+    >>> validar_contraseña("Abcd")
+    'Debe contener por lo menos un numero'
+    >>> validar_contraseña("Abcd91")
+    'Debe contener por lo menor uno de estos caracteres “_” “-” “#” “*”'
+    >>> validar_contraseña("Abcd91#")
+    True
+    >>> validar_contraseña("Alg#rit7")
+    True
+    >>> validar_contraseña("Abcd_#99")
+    'No puede haber caracteres repetidos adyacentes'
+    """
+    if 4<=len(contraseña)<=8:
+
+        Caracteres_solicitados=["_","-",".","#","*"]
+
+        mayusculas=False
+        minusculas=False
+        num=False
+        caracteres=False
+
+        respuesta=True
+        i=0
+
+        while respuesta==True and i<len(contraseña):
+
+            if  i <len(contraseña)-1 and contraseña[i]==contraseña[i+1]:
+                respuesta="No puede haber caracteres repetidos adyacentes"
+
+            elif contraseña[i] in Caracteres_solicitados:
+                caracteres=True
+            elif contraseña[i].isalpha():   
+                if contraseña[i].islower():
+                    minusculas=True
+                else:
+                    mayusculas=True
+            elif contraseña[i].isnumeric():
+                num=True
+
+            i+=1
+        if respuesta==True and not ( mayusculas and minusculas and num and caracteres):
+            respuesta=procesar_respuesta(mayusculas,minusculas,num,caracteres)
+    else:
+        if len(contraseña)<4:
+            respuesta="Usa como minimo 4 caracteres"
+        else:
+            respuesta="Se excedio el limite de caracteres(8)" 
+
+    return respuesta
+    	
+def procesar_respuesta(mayusculas,minusculas,num,caracteres):
+    """esta funcion no te da una devolucion super larga con todo lo que te equivocaste, si te equivocaste en varios campos te da una devolucion parcial """    
+
+    if not mayusculas:
+        devolucion="Debe contener por lo menos una mayuscula"
+    elif not minusculas:
+        devolucion="Debe contener por lo menos una minuscula"
+    elif not num:
+        devolucion="Debe contener por lo menos un numero"
+    elif not caracteres:
+        devolucion="Debe contener por lo menor uno de estos caracteres “_” “-” “#” “*”"
+        
+    return devolucion
+    
+
+print(doctest.testmod())
