@@ -58,7 +58,7 @@ def abrir_ventana2(ventana):
     ventana.destroy()
     ventana2()
 
-def reiniciar_ventana2(texto1, texto2, texto3):
+def reiniciar_ventana2(texto1, texto2, texto3,radiobutton_v):
     """
     Esta funcion borra los campos llenados por el ususario
     Responsable= Ruth
@@ -70,8 +70,12 @@ def reiniciar_ventana2(texto1, texto2, texto3):
     texto2.delete(1.0, END)
     texto2.insert(END, cadena_vacia)
     texto2.config(state=DISABLED)
+    
+    texto3.config(state=NORMAL)
     texto3.delete(0, END)
     texto3.insert(0, cadena_vacia)
+    if radiobutton_v.get()==2:
+        texto3.config(state=DISABLED)
 
 
 def ventana2():
@@ -137,7 +141,7 @@ def usuario_conf_ventana2(raiz_ventana2,entrada_mensaje,resultado):
     texto_modo.grid(row=0, column=0, columnspan=2, padx=5, pady=5)  
     
     boton_cifrar = Button(frame_modos,text="Cifrar",font= FUENTE, relief=RAISED, bd=5, command= lambda: verificar_cifrado(variable_radiobuttons, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado))
-    boton_cifrar.grid(row=10, column=4, padx=5, pady=5)
+    boton_cifrar.grid(row=6, column=0, padx=5, pady=5)
 
     def entra_boton(boton):
         boton.widget["bg"] = "#FFFFFF"
@@ -147,24 +151,31 @@ def usuario_conf_ventana2(raiz_ventana2,entrada_mensaje,resultado):
     boton_cifrar.bind("<Enter>", entra_boton)
     boton_cifrar.bind("<Leave>", sale_boton)
     boton_descifrar = Button(frame_modos,text="Descifrar",font= FUENTE, relief=RAISED, bd=5, command= lambda: verificar_cifrado(variable_radiobuttons, entrada_mensaje.get("1.0", "end-1c"), entrada_clave.get(), resultado, -1))
-    boton_descifrar.grid(row=10, column=5, padx=5, pady=5)
+    boton_descifrar.grid(row=6, column=1, padx=5, pady=5)
     boton_descifrar.bind("<Enter>", entra_boton)
     boton_descifrar.bind("<Leave>", sale_boton)
 
     variable_radiobuttons = IntVar()
     variable_radiobuttons.set(-1)
-    caja_cesar = Radiobutton(frame_modos,text="Cesar",font= FUENTE, variable=variable_radiobuttons, value=1, bg=COLOR)
-    caja_cesar.grid(row=4, column=0, padx=5, pady=5, sticky='w')
-    caja_atbash = Radiobutton(frame_modos,text="Atbash",font= FUENTE, variable=variable_radiobuttons, value=2, bg=COLOR)
-    caja_atbash.grid(row=4, column=3, padx=5, pady=5, sticky='w')
-    texto_clave = Label(frame_modos, text="Clave del cifrado Cesar:",font= FUENTE,bg=COLOR)
-    texto_clave.grid(row=9, column=0, padx=5, sticky='s')
-    entrada_clave=Entry(frame_modos, relief=SUNKEN, bd=2)
-    entrada_clave.grid(row=10, column=0, padx=5, pady=10, sticky='n')
-    opciones_finales_ventana2(frame_modos,raiz_ventana2,entrada_mensaje,entrada_clave,resultado)
+    caja_cesar = Radiobutton(frame_modos,text="Cesar",font= FUENTE, variable=variable_radiobuttons, value=1, bg=COLOR,command=lambda:evento_destapar(texto_clave,entrada_clave))
+    caja_cesar.grid(row=4, column=1, padx=5, pady=5, sticky='w')
+    caja_atbash = Radiobutton(frame_modos,text="Atbash",font= FUENTE, variable=variable_radiobuttons, value=2, bg=COLOR,command=lambda:evento_tapar(texto_clave,entrada_clave))
+    caja_atbash.grid(row=4, column=0, padx=5, pady=5, sticky='w')
+    texto_clave = Label(frame_modos, text="Clave: ",font= FUENTE,bg=COLOR,state=DISABLED)
+    texto_clave.grid(row=4, column=2, padx=5, pady=5)
+    entrada_clave=Entry(frame_modos, relief=SUNKEN, bd=2,state=DISABLED)
+    entrada_clave.grid(row=4, column=3, padx=5, pady=5)
+    opciones_finales_ventana2(frame_modos,raiz_ventana2,entrada_mensaje,entrada_clave,resultado,variable_radiobuttons)
+
+def evento_destapar(label,entry):
+        entry.config(state=NORMAL)
+        label.config(state=NORMAL)
+def evento_tapar(label,entry):
+        entry.config(state=DISABLED)
+        label.config(state=DISABLED)
 
 
-def opciones_finales_ventana2(frame_modos,raiz_ventana2,entrada_mensaje,entrada_clave,resultado):
+def opciones_finales_ventana2(frame_modos,raiz_ventana2,entrada_mensaje,entrada_clave,resultado,variable_radiobuttons):
     """
     Esta funcion sirve para que te limpie la pantalla del programa y para cerrarlo si apretan sus respectivos botones.
     Responsable= Iñaki
@@ -172,7 +183,7 @@ def opciones_finales_ventana2(frame_modos,raiz_ventana2,entrada_mensaje,entrada_
     frame_opciones_extra=Frame(frame_modos,bg=COLOR)
     frame_opciones_extra.place(x=0, y=190)
 
-    boton_reiniciar = Button(frame_opciones_extra, text="Cifrar otro mensaje", relief=RAISED, bd=5, font= FUENTE, command=lambda: reiniciar_ventana2(entrada_mensaje,resultado,entrada_clave))
+    boton_reiniciar = Button(frame_opciones_extra, text="Cifrar otro mensaje", relief=RAISED, bd=5, font= FUENTE, command=lambda: reiniciar_ventana2(entrada_mensaje,resultado,entrada_clave,variable_radiobuttons))
     boton_reiniciar.grid(row=16, column=0,padx=5, pady=5)
     def entra_boton(boton):
         boton.widget["bg"] = "#FFFFFF"
