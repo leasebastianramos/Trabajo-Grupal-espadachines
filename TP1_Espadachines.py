@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
 from tkinter import filedialog
-import doctest
 
 COLOR = "#79c4ae"
 FUENTE=("Calibri",14)
@@ -215,15 +214,15 @@ def validar_clave(clave):
     """
     Esta funcion valida que la clave que el ususario escribió sea un numero y devuelve un valor booleano.
     Responsable= Juan Martin 
-    >>> validar_clave(''):
+    >>> validar_clave('')
     False
-    >>> validar_clave('a'):
+    >>> validar_clave('a')
     False
-    >>> validar_clave('0'):
+    >>> validar_clave('0')
     True
-    >>> validar_clave('1'):
+    >>> validar_clave('1')
     True
-    >>> validar_clave('-1'):
+    >>> validar_clave('-1')
     True
     """
     try:
