@@ -1,0 +1,247 @@
+from tkinter import *
+
+COLOR = "#79c4ae"
+FUENTE=("Calibri",14)
+
+
+COLOR = "#79c4ae"
+FUENTE=("Calibri",14)
+
+def Ventana_iniciar_sesion():
+
+    ven_login= Tk()
+    ven_login.title("Iniciar sesion ")
+    ven_login.resizable(0,0)
+    ven_login.iconbitmap("espadachines.ico")
+    ven_login.geometry("650x400")
+
+    frame_decoracion=Frame(ven_login, width=350, height=400)
+    frame_decoracion.grid(row=0, column=0,sticky="nsew")
+    frame_decoracion.config(bg=COLOR)
+    
+    frame_opciones=Frame(ven_login,width=300,height=400)
+    frame_opciones.grid(row=0, column=1,sticky="nsew")
+    frame_opciones.config(bg=COLOR)
+    frame_opciones.config(bd=15,relief="groove")
+    
+
+
+    Text_iniciar=Label(frame_opciones, text="Iniciar sesion",font= (FUENTE[0],16))
+    Text_iniciar.place(x=70, y=20)
+
+    
+   
+    usuario=Entry(frame_opciones, relief=SUNKEN, bd=2,width=25)
+    usuario.insert(0,"Nombre de usuario")   
+    usuario.place(x=20,y=120)
+    usuario.bind("<Button-1>",lambda X : usuario.delete(0,END))  #LO TENGO QUE CAMBIAR
+    
+
+    contraseña=Entry(frame_opciones, relief=SUNKEN, bd=2,width=25)
+    contraseña.insert(0,"Contraseña") 
+    contraseña.place(x=20,y=150)
+    contraseña.bind("<Button-1>",lambda x : contraseña.delete(0,END))  #Yo quiero que al darle clik se borre y cambie a show="*" si la variable me lo indica 
+                 
+    control=IntVar()
+    mostrar=Checkbutton(frame_opciones,text="Ocultar",variable=control,background=COLOR,command=lambda:ocultar_contraseña(control,contraseña)) #valores de la variable 1  o  0 \ control.get() y la usas
+    mostrar.place(x=185,y=150)
+
+    advertencia=Text(frame_opciones,font=(FUENTE[0],9),background=COLOR,foreground="red",width=30, height=2,bd=0)   #Aca le avisaria al usuario si puso algo mal tipo "Usuario o contraseña invalida"
+    advertencia.place(x=20,y=180)
+
+    iniciar=Button(frame_opciones,text="Iniciar",font=(FUENTE[0],10),command= lambda:"")
+    iniciar.place(x=70,y=215)
+
+
+    recuperar=Button(frame_opciones,text="¿has olvidado tu contraseña?",font= (FUENTE[0],10),background=COLOR,foreground= "blue",bd=0, command= lambda:"")
+    recuperar.place(x=10,y=280)
+
+    Crear_cuenta=Button(frame_opciones,text="Crear cuenta",font= (FUENTE[0],10),foreground= "blue",background=COLOR,bd=0, command= lambda:crear_cuenta())
+    Crear_cuenta.place(x=10,y=308)
+
+    ven_login.mainloop()
+
+def ocultar_contraseña(control,contraseña):
+    if control.get()==0:
+        contraseña.config(show="")
+    else:
+        contraseña.config(show="*")
+
+
+
+def validar_usuario(usuario):
+    #la variable usuario debe ser un str, devuelve una advertencia para mostrar al usuario o True en caso de estar validada
+    """
+    >>> validar_usuario("Lucas97*###")
+    'Solo se permiten letras(a-z),numeros(0-9) y “_” “-” “.” '
+    >>> validar_usuario("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    'Se excedio el limite de caracteres(15)'
+    >>> validar_usuario("Iña")
+    'Usa como minimo 5 caracteres'
+    >>> validar_usuario("Iñaki12345")
+    True
+    >>> validar_usuario("Iñaki")
+    True
+    """
+    caracteres_validos=["_","-","."]
+    if 5<=len(usuario)<=15:
+        i=0
+        respuesta=True
+
+        while respuesta==True and i<len(usuario):  #le puse respuesta==True por que quiero que para cuando respuesta es un texto 
+            if not usuario[i].isalnum() and not usuario[i] in caracteres_validos:
+                respuesta="Solo se permiten letras(a-z),numeros(0-9) y “_” “-” “.” " 
+
+            else:
+                i+=1
+    else:
+        if 15<len(usuario):
+            respuesta="Se excedio el limite de caracteres(15)"   #La idea es mostrar esto en rojo en la interfaz
+        else:
+            respuesta="Usa como minimo 5 caracteres"
+
+    return respuesta
+    
+def validar_contraseña(contraseña):
+    #la variable contraseña debe ser un str, devuelve una advertencia para mostrar al usuario o True en caso de estar validada
+    """
+    >>> validar_contraseña("a1")
+    'Usa como minimo 4 caracteres'
+    >>> validar_contraseña("aaaaaaaaaaaaaaa")
+    'Se excedio el limite de caracteres(8)'
+    >>> validar_contraseña("aaaa")
+    'No puede haber caracteres repetidos adyacentes'
+    >>> validar_contraseña("abcd")
+    'Debe contener por lo menos una mayuscula'
+    >>> validar_contraseña("ABCD")
+    'Debe contener por lo menos una minuscula'
+    >>> validar_contraseña("Abcd")
+    'Debe contener por lo menos un numero'
+    >>> validar_contraseña("Abcd91")
+    'Debe contener por lo menor uno de estos caracteres “_” “-” “#” “*”'
+    >>> validar_contraseña("Abcd91#")
+    True
+    >>> validar_contraseña("Alg#rit7")
+    True
+    >>> validar_contraseña("Abcd_#99")
+    'No puede haber caracteres repetidos adyacentes'
+    """
+    if 4<=len(contraseña)<=8:
+
+        Caracteres_solicitados=["_","-",".","#","*"]
+
+        mayusculas=False
+        minusculas=False
+        num=False
+        caracteres=False
+
+        respuesta=True
+        i=0
+
+        while respuesta==True and i<len(contraseña):
+
+            if  i <len(contraseña)-1 and contraseña[i]==contraseña[i+1]:
+                respuesta="No puede haber caracteres repetidos adyacentes"
+
+            elif contraseña[i] in Caracteres_solicitados:
+                caracteres=True
+            elif contraseña[i].isalpha():   
+                if contraseña[i].islower():
+                    minusculas=True
+                else:
+                    mayusculas=True
+            elif contraseña[i].isnumeric():
+                num=True
+
+            i+=1
+        if respuesta==True and not ( mayusculas and minusculas and num and caracteres):
+            respuesta=procesar_respuesta(mayusculas,minusculas,num,caracteres)
+    else:
+        if len(contraseña)<4:
+            respuesta="Usa como minimo 4 caracteres"
+        else:
+            respuesta="Se excedio el limite de caracteres(8)" 
+
+    return respuesta
+    	
+def procesar_respuesta(mayusculas,minusculas,num,caracteres):
+    """esta funcion no te da una devolucion super larga con todo lo que te equivocaste, si te equivocaste en varios campos te da una devolucion parcial """    
+
+    if not mayusculas:
+        devolucion="Debe contener por lo menos una mayuscula"
+    elif not minusculas:
+        devolucion="Debe contener por lo menos una minuscula"
+    elif not num:
+        devolucion="Debe contener por lo menos un numero"
+    elif not caracteres:
+        devolucion="Debe contener por lo menor uno de estos caracteres “_” “-” “#” “*”"
+        
+    return devolucion
+
+
+
+def crear_cuenta():
+    ven_registrar= Tk()
+    ven_registrar.title("Crear usuario")
+    ven_registrar.resizable(0,0)
+    ven_registrar.iconbitmap("espadachines.ico")
+    ven_registrar.geometry("430x380")
+
+    frame_opciones=Frame(ven_registrar,width=430, height=380)
+    frame_opciones.pack()
+    frame_opciones.config(bg=COLOR)
+    frame_opciones.config(bd=15,relief="groove")
+
+    Text_registrar=Label(frame_opciones, text="Registrar usuario",font= (FUENTE[0],16))
+    Text_registrar.place(x=20,y=20)
+
+
+    usuario=Entry(frame_opciones, relief=SUNKEN, bd=2,width=20)
+    usuario.insert(0,"Nombre de usuario")   
+    usuario.place(x=20,y=100)
+    
+    advertencia_usuario=Text(frame_opciones,font=(FUENTE[0],10),background=COLOR,foreground="red",width=20, height=2,bd=0)   
+    advertencia_usuario.place(x=20,y=130)
+
+    contraseña=Entry(frame_opciones, relief=SUNKEN, bd=2,width=15)
+    contraseña.insert(0,"Contraseña")
+    contraseña.place(x=200,y=100) 
+
+    advertencia_contraseña=Text(frame_opciones,font=(FUENTE[0],10),foreground="red",background=COLOR,width=20, height=2,bd=0)   
+    advertencia_contraseña.place(x=200,y=130)
+
+    confirmar_contraseña=Entry(frame_opciones, relief=SUNKEN, bd=2,width=15)
+    confirmar_contraseña.insert(0,"Confirmar") 
+    confirmar_contraseña.place(x=200,y=165)
+
+    advertencia_contraseña2=Text(frame_opciones,font=(FUENTE[0],10),background=COLOR,foreground="red",width=20,height=1,bd=0)
+    advertencia_contraseña2.place(x=200,y=195)
+
+
+    control=IntVar()
+    mostrar=Checkbutton(frame_opciones,text="Mostrar",variable=control,background=COLOR) 
+    mostrar.place(x=300,y=100)
+
+    recuperar_contraseña=Entry(frame_opciones, relief=SUNKEN, bd=2,width=20)
+    recuperar_contraseña.insert(0,"Recuperar contraseña")   
+    recuperar_contraseña.place(x=20,y=200)
+
+    registrar=Button(frame_opciones,text="Registrar",font=(FUENTE[0],10),command= lambda:enviar_crear_usuario(usuario,contraseña,confirmar_contraseña.get(),advertencia_usuario,advertencia_contraseña))
+    registrar.place(x=150,y=250)
+
+
+    ven_registrar.mainloop()
+
+
+def enviar_crear_usuario(user,pasword,confirmar,advertencia_usuario,advertencia_contraseña):
+    usuario_validado=validar_usuario(user.get())
+    contraseña_validada=validar_contraseña(pasword.get())
+    
+    if usuario_validado!=True:
+        advertencia_usuario.insert(END,usuario_validado)
+    else:
+        user.config(foreground="green",highlightbackground="green",highlightthickness=3)
+   
+    
+
+Ventana_iniciar_sesion()
