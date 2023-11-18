@@ -110,12 +110,16 @@ def registrar_usuario():
     Raiz_ventana.title("Registrar usuario")
     Raiz_ventana.resizable(0,0)
     Raiz_ventana.iconbitmap("espadachines.ico")
-    Raiz_ventana.geometry("550x450")
+    Raiz_ventana.geometry("575x450")
 
     frame_opciones=Frame(Raiz_ventana,width=600, height=450)
     frame_opciones.pack()
     frame_opciones.config(bg=COLOR)
     frame_opciones.config(bd=15,relief="groove")
+
+    
+    text_info=Text(frame_opciones,font= (FUENTE[0],10),width=30, height=8, bd=0,background=COLOR,state=DISABLED)
+    text_info.place(x=310,y=180)
 
 
     Text_registrar=Label(frame_opciones, text="Registrar usuario",font= (FUENTE[0],22),bg=COLOR)
@@ -127,13 +131,14 @@ def registrar_usuario():
     Text_usuario_pordefcto_top.place(x=60,y=70)
 
 
-
     variable_usuario=StringVar()
 
 
     entry_usuario=Entry(frame_opciones, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Text_usuario_pordefcto)  
     entry_usuario.place(x=60,y=90)
-    #entry_usuario.bind("Enter", lambda )
+
+    entry_usuario.bind("<Enter>", lambda x:mostrar_info(text_info,Text_usuario_pordefcto) )
+    entry_usuario.bind("<Leave>",lambda x:ocultar_info(text_info))
 
     entry_usuario.bind("<FocusIn>",lambda X : entry_focus_in(entry_usuario,Text_usuario_pordefcto,variable_usuario,Text_usuario_pordefcto_top)) 
     entry_usuario.bind("<FocusOut>",lambda X : entry_focus_out(entry_usuario,Text_usuario_pordefcto,Text_usuario_pordefcto_top))
@@ -151,12 +156,15 @@ def registrar_usuario():
     entry_contraseña=Entry(frame_opciones, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Text_contraseña_pordefcto)
     entry_contraseña.place(x=60,y=180)
 
+    entry_contraseña.bind("<Enter>", lambda x:mostrar_info(text_info,Text_contraseña_pordefcto) )
+    entry_contraseña.bind("<Leave>",lambda x:ocultar_info(text_info))
+
     entry_contraseña.bind("<FocusIn>",lambda X : entry_focus_in(entry_contraseña,Text_contraseña_pordefcto,variable_contraseña,Text_contraseña_pordefcto_top,control.get())) 
     entry_contraseña.bind("<FocusOut>",lambda X : entry_focus_out(entry_contraseña,Text_contraseña_pordefcto,Text_contraseña_pordefcto_top))
 
     control=IntVar()
     mostrar=Checkbutton(frame_opciones,text="mostrar",variable=control,background=COLOR,command=lambda:mostrar_contraseña_confirmacion(control,entry_contraseña,Text_contraseña_pordefcto.get(),confirmar_contraseña,Texto_confirmar_pordecto.get())) 
-    mostrar.place(x=240,y=180)
+    mostrar.place(x=230,y=180)
 
     advertencia_contraseña=Text(frame_opciones,font=(FUENTE[0],10),foreground="red",background=COLOR,width=20, height=2,bd=0,state=DISABLED)   
     advertencia_contraseña.place(x=60,y=210)
@@ -177,29 +185,45 @@ def registrar_usuario():
 
 
     valor=StringVar()
-    valor.set("Recuperar contraseña")
+    valor.set("Pregunta de seguridad")
     list_preguntas=["Apellido de su abuela materna"
                     ,"Nombre de tu mascota"
                     ,"Nombre de tu mejor amigo/a"
                     ,"Cantante preferido"
                     ,"Ciudad preferida"
-                    ,"opcion 6"
-                    ,"opcion 7"
-                    ,"opcion 8"
-                    ,"opcion 9"
-                    ,"opcion 10"]
+                    ,"Numero de tarjeta de credito"
+                    ,"Convinacion de la caja fuerte"
+                    ,"Fecha del cumple de tu mascota"
+                    ,"k/d/a de tu ultima partida"
+                    ,"Instagram de tu novia"]
     
-    entry_recuperar=Entry(frame_opciones, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,state=DISABLED)
-    entry_recuperar.place(x=280,y=130)
-
     recuperar_contraseña=OptionMenu(frame_opciones,valor,*list_preguntas,command=lambda x:destapar_entry(entry_recuperar))
-    recuperar_contraseña.place(x=280,y=90)
+    recuperar_contraseña.config(width=27)
+    recuperar_contraseña.place(x=310,y=90)
+    
+
+    entry_recuperar=Entry(frame_opciones, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=25,state=DISABLED)
+    entry_recuperar.place(x=310,y=140)
+    
 
 
     registrar=Button(frame_opciones,text="Registrar",font=(FUENTE[0],12),anchor=CENTER,bg="blue",foreground="white",padx=20,command= lambda:enviar_crear_usuario(entry_usuario,entry_contraseña,confirmar_contraseña,advertencia_usuario,advertencia_contraseña,advertencia_confirmar))
-    registrar.place(x=160,y=350)
+    registrar.place(x=200,y=350)
 
 
+def mostrar_info(text,identificador):
+    if identificador.get()=="Nombre de usuario":
+        text.config(state=NORMAL)
+        text.insert(END,"Para crear el usuario:\n*debe tener entre (5-15) caracteres \n*solo se permite letras(a-z),numeros(0-9) o “_” “-” “.” """)
+        text.config(state=DISABLED)
+    if identificador.get()=="Contraseña":
+        text.config(state=NORMAL)
+        text.insert(END,"La contraseña debe tener:\n*entre (4-8) caracteres\n*una mayuscula\n*una minuscula \n*un numero\n*algunos de estos caracteres \n“_” “-” “#” “*”")
+
+def ocultar_info(text):
+    text.config(state=NORMAL)
+    text.delete(1.0, END)
+    text.config(state=DISABLED)
 
 def destapar_entry(entry):
         entry.config(state=NORMAL)
