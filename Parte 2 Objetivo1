@@ -1,254 +1,276 @@
 from tkinter import *
 from tkinter import messagebox
-from tkinter import filedialog
 import doctest
 
-COLOR = "#482b6b"   #514788
+COLOR = "#482b6b"   
 FUENTE=("Calibri",14) 
 COLOR_FUENTE="white"
+COLOR_BOTONES="#8f89af"
 
+#ventana iniciar sesion
 def Ventana_inicio_sesion():
-    Raiz_vent=Tk()
-    Raiz_vent.title("Iniciar sesion ")
-    Raiz_vent.resizable(0,0)
-    Raiz_vent.iconbitmap("espadachines.ico")  
-    Raiz_vent.geometry("350x450")
-    frame_opciones=Frame(Raiz_vent,width=350,height=450)
-    frame_opciones.pack()
-    frame_opciones.config(bg=COLOR)
-    frame_opciones.config(bd=8,relief= RIDGE)  
-
-    Text_iniciar=Label(frame_opciones, text="Iniciar sesión",font= (FUENTE[0],22),foreground= COLOR_FUENTE,bg=COLOR)
-    Text_iniciar.place(x=85,y=20)
+    raiz_iniciar_sesion=Tk()
+    raiz_iniciar_sesion.title("Iniciar sesion ")
+    raiz_iniciar_sesion.iconbitmap("espadachines.ico")  
+    raiz_iniciar_sesion.resizable(0,0)
+    raiz_iniciar_sesion.geometry("350x450")
+    frame_iniciar_sesion=Frame(raiz_iniciar_sesion,width=350,height=450)
+    frame_iniciar_sesion.pack()
+    frame_iniciar_sesion.config(bg=COLOR,bd=8,relief= RIDGE)
 
 
-    #Boton para ir a la ventana de crear usuario
-    registrar=Button(frame_opciones,text="¿No tenes cuenta? Registrate ",font= (FUENTE[0],12,UNDERLINE),foreground= COLOR_FUENTE,background=COLOR,bd=0,command= lambda:registrar_usuario(ft_usuario,ft_contraeña))
-    registrar.place(x=65,y=60)
+    Label(frame_iniciar_sesion, text="Iniciar sesión",font= (FUENTE[0],22),foreground= COLOR_FUENTE,bg=COLOR).place(x=85,y=20)
+    
+    Button(frame_iniciar_sesion,text="¿No tenes cuenta? Registrate ",font= (FUENTE[0],12,UNDERLINE),foreground= COLOR_FUENTE,background=COLOR,bd=0,command= lambda:registrar_usuario(ft_usuario,ft_contraeña)).place(x=65,y=60)
 
 
     #Esto es lo que ve el usuario en el entry si no ingresa nada
-    Text_usuario_pordefcto=StringVar(value="Nombre de usuario")
-    Text_usuario_pordefcto_top=Label(frame_opciones,font= (FUENTE[0],12),textvariable=Text_usuario_pordefcto,background=COLOR,foreground=COLOR)
-    Text_usuario_pordefcto_top.place(x=80,y=100)
+    Text_usuario_por_defecto=StringVar(value="Nombre de usuario")
+    Text_usuario_por_defecto_top=Label(frame_iniciar_sesion,font= (FUENTE[0],12),textvariable=Text_usuario_por_defecto,background=COLOR,foreground=COLOR)
+    Text_usuario_por_defecto_top.place(x=80,y=100)
 
     #aca quedarian los datos que ponga en usuario
     variable_usuario=StringVar()
-    entry_usuario=Entry(frame_opciones, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Text_usuario_pordefcto)  
+    entry_usuario=Entry(frame_iniciar_sesion, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Text_usuario_por_defecto)  
     entry_usuario.place(x=80,y=120)
 
     #estos son elementos esteticos
     ft_usuario=PhotoImage(file="usuario.png")
-    posicion_ft_usuario=Label(frame_opciones,image=ft_usuario,bg=COLOR).place(x=50,y=120)
-    entry_usuario.bind("<FocusIn>",lambda X : entry_focus_in(entry_usuario,Text_usuario_pordefcto,variable_usuario,Text_usuario_pordefcto_top,advertencia_usuario)) 
-    entry_usuario.bind("<FocusOut>",lambda X : entry_focus_out(entry_usuario,Text_usuario_pordefcto,Text_usuario_pordefcto_top))
+    Label(frame_iniciar_sesion,image=ft_usuario,bg=COLOR).place(x=50,y=120)
+
+    entry_usuario.bind("<FocusIn>",lambda X : entry_focus_in(entry_usuario,Text_usuario_por_defecto,variable_usuario,Text_usuario_por_defecto_top,advertencia)) 
+    entry_usuario.bind("<FocusOut>",lambda X : entry_focus_out(entry_usuario,Text_usuario_por_defecto,Text_usuario_por_defecto_top))
 
 
     #Esto es lo que ve el usuario en el entry si no ingresa nada
-    Text_contraseña_pordefcto=StringVar(value="Contraseña") 
-    Text_contraseña_pordefcto_top=Label(frame_opciones,font= (FUENTE[0],12),textvariable=Text_contraseña_pordefcto,background=COLOR,foreground=COLOR)
-    Text_contraseña_pordefcto_top.place(x=80,y=160)
+    Text_contraseña_por_defecto=StringVar(value="Contraseña") 
+    Text_contraseña_por_defecto_top=Label(frame_iniciar_sesion,font= (FUENTE[0],12),textvariable=Text_contraseña_por_defecto,background=COLOR,foreground=COLOR)
+    Text_contraseña_por_defecto_top.place(x=80,y=160)
 
     #aca quedarian los datos que ponga en contraseña
     variable_contraseña=StringVar()
-    entry_contraseña=Entry(frame_opciones, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Text_contraseña_pordefcto)
+    entry_contraseña=Entry(frame_iniciar_sesion, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Text_contraseña_por_defecto)
     entry_contraseña.place(x=80,y=180)
     
     #estos son elementos esteticos  
     ft_contraeña=PhotoImage(file="candado.png")
-    posicion_ft_contraseña=Label(frame_opciones,image=ft_contraeña,bg=COLOR).place(x=50,y=180)
-    entry_contraseña.bind("<FocusIn>",lambda X : entry_focus_in(entry_contraseña,Text_contraseña_pordefcto,variable_contraseña,Text_contraseña_pordefcto_top,advertencia_usuario,control.get())) 
-    entry_contraseña.bind("<FocusOut>",lambda X : entry_focus_out(entry_contraseña,Text_contraseña_pordefcto,Text_contraseña_pordefcto_top))
+    Label(frame_iniciar_sesion,image=ft_contraeña,bg=COLOR).place(x=50,y=180)
+    entry_contraseña.bind("<FocusIn>",lambda X : entry_focus_in(entry_contraseña,Text_contraseña_por_defecto,variable_contraseña,Text_contraseña_por_defecto_top,advertencia,control.get())) 
+    entry_contraseña.bind("<FocusOut>",lambda X : entry_focus_out(entry_contraseña,Text_contraseña_por_defecto,Text_contraseña_por_defecto_top))
 
     
     #Para mostrar/ocultar la contraseña ingresada
     Label(text="Mostrar",foreground=COLOR_FUENTE,bg=COLOR).place(x=115,y=225)
 
     control=IntVar()
-    mostrar=Checkbutton(frame_opciones,variable=control,background=COLOR,command=lambda:mostrar_contraseña_confirmacion(control,entry_contraseña,Text_contraseña_pordefcto.get())) 
+    mostrar=Checkbutton(frame_iniciar_sesion,variable=control,background=COLOR,command=lambda:mostrar_contraseña_confirmacion(control,entry_contraseña,Text_contraseña_por_defecto.get())) 
     mostrar.place(x=80,y=215)
 
+    #aca se le avisa al usuario si hubo algun problema al iniciar
+    advertencia=Text(frame_iniciar_sesion,font=(FUENTE[0],10),background=COLOR,foreground=COLOR_FUENTE,width=25, height=2,bd=0,state=DISABLED)   
+    advertencia.place(x=80,y=250)
 
-    #boton para llamar a la  ventana recuperar contraseña
-    recuperar=Button(frame_opciones,text="¿Olvidaste tu contraseña?",font= (FUENTE[0],10,UNDERLINE),background=COLOR,foreground= COLOR_FUENTE,bd=0, command= lambda:recuperar_contraseña(ft_usuario,ft_contraeña))
-    recuperar.place(x=85,y=310)
 
-    advertencia_usuario=Text(frame_opciones,font=(FUENTE[0],10),background=COLOR,foreground=COLOR_FUENTE,width=25, height=2,bd=0,state=DISABLED)   
-    advertencia_usuario.place(x=80,y=250)
+    Button(frame_iniciar_sesion,text="¿Olvidaste tu contraseña?",font= (FUENTE[0],10,UNDERLINE),background=COLOR,foreground= COLOR_FUENTE,bd=0, command= lambda:abrir_recuperar(entry_usuario,advertencia,ft_usuario,ft_contraeña)).place(x=85,y=310)
 
-    #boton para procesar los datos que ingreso el usuario
-    iniciar=Button(frame_opciones,text="Iniciar sesion",font=(FUENTE[0],10),anchor=CENTER,padx=40,bg="#8f89af",foreground=COLOR_FUENTE,command= lambda:Inicio_sesion(entry_usuario.get(),entry_contraseña.get(),advertencia_usuario)) 
-    iniciar.place(x=80,y=350)
-
-    Raiz_vent.mainloop()
-
-def Inicio_sesion(usuario_entry,contraseña_entry,advertencia):
-
+    Button(frame_iniciar_sesion,text="Iniciar sesion",font=(FUENTE[0],10),anchor=CENTER,padx=40,bg=COLOR_BOTONES,foreground=COLOR_FUENTE,command= lambda:Inicio_sesion(entry_usuario.get(),entry_contraseña.get(),advertencia)) .place(x=80,y=350)
+    
+    raiz_iniciar_sesion.mainloop()
+def Inicio_sesion(usuario_ingresado,contraseña_ingresada,advertencia):
+#Esta funcion revisa si lo que fue ingresado por el usuario coincide con algun perfil que este registrado
     with open ("Datos_registrados.csv","r") as archivo:
 
         usuario,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
-        if usuario==usuario_entry and contraseña==contraseña_entry:
+        if usuario==usuario_ingresado and contraseña==contraseña_ingresada:
             messagebox.showinfo("Inisiar sesion","iniciando...")
 
-        while usuario!=usuario_entry and usuario:
+        while usuario!=usuario_ingresado and usuario:
 
             usuario,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
-            if usuario==usuario_entry and contraseña==contraseña_entry:
-
+            if usuario==usuario_ingresado and contraseña==contraseña_ingresada:
                 messagebox.showinfo("Inisiar sesion","iniciando...")
 
-        if usuario=="" or contraseña!=contraseña_entry:
+        if usuario=="" or contraseña!=contraseña_ingresada:
             advertencia.config(state=NORMAL)
             advertencia.delete(1.0, END)
             advertencia.insert(END,"El usuario o la contraseña\nson invalidos")
             advertencia.config(state=DISABLED)
 
-def leer_archivo(archivo):
-        linea = archivo.readline()
-        if linea:
-            devolver = linea.rstrip("\n").split(",")
-        else:
-            devolver = "","","","",""
-        return devolver
 
+#ventana recuperar contraseña
+def abrir_recuperar(usuario_ingresado,advertencia_usuario,ft_usuario,ft_contraeña):
+    with open ("Datos_registrados.csv","r") as archivo:
+        usuario_registrado,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
+        if usuario_registrado==usuario_ingresado.get() and usuario_ingresado.get()!="":
 
+            recuperar_contraseña(ft_usuario,ft_contraeña,usuario_ingresado.get())
+        while usuario_registrado!=usuario_ingresado.get() and usuario_registrado:
 
-def recuperar_contraseña(ft_usuario,ft_contraeña):
+            usuario_registrado,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
+            if usuario_registrado==usuario_ingresado.get() and usuario_ingresado.get()!="":
+                recuperar_contraseña(ft_usuario,ft_contraeña,usuario_ingresado.get(),pregunta,respuesta,contraseña,intentos)                
 
-    Raiz_ventana= Toplevel()
-    Raiz_ventana.grab_set()
-    Raiz_ventana.focus_set()
-    Raiz_ventana.title("Recuperar contraseña")
-    Raiz_ventana.resizable(0,0)
-    Raiz_ventana.iconbitmap("espadachines.ico")
-    Raiz_ventana.geometry("350x450")
+        advertencia_usuario.config(state=NORMAL)
+        advertencia_usuario.delete(1.0, END)
+        if usuario_registrado=="":
+            advertencia_usuario.insert(END,"Usuario no registrado")
 
-    frame_opciones=Frame(Raiz_ventana,width=600, height=450)
-    frame_opciones.pack()
-    frame_opciones.config(bg=COLOR)
-    frame_opciones.config(bd=8,relief= RIDGE)
+        advertencia_usuario.config(state=DISABLED)
+def recuperar_contraseña(ft_usuario,ft_contraeña,usuario,pregunta,respuesta,contraseña,intentos):
 
+    raiz_recuperar_contraseña= Toplevel()
 
-    Text_iniciar=Label(frame_opciones, text="Recuperar contraseña",font= (FUENTE[0],20),foreground= COLOR_FUENTE,bg=COLOR)
-    Text_iniciar.place(x=50,y=20)
+    #Para congelar la otra ventana hasta que se cierre
+    raiz_recuperar_contraseña.grab_set()
+    raiz_recuperar_contraseña.focus_set()
+
+    raiz_recuperar_contraseña.title("Recuperar contraseña")
+    raiz_recuperar_contraseña.iconbitmap("espadachines.ico")
+    raiz_recuperar_contraseña.geometry("350x450")
+    raiz_recuperar_contraseña.resizable(0,0)
+
+    frame_recuperar_contraseña=Frame(raiz_recuperar_contraseña,width=600, height=450)
+    frame_recuperar_contraseña.pack()
+    frame_recuperar_contraseña.config(bg=COLOR,bd=8,relief= RIDGE)
+
+    Label(frame_recuperar_contraseña, text="Recuperar contraseña",font= (FUENTE[0],20),foreground= COLOR_FUENTE,bg=COLOR).place(x=50,y=20)
     
-    #Esto es lo que ve el usuario en el entry si no ingresa nada
-    Text_usuario_pordefcto=StringVar(value="Nombre de usuario")
-    Text_usuario_pordefcto_top=Label(frame_opciones,font= (FUENTE[0],12),textvariable=Text_usuario_pordefcto,background=COLOR,foreground=COLOR)
-    Text_usuario_pordefcto_top.place(x=80,y=100)
-
-    #aca quedarian los datos que ponga en usuario
-    variable_usuario=StringVar()
-    entry_usuario=Entry(frame_opciones, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Text_usuario_pordefcto)  
+    Label(frame_recuperar_contraseña,image=ft_usuario,bg=COLOR).place(x=50,y=120)
+    text_usuario=StringVar(value=usuario)
+    entry_usuario=Entry(frame_recuperar_contraseña, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=text_usuario,state=DISABLED)
     entry_usuario.place(x=80,y=120)
 
-    #estos son elementos esteticos
-    ft_usuario=PhotoImage(file="usuario.png")
-    posicion_ft_usuario=Label(frame_opciones,image=ft_usuario,bg=COLOR).place(x=50,y=120)
-    entry_usuario.bind("<FocusIn>",lambda X : entry_focus_in(entry_usuario,Text_usuario_pordefcto,variable_usuario,Text_usuario_pordefcto_top,advertencia_usuario)) 
-    entry_usuario.bind("<FocusOut>",lambda X : entry_focus_out(entry_usuario,Text_usuario_pordefcto,Text_usuario_pordefcto_top))
-
-    advertencia_usuario=Text(frame_opciones,font=(FUENTE[0],10),background=COLOR,foreground=COLOR_FUENTE,width=24, height=2,bd=0,state=DISABLED)   
-    advertencia_usuario.place(x=80,y=150)
     
-    #este boton procesa los datos que ingreso el usuario
-    registrar=Button(frame_opciones,text="Recuperar",font=(FUENTE[0],10),anchor=CENTER,bg="#8f89af",foreground="white",padx=20)#,command= lambda:enviar_crear_usuario(entry_usuario,entry_contraseña,confirmar_contraseña,advertencia_usuario,advertencia_contraseña,advertencia_confirmar,Pregunta,entry_recuperar,text_info,Raiz_ventana))
-    registrar.place(x=60,y=350)
 
-    registrar=Button(frame_opciones,text="Cancelar",font=(FUENTE[0],10),anchor=CENTER,bg="#8f89af",foreground="white",padx=20,command=lambda:cancelar_ventana(Raiz_ventana))
-    registrar.place(x=180,y=350)
+    Label(frame_recuperar_contraseña,font=(FUENTE[0],12),background=COLOR,foreground=COLOR_FUENTE,width=20,text="Pregunta de seguridad:").place(x=70,y=195)
+    text_pregunta=StringVar(value=pregunta)
+    pregunta_de_seguridad=Label(frame_recuperar_contraseña,font= (FUENTE[0],12),textvariable=text_pregunta,background=COLOR,foreground=COLOR_FUENTE)
+    pregunta_de_seguridad.place(x=75,y=220)
 
 
+    entry_pregunta_de_seguridad=Entry(frame_recuperar_contraseña, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20)
+    entry_pregunta_de_seguridad.place(x=80,y=250)
+    entry_pregunta_de_seguridad.bind("<Return>",lambda x: recuperar(entry_pregunta_de_seguridad.get(),respuesta,contraseña,Num_intentos,raiz_recuperar_contraseña,usuario))
+
+    Num_intentos=IntVar(value=intentos)
+
+    Button(frame_recuperar_contraseña,text="Recuperar",font=(FUENTE[0],10),anchor=CENTER,bg=COLOR_BOTONES,foreground="white",padx=20,command=lambda:recuperar(entry_pregunta_de_seguridad.get(),respuesta,contraseña,Num_intentos,raiz_recuperar_contraseña,usuario)).place(x=60,y=350)
+
+    Button(frame_recuperar_contraseña,text="Cancelar",font=(FUENTE[0],10),anchor=CENTER,bg=COLOR_BOTONES,foreground="white",padx=20,command=lambda:cancelar_ventana(raiz_recuperar_contraseña)).place(x=180,y=350)
+
+def recuperar(Respuesta_ingresada,respuesta,contraseña,Num_intentos,ventana_recuperar,nombre_usuario):
+    if Respuesta_ingresada!="":
+        if Respuesta_ingresada==respuesta:
+            ventana_recuperar.destroy()
+            Num_intentos.set(0)
+            actualizar_archivo(Num_intentos,nombre_usuario)
+            messagebox.showinfo("Recuperar contraseña",f"Tu contraseña es {contraseña}")
+        else:
+            Num_intentos.set(Num_intentos.get()+1)
+            actualizar_archivo(Num_intentos.get(),nombre_usuario)
+            if Num_intentos.get()>2:
+                messagebox.showwarning("Respuesta incorrecta",f"Se llego al limite de 3 intentos\nEl usuario a sido bloqueado")
+            else:
+                messagebox.showwarning("Respuesta incorrecta",f"tiene un limite de 3 intentos\nIntentos de recuperar contraseña:{Num_intentos.get()}")
+
+def actualizar_archivo(intentos,usuario):
+    ""
+
+#Ventana registrar usuario
 def registrar_usuario(ft_usuario,ft_contraeña):
 
-    Raiz_ventana= Toplevel()
-    Raiz_ventana.grab_set()
-    Raiz_ventana.focus_set()
-    Raiz_ventana.title("Registrar usuario")
-    Raiz_ventana.resizable(0,0)
-    Raiz_ventana.iconbitmap("espadachines.ico")
-    Raiz_ventana.geometry("575x450")
+    raiz_registrar_usuario= Toplevel()
+    
+    raiz_registrar_usuario.grab_set()
+    raiz_registrar_usuario.focus_set()
 
-    frame_opciones=Frame(Raiz_ventana,width=600, height=450)
-    frame_opciones.pack()
-    frame_opciones.config(bg=COLOR)
-    frame_opciones.config(bd=8,relief= RIDGE)
+    raiz_registrar_usuario.title("Registrar usuario")
+    raiz_registrar_usuario.iconbitmap("espadachines.ico")
+    raiz_registrar_usuario.geometry("575x450")
+    raiz_registrar_usuario.resizable(0,0)
 
-    Text_registrar=Label(frame_opciones, text="Registrar usuario",foreground= COLOR_FUENTE,font= (FUENTE[0],22),bg=COLOR)
-    Text_registrar.place(x=160,y=20)
+    frame_registrar_usuario=Frame(raiz_registrar_usuario,width=600, height=450)
+    frame_registrar_usuario.pack()
+    frame_registrar_usuario.config(bg=COLOR,bd=8,relief= RIDGE)
+
+    Label(frame_registrar_usuario, text="Registrar usuario",foreground= COLOR_FUENTE,font= (FUENTE[0],22),bg=COLOR).place(x=160,y=20)
     
     #aca le muestro al usuario informacion de los requerimientos de el usuario y la contraseña
-
-    text_info=Text(frame_opciones,font= (FUENTE[0],10),width=30, height=8, bd=0,background=COLOR,foreground= COLOR_FUENTE,state=DISABLED)
-    text_info.place(x=310,y=180)
-
+    info=Text(frame_registrar_usuario,font= (FUENTE[0],10),width=30, height=8, bd=0,background=COLOR,foreground= COLOR_FUENTE,state=DISABLED)
+    info.place(x=310,y=180)
 
     #Esto es lo que ve el usuario en el entry si no ingresa nada
-    Text_usuario_pordefcto=StringVar(value="Nombre de usuario")
-    Text_usuario_pordefcto_top=Label(frame_opciones,font= (FUENTE[0],12),textvariable=Text_usuario_pordefcto,background=COLOR,foreground=COLOR)
-    Text_usuario_pordefcto_top.place(x=60,y=70)
+    Text_usuario_por_defecto=StringVar(value="Nombre de usuario")
+    Text_usuario_por_defecto_top=Label(frame_registrar_usuario,font= (FUENTE[0],12),textvariable=Text_usuario_por_defecto,background=COLOR,foreground=COLOR)
+    Text_usuario_por_defecto_top.place(x=60,y=70)
 
     #aca quedan los datos que ingrese en usuario
     variable_usuario=StringVar()
-    
-    entry_usuario=Entry(frame_opciones, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Text_usuario_pordefcto)  
+    entry_usuario=Entry(frame_registrar_usuario, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Text_usuario_por_defecto)  
     entry_usuario.place(x=60,y=90)
 
     #son eventos para mostrar la info de los requerimientos del usuario
-    entry_usuario.bind("<Enter>", lambda x:mostrar_info(text_info,Text_usuario_pordefcto) )
-    entry_usuario.bind("<Leave>",lambda x:ocultar_info(text_info))
+    entry_usuario.bind("<Enter>", lambda x:mostrar_info(info,Text_usuario_por_defecto) )
+    entry_usuario.bind("<Leave>",lambda x:ocultar_info(info))
 
     #estos son elementos esteticos  
-    posicion_ft_usuario=Label(frame_opciones,image=ft_usuario,bg=COLOR).place(x=30,y=90)
-    entry_usuario.bind("<FocusIn>",lambda X : entry_focus_in(entry_usuario,Text_usuario_pordefcto,variable_usuario,Text_usuario_pordefcto_top,advertencia_usuario)) 
-    entry_usuario.bind("<FocusOut>",lambda X : entry_focus_out(entry_usuario,Text_usuario_pordefcto,Text_usuario_pordefcto_top))
+    Label(frame_registrar_usuario,image=ft_usuario,bg=COLOR).place(x=30,y=90)
+    entry_usuario.bind("<FocusIn>",lambda X : entry_focus_in(entry_usuario,Text_usuario_por_defecto,variable_usuario,Text_usuario_por_defecto_top,advertencia_usuario)) 
+    entry_usuario.bind("<FocusOut>",lambda X : entry_focus_out(entry_usuario,Text_usuario_por_defecto,Text_usuario_por_defecto_top))
 
     #aca le muestro al usuario si no cumplio con algun requerimiento del usuario
-    advertencia_usuario=Text(frame_opciones,font=(FUENTE[0],10),background=COLOR,foreground=COLOR_FUENTE,width=20, height=2,bd=0,state=DISABLED)   
+    advertencia_usuario=Text(frame_registrar_usuario,font=(FUENTE[0],10),background=COLOR,foreground=COLOR_FUENTE,width=20, height=2,bd=0,state=DISABLED)   
     advertencia_usuario.place(x=60,y=120)
+
+    #si el usuario da ENTER le valido el usuario
+
+    bool_usuario_validado=BooleanVar(value=False)
+
+    entry_usuario.bind("<Return>",lambda x:procesar_usuario_ingresado(entry_usuario,advertencia_usuario,bool_usuario_validado))
 
 
     #Esto es lo que ve el usuario en el entry si no ingresa nada
-
-    Text_contraseña_pordefcto=StringVar(value="Contraseña") 
-    Text_contraseña_pordefcto_top=Label(frame_opciones,font= (FUENTE[0],12),textvariable=Text_contraseña_pordefcto,background=COLOR,foreground=COLOR)
-    Text_contraseña_pordefcto_top.place(x=60,y=160)
+    Text_contraseña_por_defecto=StringVar(value="Contraseña") 
+    Text_contraseña_por_defecto_top=Label(frame_registrar_usuario,font= (FUENTE[0],12),textvariable=Text_contraseña_por_defecto,background=COLOR,foreground=COLOR)
+    Text_contraseña_por_defecto_top.place(x=60,y=160)
 
     #aca quedan los datos que ingrese en usuario
     variable_contraseña=StringVar()
-
-    entry_contraseña=Entry(frame_opciones, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Text_contraseña_pordefcto)
+    entry_contraseña=Entry(frame_registrar_usuario, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Text_contraseña_por_defecto)
     entry_contraseña.place(x=60,y=180)
 
-
     #son eventos para mostrar la info de los requerimientos de la contraseña
-
-    entry_contraseña.bind("<Enter>", lambda x:mostrar_info(text_info,Text_contraseña_pordefcto) )
-    entry_contraseña.bind("<Leave>",lambda x:ocultar_info(text_info))
+    entry_contraseña.bind("<Enter>", lambda x:mostrar_info(info,Text_contraseña_por_defecto) )
+    entry_contraseña.bind("<Leave>",lambda x:ocultar_info(info))
 
     #estos son elementos esteticos  
-    posicion_ft_contraseña=Label(frame_opciones,image=ft_contraeña,bg=COLOR).place(x=30,y=180)
-    entry_contraseña.bind("<FocusIn>",lambda X : entry_focus_in(entry_contraseña,Text_contraseña_pordefcto,variable_contraseña,Text_contraseña_pordefcto_top,advertencia_contraseña,control.get())) 
-    entry_contraseña.bind("<FocusOut>",lambda X : entry_focus_out(entry_contraseña,Text_contraseña_pordefcto,Text_contraseña_pordefcto_top))
+    Label(frame_registrar_usuario,image=ft_contraeña,bg=COLOR).place(x=30,y=180)
+    entry_contraseña.bind("<FocusIn>",lambda X : entry_focus_in(entry_contraseña,Text_contraseña_por_defecto,variable_contraseña,Text_contraseña_por_defecto_top,advertencia_contraseña,control.get())) 
+    entry_contraseña.bind("<FocusOut>",lambda X : entry_focus_out(entry_contraseña,Text_contraseña_por_defecto,Text_contraseña_por_defecto_top))
 
     #aca le muestro al usuario si no cumplio con algun requerimiento de la contraseña
-    advertencia_contraseña=Text(frame_opciones,font=(FUENTE[0],10),foreground=COLOR_FUENTE,background=COLOR,width=20, height=2,bd=0,state=DISABLED)   
+    advertencia_contraseña=Text(frame_registrar_usuario,font=(FUENTE[0],10),foreground=COLOR_FUENTE,background=COLOR,width=20, height=2,bd=0,state=DISABLED)   
     advertencia_contraseña.place(x=60,y=210)
+
+    bool_contraseña_validada=BooleanVar(value=False)
+
+    entry_contraseña.bind("<Return>",lambda x:procesar_contraseña_ingresada(entry_contraseña,advertencia_contraseña,bool_contraseña_validada))
+
 
     #Para mostrar/ocultar lo que el usuario ingrese en contraseña y confirmar 
     control=IntVar()
-    Label(frame_opciones,text="Mostrar",foreground=COLOR_FUENTE,bg=COLOR).place(x=255,y=182)
-    mostrar=Checkbutton(frame_opciones,variable=control,background=COLOR,command=lambda:mostrar_contraseña_confirmacion(control,entry_contraseña,Text_contraseña_pordefcto.get(),confirmar_contraseña,Texto_confirmar_pordecto.get())) 
+    Label(frame_registrar_usuario,text="Mostrar",foreground=COLOR_FUENTE,bg=COLOR).place(x=255,y=182)
+    mostrar=Checkbutton(frame_registrar_usuario,variable=control,background=COLOR,command=lambda:mostrar_contraseña_confirmacion(control,entry_contraseña,Text_contraseña_por_defecto.get(),confirmar_contraseña,Texto_confirmar_pordecto.get())) 
     mostrar.place(x=230,y=180)
 
     #Esto es lo que ve el usuario en el entry si no ingresa nada   
     Texto_confirmar_pordecto=StringVar(value="Confirmar")
-    Texto_confirmar_pordecto_top=Label(frame_opciones,font= (FUENTE[0],12),textvariable=Texto_confirmar_pordecto,background=COLOR,foreground=COLOR)
+    Texto_confirmar_pordecto_top=Label(frame_registrar_usuario,font= (FUENTE[0],12),textvariable=Texto_confirmar_pordecto,background=COLOR,foreground=COLOR)
     Texto_confirmar_pordecto_top.place(x=60,y=250)
 
     #aca quedan los datos que ingrese en usuario
     variable_r_confirmar=StringVar()
-    confirmar_contraseña=Entry(frame_opciones, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Texto_confirmar_pordecto) 
+    confirmar_contraseña=Entry(frame_registrar_usuario, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Texto_confirmar_pordecto) 
     confirmar_contraseña.place(x=60,y=270)
 
     #estos son elementos esteticos  
@@ -256,8 +278,12 @@ def registrar_usuario(ft_usuario,ft_contraeña):
     confirmar_contraseña.bind("<FocusOut>",lambda X : entry_focus_out(confirmar_contraseña,Texto_confirmar_pordecto,Texto_confirmar_pordecto_top))
 
     #aca le muestro si no coinciden la contraseña y el confirmar o si no ingresa nada
-    advertencia_confirmar=Text(frame_opciones,font=(FUENTE[0],10),background=COLOR,foreground=COLOR_FUENTE,width=20,height=1,bd=0,state=DISABLED)
+    advertencia_confirmar=Text(frame_registrar_usuario,font=(FUENTE[0],10),background=COLOR,foreground=COLOR_FUENTE,width=20,height=1,bd=0,state=DISABLED)
     advertencia_confirmar.place(x=60,y=300)
+
+    bool_confirmar_validada=BooleanVar(value=False)
+
+    confirmar_contraseña.bind("<Return>",lambda x:procesar_confirmar_ingresado(confirmar_contraseña,advertencia_confirmar,entry_contraseña,bool_confirmar_validada))
 
 
     #estas son las opciones del menu desplegable
@@ -274,131 +300,138 @@ def registrar_usuario(ft_usuario,ft_contraeña):
                     ,"k/d/a de tu ultima partida"
                     ,"Instagram de tu novia"]
     
-    recuperar_contraseña=OptionMenu(frame_opciones,Pregunta,*list_preguntas,command=lambda x:destapar_entry(entry_recuperar))
+    recuperar_contraseña=OptionMenu(frame_registrar_usuario,Pregunta,*list_preguntas,command=lambda x:activar_entry(entry_recuperar))
     recuperar_contraseña.config(width=27)
     recuperar_contraseña.place(x=310,y=90)
     
     #aca queda la respuesta del usuario a la pregunta
-    entry_recuperar=Entry(frame_opciones, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=25,state=DISABLED)
+    entry_recuperar=Entry(frame_registrar_usuario, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=25,state=DISABLED)
     entry_recuperar.place(x=310,y=140)
     
+
     #este boton procesa los datos que ingreso el usuario
-    registrar=Button(frame_opciones,text="Registrar",font=(FUENTE[0],10),anchor=CENTER,bg="#8f89af",foreground="white",padx=55,command= lambda:enviar_crear_usuario(entry_usuario,entry_contraseña,confirmar_contraseña,advertencia_usuario,advertencia_contraseña,advertencia_confirmar,Pregunta,entry_recuperar,text_info,Raiz_ventana))
-    registrar.place(x=80,y=350)
-
-    registrar=Button(frame_opciones,text="Cancelar",font=(FUENTE[0],10),anchor=CENTER,bg="#8f89af",foreground="white",padx=55,command=lambda:cancelar_ventana(Raiz_ventana))
-    registrar.place(x=290,y=350)
-
-def cancelar_ventana(Raiz_ventana):
-    respuesta=messagebox.askyesno("TP Grupal Parte 1 - Grupo: ESPADACHINES ","¨¿Esta seguro que desea cancelar?")
-    if respuesta:
-        Raiz_ventana.destroy()
     
-def enviar_crear_usuario(user,pasword,confirmar,advertencia_usuario,advertencia_contraseña,advertencia_confirmar,pregunta_seguridad,entry_recuperar,text_info,Raiz_ventana): 
+    Button(frame_registrar_usuario,text="Registrar",font=(FUENTE[0],10),anchor=CENTER,bg=COLOR_BOTONES,foreground="white",padx=55,command= lambda:verificar_datos(entry_usuario,bool_usuario_validado,entry_contraseña,bool_contraseña_validada,confirmar_contraseña,bool_confirmar_validada,advertencia_usuario,advertencia_contraseña,advertencia_confirmar,Pregunta,entry_recuperar,info,raiz_registrar_usuario)).place(x=80,y=350)
 
-    usuario_validado=validar_usuario(user.get())                                                                    
-    contraseña_validada=validar_contraseña(pasword.get())
-
-    advertencia_usuario.config(state=NORMAL)
-    advertencia_usuario.delete(1.0, END)
-
-    if user.get()!="Nombre de usuario":
-        if usuario_validado!=True:
-            user.config(foreground="Black")
-            advertencia_usuario.insert(END,usuario_validado)
-        else:
-            with open ("Datos_registrados.csv","r") as archivo:
-
-                usuario,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
-                if usuario==user.get():
-                    advertencia_usuario.insert(END,"Usuario ya ingresado\nPruebe con otro")
-                    advertencia_usuario.config(state=DISABLED)
-                while usuario!=user.get() and usuario:
-
-                    usuario,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
-                    if usuario==user.get():
-                        advertencia_usuario.insert(END,"Usuario ya ingresado\nPruebe con otro")
-                        advertencia_usuario.config(state=DISABLED)
-                if usuario=="" and contraseña=="":
-                    user.config(foreground="green")
-    else:
-        user.config(foreground="Black")
-        advertencia_usuario.insert(END,"Ingrese un nombre de \nusuario")
-
-    advertencia_usuario.config(state=DISABLED)
-
-    advertencia_contraseña.config(state=NORMAL)
-    advertencia_contraseña.delete(1.0, END)
-    if pasword.get()!="Contraseña":
-        
-
-        if contraseña_validada!=True:
-            pasword.config(foreground="Black")
-            advertencia_contraseña.insert(END,contraseña_validada)
-        else:
-            pasword.config(foreground="green")
-    else:
-        pasword.config(foreground="Black")
-        advertencia_contraseña.insert(END,"Ingrese una contraseña")
-    advertencia_contraseña.config(state=DISABLED)
-
-    advertencia_confirmar.config(state=NORMAL)
-    advertencia_confirmar.delete(1.0, END)
-    if pasword.get()!="Contraseña":
-        if pasword.get()!=confirmar.get():
-    
-            confirmar.config(foreground="Black")
-            advertencia_confirmar.insert(END,"No coinciden")
-        else:
-            confirmar.config(foreground="green")
-    advertencia_confirmar.config(state=DISABLED)
-
-
-    text_info.config(state=NORMAL,foreground=COLOR_FUENTE)
-    text_info.delete(1.0, END)
-
-    if pregunta_seguridad.get()=="Elija una opción:":
-        text_info.insert(END,"No elijio una opción")
-
-    if pregunta_seguridad.get()!="Elija una opción:" and entry_recuperar.get()=="":
-        text_info.insert(END,"Respuesta invalida")
-    
-
-    text_info.config(state=DISABLED)
-
-
-    if contraseña_validada==True and usuario_validado==True and pregunta_seguridad!="Pregunta de seguridad" and entry_recuperar.get()!="":  #queda raro pero como concidera el "no vacio" como True tengo que ponerlo asi
-        if pasword.get()==confirmar.get():
-
-            guardar_datos(user.get(),pasword.get(),pregunta_seguridad.get(),entry_recuperar.get())
-            Raiz_ventana.destroy()
-            messagebox.showinfo("Carga de datos","Usuario registrado")
-   
-def guardar_datos(Id_usuario,clave_usuario,id_pregunta,respuesta_recuperacion):
-    with open("Datos_registrados.csv","a") as archivo:
-        linea="{},{},{},{},0 \n".format(Id_usuario, clave_usuario, id_pregunta,respuesta_recuperacion)
-        archivo.write(linea)
-
-def mostrar_info(text,identificador):
-    if identificador.get()=="Nombre de usuario":
+    Button(frame_registrar_usuario,text="Cancelar",font=(FUENTE[0],10),anchor=CENTER,bg=COLOR_BOTONES,foreground="white",padx=55,command=lambda:cancelar_ventana(raiz_registrar_usuario)).place(x=290,y=350)
+def mostrar_info(text,text_por_defecto):
+    #esta funcion muestra informacion para crear el usuario y la contraseña
+    if text_por_defecto.get()=="Nombre de usuario":
         text.config(state=NORMAL,foreground="White")
         text.delete(1.0,END)
         text.insert(END,"Para crear el usuario:\n*debe tener entre (5-15) caracteres \n*solo se permite letras(a-z),numeros(0-9) o “_” “-” “.” """)
         text.config(state=DISABLED)
-    if identificador.get()=="Contraseña":
+    if text_por_defecto.get()=="Contraseña":
         text.config(state=NORMAL,foreground="White")
         text.delete(1.0,END)
         text.insert(END,"La contraseña debe tener:\n*entre (4-8) caracteres\n*una mayuscula\n*una minuscula \n*un numero\n*algunos de estos caracteres \n“_” “-” “#” “*”")
-
 def ocultar_info(text):
     text.config(state=NORMAL)
     text.delete(1.0, END)
     text.config(state=DISABLED)
-  
-def destapar_entry(entry):
+def activar_entry(entry):
         entry.config(state=NORMAL)
 
-#funciones para validar usuario y contraseña
+def verificar_datos(usuario_ingresado,usuario_aprobado,contraseña_ingresada,contraseña_aprobada,confirmar,confirmar_aprobado,advertencia_usuario,advertencia_contraseña,advertencia_confirmar,pregunta_seguridad,entry_recuperar,advertencia_pregunta_seguridad,raiz_registrar_usuario): 
+
+    if not usuario_aprobado.get():
+        usuario_aprobado=procesar_usuario_ingresado(usuario_ingresado,advertencia_usuario,usuario_aprobado)
+    if not contraseña_aprobada.get():
+        contraseña_aprobada=procesar_contraseña_ingresada(contraseña_ingresada,advertencia_contraseña,contraseña_aprobada)
+    if not confirmar_aprobado.get():
+        confirmar_aprobado=procesar_confirmar_ingresado(confirmar,advertencia_confirmar,contraseña_ingresada,confirmar_aprobado)
+    
+    #chequeo si eligio una pregunta de suguridad y veo si respondio
+    advertencia_pregunta_seguridad.config(state=NORMAL,foreground=COLOR_FUENTE)
+    advertencia_pregunta_seguridad.delete(1.0, END)
+    if pregunta_seguridad.get()=="Elija una opción:":
+        advertencia_pregunta_seguridad.insert(END,"No elijio una opción")
+    if pregunta_seguridad.get()!="Elija una opción:" and entry_recuperar.get()=="":
+        advertencia_pregunta_seguridad.insert(END,"Respuesta invalida")
+    advertencia_pregunta_seguridad.config(state=DISABLED)
+
+    #si cumplen todas las condiciones guardo los datos
+    if contraseña_aprobada and usuario_aprobado and pregunta_seguridad!="Pregunta de seguridad" and entry_recuperar.get()!="": 
+        if confirmar_aprobado:
+            guardar_datos(usuario_ingresado.get(),contraseña_ingresada.get(),pregunta_seguridad.get(),entry_recuperar.get())
+            raiz_registrar_usuario.destroy()
+            messagebox.showinfo("Registrar usuario","Usuario registrado exitosamente")      
+def procesar_usuario_ingresado(usuario_ingresado,advertencia_usuario,usuario_aprobado):
+    
+    usuario_validado=validar_usuario(usuario_ingresado.get()) #usuario_validado es TRUE o una devolucion para el usuario
+
+    advertencia_usuario.config(state=NORMAL)
+    advertencia_usuario.delete(1.0, END)
+
+    usuario_aprobado.set(False)
+
+    if usuario_ingresado.get()!="Nombre de usuario":
+        if usuario_validado!=True:   
+            usuario_ingresado.config(foreground="Black")
+            advertencia_usuario.insert(END,usuario_validado) #Si el usuario no es correcto le muestro la devolucion
+        else:
+            #me fijo si el usuario ya estaba registrado
+            with open ("Datos_registrados.csv","r") as archivo:
+                usuario,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
+                if usuario==usuario_ingresado.get():
+                    advertencia_usuario.insert(END,"Usuario ya ingresado\nPruebe con otro")
+                    advertencia_usuario.config(state=DISABLED)
+                while usuario!=usuario_ingresado.get() and usuario:
+                    usuario,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
+                    if usuario==usuario_ingresado.get():
+                        advertencia_usuario.insert(END,"Usuario ya ingresado\nPruebe con otro")
+                        advertencia_usuario.config(state=DISABLED)
+                if usuario=="" and contraseña=="":
+                    usuario_aprobado.set(True)
+                    usuario_ingresado.config(foreground="green")
+    else:
+        usuario_ingresado.config(foreground="Black")
+        advertencia_usuario.insert(END,"Ingrese un nombre de \nusuario")
+
+    advertencia_usuario.config(state=DISABLED)
+
+    return usuario_aprobado.get()
+def procesar_contraseña_ingresada(contraseña_ingresada,advertencia_contraseña,contraseña_aprobada):
+    
+    contraseña_validada=validar_contraseña(contraseña_ingresada.get())
+    contraseña_aprobada.set(False)
+
+    advertencia_contraseña.config(state=NORMAL)
+    advertencia_contraseña.delete(1.0, END)
+    if contraseña_ingresada.get()!="Contraseña":
+        if contraseña_validada!=True:
+            contraseña_ingresada.config(foreground="Black")
+            advertencia_contraseña.insert(END,contraseña_validada)
+        else:
+            contraseña_aprobada.set(True)
+            contraseña_ingresada.config(foreground="green")
+    else:
+        contraseña_ingresada.config(foreground="Black")
+        advertencia_contraseña.insert(END,"Ingrese una contraseña")
+    advertencia_contraseña.config(state=DISABLED)
+
+    return contraseña_aprobada.get()
+def procesar_confirmar_ingresado(confirmar,advertencia_confirmar,contraseña_ingresada,confirmar_aprobado):
+    confirmar_aprobado.set(False)
+
+    advertencia_confirmar.config(state=NORMAL)
+    advertencia_confirmar.delete(1.0, END)
+    if contraseña_ingresada.get()!="Contraseña":
+        if contraseña_ingresada.get()!=confirmar.get():
+            confirmar.config(foreground="Black")
+            advertencia_confirmar.insert(END,"No coinciden")
+        else:
+            confirmar_aprobado.set(True)
+            confirmar.config(foreground="green")
+    advertencia_confirmar.config(state=DISABLED)
+
+    return confirmar_aprobado.get()
+
+def guardar_datos(Id_usuario,clave_usuario,id_pregunta,respuesta_recuperacion,intentos=0):
+    with open("Datos_registrados.csv","a") as archivo:
+        linea="{},{},{},{},{}\n".format(Id_usuario, clave_usuario, id_pregunta,respuesta_recuperacion,intentos)
+        archivo.write(linea)
+
 def validar_usuario(usuario):
     #la variable usuario debe ser un str, devuelve una advertencia para mostrar al usuario o True en caso de estar validada
     """
@@ -431,7 +464,6 @@ def validar_usuario(usuario):
             respuesta="Usa como minimo 5\n caracteres"
 
     return respuesta
-    
 def validar_contraseña(contraseña):
     #la variable contraseña debe ser un str, devuelve una advertencia para mostrar al usuario o True en caso de estar validada
     """
@@ -492,8 +524,7 @@ def validar_contraseña(contraseña):
             respuesta="Usa como minimo\n4 caracteres"
         else:
             respuesta="Se excedio el limite de\n caracteres(8)" 
-    return respuesta
-    	
+    return respuesta 	
 def procesar_respuesta(mayusculas,minusculas,num,caracteres):
     """esta funcion no te da una devolucion super larga con todo lo que te equivocaste, si te equivocaste en varios campos te da una devolucion parcial """    
 
@@ -509,23 +540,25 @@ def procesar_respuesta(mayusculas,minusculas,num,caracteres):
     return devolucion
 
 
+#funciones que se usan en varias ventanas
+def mostrar_contraseña_confirmacion(control,contraseña,Text_contraseña_por_defecto,confirmar=99,Texto_pordecto_confirmar=99):
+    #Esta funcion muestra o oculta el contenido de los entrys de contraseña o el de confirmacion
 
-def mostrar_contraseña_confirmacion(control,contraseña,Texto_pordecto_contra,confirmar=99,Texto_pordecto_confirmar=99):
-    if contraseña.get()!=Texto_pordecto_contra:
+    if contraseña.get()!=Text_contraseña_por_defecto:
 
         if control.get()==0:
             contraseña.config(show="*")
         else: 
             contraseña.config(show="")
-    if confirmar!=99 and Texto_pordecto_contra!=99:
+    
+    if confirmar!=99 and Text_contraseña_por_defecto!=99:
         if  confirmar.get()!=Texto_pordecto_confirmar:
             if control.get()==0:
                 confirmar.config(show="*")
             else: 
                 confirmar.config(show="")
-
 def entry_focus_in(entry,text_pordefecto,variable_para_usar,text_pordefecto_top,advertencia,control_contraseña=99):
-    #Esta funcion es para borrar los textos por defecto de los entry y mostrarlo arriva del entry
+    #Esta funcion es para borrar los textos por defecto de los entry y los muestra arriva del entry
 
     advertencia.config(state=NORMAL)
     advertencia.delete(1.0,END)
@@ -537,11 +570,21 @@ def entry_focus_in(entry,text_pordefecto,variable_para_usar,text_pordefecto_top,
 
     if control_contraseña==0:
         entry.config(show="*")
-
 def entry_focus_out(entry,text_pordefecto,text_pordefecto_top):
-    #Esta funcion es para volver a poner los textos por defecto en los entry, si dejo vacio el espacio
+    #Esta funcion es para volver a poner los textos por defecto en los entry, si el usuario dejo vacio el espacio
     if entry.get()=="":
         entry.config(textvariable=text_pordefecto,show="")
         text_pordefecto_top.config(foreground=COLOR)
+def leer_archivo(archivo):
+        linea = archivo.readline()
+        if linea:
+            devolver = linea.rstrip("\n").split(",")
+        else:
+            devolver = "","","","",0
+        return devolver
+def cancelar_ventana(Raiz_ventana):
+    respuesta=messagebox.askyesno("TP Grupal - Grupo: ESPADACHINES ","¨¿Esta seguro que desea cancelar?")
+    if respuesta:
+        Raiz_ventana.destroy()
 
 Ventana_inicio_sesion()
