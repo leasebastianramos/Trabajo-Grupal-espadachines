@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+
 import doctest
 
 COLOR = "#482b6b"   
@@ -71,52 +72,72 @@ def Ventana_inicio_sesion():
     advertencia.place(x=80,y=250)
 
 
-    Button(frame_iniciar_sesion,text="¿Olvidaste tu contraseña?",font= (FUENTE[0],10,UNDERLINE),background=COLOR,foreground= COLOR_FUENTE,bd=0, command= lambda:abrir_recuperar(entry_usuario,advertencia,ft_usuario,ft_contraeña)).place(x=85,y=310)
+    Button(frame_iniciar_sesion,text="¿Olvidaste tu contraseña?",font= (FUENTE[0],10,UNDERLINE),background=COLOR,foreground= COLOR_FUENTE,bd=0, command= lambda:abrir_recuperar(entry_usuario,advertencia,ft_usuario)).place(x=85,y=310)
 
     Button(frame_iniciar_sesion,text="Iniciar sesion",font=(FUENTE[0],10),anchor=CENTER,padx=40,bg=COLOR_BOTONES,foreground=COLOR_FUENTE,command= lambda:Inicio_sesion(entry_usuario.get(),entry_contraseña.get(),advertencia)) .place(x=80,y=350)
     
     raiz_iniciar_sesion.mainloop()
 def Inicio_sesion(usuario_ingresado,contraseña_ingresada,advertencia):
 #Esta funcion revisa si lo que fue ingresado por el usuario coincide con algun perfil que este registrado
+
+    advertencia.config(state=NORMAL)
+    advertencia.delete(1.0, END)
+
     with open ("Datos_registrados.csv","r") as archivo:
 
         usuario,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
-        if usuario==usuario_ingresado and contraseña==contraseña_ingresada:
-            messagebox.showinfo("Inisiar sesion","iniciando...")
+        intentos=int(intentos)
+        if usuario==usuario_ingresado:
+            if intentos<3:
+                if contraseña==contraseña_ingresada:
+                    messagebox.showinfo("Inisiar sesion","iniciando...")
+            else:
+                advertencia.insert(END,"El usuario esta bloqueado")
 
         while usuario!=usuario_ingresado and usuario:
-
             usuario,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
-            if usuario==usuario_ingresado and contraseña==contraseña_ingresada:
-                messagebox.showinfo("Inisiar sesion","iniciando...")
+            intentos=int(intentos)
+            if usuario==usuario_ingresado:
+                if intentos<3:
+                    if contraseña==contraseña_ingresada:
+                        messagebox.showinfo("Inisiar sesion","iniciando...")
+                else:
+                    advertencia.insert(END,"El usuario esta bloqueado")
 
-        if usuario=="" or contraseña!=contraseña_ingresada:
-            advertencia.config(state=NORMAL)
-            advertencia.delete(1.0, END)
+        if usuario=="" or contraseña!=contraseña_ingresada and intentos<3:
+            
             advertencia.insert(END,"El usuario o la contraseña\nson invalidos")
-            advertencia.config(state=DISABLED)
-
+        advertencia.config(state=DISABLED)
 
 #ventana recuperar contraseña
-def abrir_recuperar(usuario_ingresado,advertencia_usuario,ft_usuario,ft_contraeña):
+def abrir_recuperar(usuario_ingresado,advertencia_usuario,ft_usuario):
+    advertencia_usuario.config(state=NORMAL)
+    advertencia_usuario.delete(1.0, END)
+    
     with open ("Datos_registrados.csv","r") as archivo:
         usuario_registrado,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
+        intentos=int(intentos)
         if usuario_registrado==usuario_ingresado.get() and usuario_ingresado.get()!="":
+            if intentos<3:
+                recuperar_contraseña(ft_usuario,usuario_ingresado.get(),pregunta,respuesta,contraseña,intentos)
+            else:
+                advertencia_usuario.insert(END,"El usuario esta bloqueado")
 
-            recuperar_contraseña(ft_usuario,ft_contraeña,usuario_ingresado.get())
         while usuario_registrado!=usuario_ingresado.get() and usuario_registrado:
 
             usuario_registrado,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
+            intentos=int(intentos)
             if usuario_registrado==usuario_ingresado.get() and usuario_ingresado.get()!="":
-                recuperar_contraseña(ft_usuario,ft_contraeña,usuario_ingresado.get(),pregunta,respuesta,contraseña,intentos)                
+                if intentos<3:
+                    recuperar_contraseña(ft_usuario,usuario_ingresado.get(),pregunta,respuesta,contraseña,intentos)
+                else:
+                    advertencia_usuario.insert(END,"El usuario esta bloqueado")
 
-        advertencia_usuario.config(state=NORMAL)
-        advertencia_usuario.delete(1.0, END)
         if usuario_registrado=="":
-            advertencia_usuario.insert(END,"Usuario no registrado")
+            advertencia_usuario.insert(END,"Ingrese un usuario registrado")
 
-        advertencia_usuario.config(state=DISABLED)
-def recuperar_contraseña(ft_usuario,ft_contraeña,usuario,pregunta,respuesta,contraseña,intentos):
+    advertencia_usuario.config(state=DISABLED)
+def recuperar_contraseña(ft_usuario,usuario,pregunta,respuesta,contraseña,intentos):
 
     raiz_recuperar_contraseña= Toplevel()
 
@@ -157,24 +178,41 @@ def recuperar_contraseña(ft_usuario,ft_contraeña,usuario,pregunta,respuesta,co
     Button(frame_recuperar_contraseña,text="Recuperar",font=(FUENTE[0],10),anchor=CENTER,bg=COLOR_BOTONES,foreground="white",padx=20,command=lambda:recuperar(entry_pregunta_de_seguridad.get(),respuesta,contraseña,Num_intentos,raiz_recuperar_contraseña,usuario)).place(x=60,y=350)
 
     Button(frame_recuperar_contraseña,text="Cancelar",font=(FUENTE[0],10),anchor=CENTER,bg=COLOR_BOTONES,foreground="white",padx=20,command=lambda:cancelar_ventana(raiz_recuperar_contraseña)).place(x=180,y=350)
-
 def recuperar(Respuesta_ingresada,respuesta,contraseña,Num_intentos,ventana_recuperar,nombre_usuario):
     if Respuesta_ingresada!="":
         if Respuesta_ingresada==respuesta:
             ventana_recuperar.destroy()
             Num_intentos.set(0)
-            actualizar_archivo(Num_intentos,nombre_usuario)
+            actualizar_archivo(Num_intentos.get(),nombre_usuario)
             messagebox.showinfo("Recuperar contraseña",f"Tu contraseña es {contraseña}")
         else:
             Num_intentos.set(Num_intentos.get()+1)
             actualizar_archivo(Num_intentos.get(),nombre_usuario)
             if Num_intentos.get()>2:
+                ventana_recuperar.destroy()
                 messagebox.showwarning("Respuesta incorrecta",f"Se llego al limite de 3 intentos\nEl usuario a sido bloqueado")
             else:
                 messagebox.showwarning("Respuesta incorrecta",f"tiene un limite de 3 intentos\nIntentos de recuperar contraseña:{Num_intentos.get()}")
+def actualizar_archivo(intentos_actualizados,usuario):
+    archivo_actualizado=open("Borrador_datos.csv","a")
+    with open("Datos_registrados.csv","r") as Datos_registrados:
 
-def actualizar_archivo(intentos,usuario):
-    ""
+        for linea in Datos_registrados:
+            usuario_registrado,contraseña_registrada,pregunta,respuesta,intentos_registrados = linea.rstrip("\n").split(",")
+            if usuario_registrado==usuario:
+                intentos_registrados=intentos_actualizados
+
+            salvar_datos(archivo_actualizado,usuario_registrado,contraseña_registrada,pregunta,respuesta,intentos_registrados)
+    archivo_actualizado.close()
+
+    archivo_actualizado=open("Borrador_datos.csv","r")
+    with open("Datos_registrados.csv","w") as Datos_registrados:        
+        for linea in archivo_actualizado:
+            Datos_registrados.writelines(linea)
+    archivo_actualizado.close()
+
+    with open("Borrador_datos.csv","w") as Datos_para_borrar:        
+        Datos_para_borrar.write("")
 
 #Ventana registrar usuario
 def registrar_usuario(ft_usuario,ft_contraeña):
@@ -300,7 +338,7 @@ def registrar_usuario(ft_usuario,ft_contraeña):
                     ,"k/d/a de tu ultima partida"
                     ,"Instagram de tu novia"]
     
-    recuperar_contraseña=OptionMenu(frame_registrar_usuario,Pregunta,*list_preguntas,command=lambda x:activar_entry(entry_recuperar))
+    recuperar_contraseña=OptionMenu(frame_registrar_usuario,Pregunta,*list_preguntas,command=lambda x:entry_recuperar.config(state=NORMAL))
     recuperar_contraseña.config(width=27)
     recuperar_contraseña.place(x=310,y=90)
     
@@ -329,8 +367,6 @@ def ocultar_info(text):
     text.config(state=NORMAL)
     text.delete(1.0, END)
     text.config(state=DISABLED)
-def activar_entry(entry):
-        entry.config(state=NORMAL)
 
 def verificar_datos(usuario_ingresado,usuario_aprobado,contraseña_ingresada,contraseña_aprobada,confirmar,confirmar_aprobado,advertencia_usuario,advertencia_contraseña,advertencia_confirmar,pregunta_seguridad,entry_recuperar,advertencia_pregunta_seguridad,raiz_registrar_usuario): 
 
@@ -351,9 +387,10 @@ def verificar_datos(usuario_ingresado,usuario_aprobado,contraseña_ingresada,con
     advertencia_pregunta_seguridad.config(state=DISABLED)
 
     #si cumplen todas las condiciones guardo los datos
-    if contraseña_aprobada and usuario_aprobado and pregunta_seguridad!="Pregunta de seguridad" and entry_recuperar.get()!="": 
-        if confirmar_aprobado:
-            guardar_datos(usuario_ingresado.get(),contraseña_ingresada.get(),pregunta_seguridad.get(),entry_recuperar.get())
+    if contraseña_aprobada and confirmar_aprobado and usuario_aprobado and pregunta_seguridad!="Pregunta de seguridad" and entry_recuperar.get()!="": 
+            with open("Datos_registrados.csv","a") as archivo:
+                salvar_datos(archivo,usuario_ingresado.get(),contraseña_ingresada.get(),pregunta_seguridad.get(),entry_recuperar.get())
+
             raiz_registrar_usuario.destroy()
             messagebox.showinfo("Registrar usuario","Usuario registrado exitosamente")      
 def procesar_usuario_ingresado(usuario_ingresado,advertencia_usuario,usuario_aprobado):
@@ -426,11 +463,6 @@ def procesar_confirmar_ingresado(confirmar,advertencia_confirmar,contraseña_ing
     advertencia_confirmar.config(state=DISABLED)
 
     return confirmar_aprobado.get()
-
-def guardar_datos(Id_usuario,clave_usuario,id_pregunta,respuesta_recuperacion,intentos=0):
-    with open("Datos_registrados.csv","a") as archivo:
-        linea="{},{},{},{},{}\n".format(Id_usuario, clave_usuario, id_pregunta,respuesta_recuperacion,intentos)
-        archivo.write(linea)
 
 def validar_usuario(usuario):
     #la variable usuario debe ser un str, devuelve una advertencia para mostrar al usuario o True en caso de estar validada
@@ -539,7 +571,6 @@ def procesar_respuesta(mayusculas,minusculas,num,caracteres):
         
     return devolucion
 
-
 #funciones que se usan en varias ventanas
 def mostrar_contraseña_confirmacion(control,contraseña,Text_contraseña_por_defecto,confirmar=99,Texto_pordecto_confirmar=99):
     #Esta funcion muestra o oculta el contenido de los entrys de contraseña o el de confirmacion
@@ -586,5 +617,8 @@ def cancelar_ventana(Raiz_ventana):
     respuesta=messagebox.askyesno("TP Grupal - Grupo: ESPADACHINES ","¨¿Esta seguro que desea cancelar?")
     if respuesta:
         Raiz_ventana.destroy()
+def salvar_datos(archivo,usuario,contraseña,pregunta,respuesta,intentos=0):
+    linea = "{},{},{},{},{}\n".format(usuario,contraseña,pregunta,respuesta,intentos)
+    archivo.write(linea)
 
 Ventana_inicio_sesion()
