@@ -9,7 +9,7 @@ FUENTE=("Calibri",14)
 COLOR_FUENTE="white"
 COLOR_BOTONES="#8f89af"
 
-#Se tiene que agregar una excepción para que la primera vez cuando no esta creado el archivo csv de Datos_registrados lo cree
+
 
 #ventana presentacion
 def ventana1_programa():
@@ -66,6 +66,7 @@ def abrir_ventana2(ventana):
 
 
 #ventanas de la parte 2 obj 1
+
 #ventana iniciar sesion
 def Ventana_inicio_sesion():
     raiz_iniciar_sesion=Tk()
@@ -682,14 +683,15 @@ def cancelar_ventana(Raiz_ventana):
         Raiz_ventana.destroy()
 
 
-#ventana2 parte 1 objetivo 3 
+
+#Cifrado/desifrado y envio de mensajes parte 1 objetivo 3 
 def Cifrar_enviar_mensajes(usuario_actual):
     """
     Funcion que crea la segunda ventana luego de apretar continuar.
     Responsable= Iñaki
     """
     Raiz_ventana = Tk()
-    Raiz_ventana.title("Cifrado y envio de mensajes")
+    Raiz_ventana.title("Cifrado y envio de mensajes-usuario: {}".format(usuario_actual))
     Raiz_ventana.resizable(0, 0)
     Raiz_ventana.config(bg=COLOR)
     Raiz_ventana.iconbitmap("espadachines.ico")
@@ -802,7 +804,6 @@ def abrir_archivo(entrada_mensaje):
         contenido = archivo.read()
         entrada_mensaje.delete(1.0, END)
         entrada_mensaje.insert(END, contenido)
-
 #procesar mensaje
 def validar_clave(clave):
     """
@@ -833,7 +834,7 @@ def Activar_desactivar_entry(entry,label,variable_radiobuttons):
             entry.config(state=NORMAL)
             label.config(state=NORMAL)
 def destapar_entry_preguntas(entry,pregunta):
-        if pregunta.get()=="Enviar a todos los usuario":
+        if pregunta.get()=="Enviar a todos los usuario" or pregunta.get()=="No enviar":
             entry.delete(0,END)
             entry.config(state=DISABLED)
         else:
@@ -863,27 +864,35 @@ def verificar_cifrado(variable_radiobuttons, entrada_mensaje, clave,descifrar=1)
 
     else:
         messagebox.showwarning("Seleccione Opción", "Debe seleccionar una de las opciones para realizar el cifrado.")
-
 #Enviar mensaje
 def Enviar_mensaje(opcion_elejida,destinatario,remitente,v_radiobutton,clave_cesar,mensaje):
     list_usuarios=usuario_registrados()  
-    if opcion_elejida!="No enviar":
+    if opcion_elejida!="No enviar" and mensaje!="":
         if opcion_elejida=="Enviar a todos los usuario":
             respuesta=messagebox.askyesno("Grupo: ESPADACHINES ","¨¿Seguro que desea enviar\n   el mensaje a todos?")
             if respuesta:
                 destinatario="Todos"
                 if v_radiobutton==1:
-                    cifrado="C"+clave_cesar
-                    mensaje_cifrado=cifrado_cesar(mensaje,int(clave_cesar))
-                    mensaje_cifrado_sin_saltos=mensaje_cifrado.replace("\n","///////")
-                    guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado_sin_saltos)
+                    if validar_clave(clave_cesar):
+                        cifrado="C"+clave_cesar
+                        mensaje_cifrado=cifrado_cesar(mensaje,int(clave_cesar))
 
-                    messagebox.showinfo("Grupo: ESPADACHINES","Mensaje enviado.")
+                        mensaje_cifrado_sin_saltos=mensaje_cifrado.replace("\n","///////")
+                        mensaje_cifrado_sin_comas=mensaje_cifrado_sin_saltos.replace(",","$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+
+                        guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado_sin_comas)
+                        messagebox.showinfo("Grupo: ESPADACHINES","Mensaje enviado.")
+                    else:
+                        messagebox.showwarning("Seleccione Opción", "Debe ingresar una clave si desea usar cesar como cifrado de seguridad.")
+
                 elif v_radiobutton==2:
                     cifrado="A"
                     mensaje_cifrado=cifrado_atbash(mensaje)
+
                     mensaje_cifrado_sin_saltos=mensaje_cifrado.replace("\n","///////")
-                    guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado_sin_saltos)
+                    mensaje_cifrado_sin_comas=mensaje_cifrado_sin_saltos.replace(",","$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+
+                    guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado_sin_comas)
 
                     messagebox.showinfo("Grupo: ESPADACHINES","Mensaje enviado.")
                 else:
@@ -897,16 +906,22 @@ def Enviar_mensaje(opcion_elejida,destinatario,remitente,v_radiobutton,clave_ces
                     if v_radiobutton==1:
                         cifrado="C"+str(clave_cesar)
                         mensaje_cifrado=cifrado_cesar(mensaje, int(clave_cesar))
+
                         mensaje_cifrado_sin_saltos=mensaje_cifrado.replace("\n","///////")
-                        guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado_sin_saltos)
+                        mensaje_cifrado_sin_comas=mensaje_cifrado_sin_saltos.replace(",","$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+
+                        guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado_sin_comas)
 
                         messagebox.showinfo("Grupo: ESPADACHINES","Mensaje enviado.")
 
                     elif v_radiobutton==2:
                         cifrado="A"
                         mensaje_cifrado=cifrado_atbash(mensaje)
+
                         mensaje_cifrado_sin_saltos=mensaje_cifrado.replace("\n","///////")
-                        guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado_sin_saltos)
+                        mensaje_cifrado_sin_comas=mensaje_cifrado_sin_saltos.replace(",","$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+
+                        guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado_sin_comas)
                         messagebox.showinfo("Grupo: ESPADACHINES","Mensaje enviado.")
 
                     else:
@@ -948,7 +963,6 @@ def Limpiar_entradas(Mensaje, Clave,radiobutton_v,Usuario_enviar,Pregunta):
     Usuario_enviar.config(state=NORMAL)
     Usuario_enviar.delete(0, END)
     Usuario_enviar.config(state=DISABLED)
-
 #Mostrar mensajes
 def mensajes_recibidos(usuario_actual,pantalla_mensajes_recibidos,mostrar_total_mensajes):
     DESTINATARIO=0
@@ -963,7 +977,9 @@ def mensajes_recibidos(usuario_actual,pantalla_mensajes_recibidos,mostrar_total_
             linea=linea.rstrip("\n").split(",")
 
             if linea[DESTINATARIO]==usuario_actual:
-                mensaje_para_desifrar=linea[MENSAJE_CIFRADO].replace("///////","\n"+"\t")
+                mensaje_con_saltos=linea[MENSAJE_CIFRADO].replace("///////","\n"+"\t")
+                mensaje_para_desifrar=mensaje_con_saltos.replace("$$$$$$$$$$$$$$$$$$$$$$$$$$$$",",")
+
                 if linea[CIFRADO][0]=="A":
                     mensaje_desifrado=cifrado_atbash(mensaje_para_desifrar)
                 else:
@@ -972,7 +988,8 @@ def mensajes_recibidos(usuario_actual,pantalla_mensajes_recibidos,mostrar_total_
                 mensajes_para_usuario.append((linea[REMITENTE],mensaje_desifrado))
 
             elif linea[DESTINATARIO]=="Todos":
-                mensaje_para_desifrar=linea[MENSAJE_CIFRADO].replace("///////","\n"+"\t")
+                mensaje_con_saltos=linea[MENSAJE_CIFRADO].replace("///////","\n"+"\t")
+                mensaje_para_desifrar=mensaje_con_saltos.replace("$$$$$$$$$$$$$$$$$$$$$$$$$$$$",",")
                 if linea[CIFRADO][0]=="A":
                     mensaje_desifrado=cifrado_atbash(mensaje_para_desifrar)
                 else:
@@ -1005,14 +1022,11 @@ def mensajes_recibidos(usuario_actual,pantalla_mensajes_recibidos,mostrar_total_
         pantalla_mensajes_recibidos.insert(END,separador)
     
     pantalla_mensajes_recibidos.config(state=DISABLED)
-
-
 def cerrar_sesion(raiz):
     respuesta=messagebox.askyesno("Grupo: ESPADACHINES ","¨¿Seguro que desea cerrar sesion?")
     if respuesta:
         raiz.destroy()
         Ventana_inicio_sesion()
-
 #funciones de cifrado
 def cifrado_cesar(cadena, clave):
     """
@@ -1104,11 +1118,8 @@ def cifrado_atbash(cadena):
     return mensaje_cifrado
 
 
-
-
 #main del programa
 def main():
     ventana1_programa()
-
 
 main()
