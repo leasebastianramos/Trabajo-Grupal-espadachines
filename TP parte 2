@@ -416,7 +416,7 @@ def mostrar_info(text,text_por_defecto):
     if text_por_defecto.get()=="Nombre de usuario":
         text.config(state=NORMAL,foreground="White")
         text.delete(1.0,END)
-        text.insert(END,"Para crear el usuario:\n*debe tener entre (5-15) caracteres \n*solo se permite letras(a-z),numeros\n(0-9) o “_” “-” “.” """)
+        text.insert(END,"Para crear el usuario:\n*debe tener entre (5-15) caracteres \n*solo se permite letras(a-z),numeros\n(0-9) o “_” “-” “.” ")
         text.config(state=DISABLED)
     if text_por_defecto.get()=="Contraseña":
         text.config(state=NORMAL,foreground="White")
