@@ -137,12 +137,10 @@ def Ventana_inicio_sesion():
     raiz_iniciar_sesion.mainloop()
 def Inicio_sesion(usuario_ingresado,contraseña_ingresada,advertencia,raiz):
 #Esta funcion revisa si lo que fue ingresado por el usuario coincide con algun perfil que este registrado
-
     advertencia.config(state=NORMAL)
     advertencia.delete(1.0, END)
 
     with open ("Datos_registrados.csv","r") as archivo:
-
         usuario,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
         intentos=int(intentos)
         if usuario==usuario_ingresado:
@@ -252,7 +250,7 @@ def recuperar(Respuesta_ingresada,respuesta,contraseña,Num_intentos,ventana_rec
                 ventana_recuperar.destroy()
                 messagebox.showwarning("Respuesta incorrecta",f"Se llego al limite de 3 intentos\nEl usuario a sido bloqueado")
             else:
-                messagebox.showwarning("Respuesta incorrecta",f"tiene un limite de 3 intentos\nIntentos de recuperar contraseña:{Num_intentos.get()}")
+                messagebox.showwarning("Respuesta incorrecta",f"Tiene un limite de 3 intentos\nIntentos de recuperar contraseña:{Num_intentos.get()}")
 def actualizar_archivo(intentos_actualizados,usuario):
     archivo_actualizado=open("Borrador_datos.csv","a")
     with open("Datos_registrados.csv","r") as Datos_registrados:
@@ -399,7 +397,7 @@ def registrar_usuario(ft_usuario,ft_contraeña):
                     ,"Pelicula o libro favorito"
                     ,"Comida favorita"]
     
-    recuperar_contraseña=OptionMenu(frame_registrar_usuario,Pregunta,*list_preguntas,command=lambda x:activar_entry(entry_recuperar))
+    recuperar_contraseña=OptionMenu(frame_registrar_usuario,Pregunta,*list_preguntas,command=lambda x:entry_recuperar.config(state=NORMAL))
     recuperar_contraseña.config(width=27)
     recuperar_contraseña.place(x=310,y=90)
     
@@ -428,11 +426,11 @@ def ocultar_info(text):
     text.config(state=NORMAL)
     text.delete(1.0, END)
     text.config(state=DISABLED)
-def activar_entry(entry):
-        entry.config(state=NORMAL)
+
 
 def verificar_datos(usuario_ingresado,usuario_aprobado,contraseña_ingresada,contraseña_aprobada,confirmar,confirmar_aprobado,advertencia_usuario,advertencia_contraseña,advertencia_confirmar,pregunta_seguridad,entry_recuperar,advertencia_pregunta_seguridad,raiz_registrar_usuario): 
 
+    #veo si ya aprobre los datos con el evento de ENTER
     if not usuario_aprobado.get():
         usuario_aprobado=procesar_usuario_ingresado(usuario_ingresado,advertencia_usuario,usuario_aprobado)
     if not contraseña_aprobada.get():
@@ -466,25 +464,20 @@ def procesar_usuario_ingresado(usuario_ingresado,advertencia_usuario,usuario_apr
 
     usuario_aprobado.set(False)
 
+    list_usuarios=usuario_registrados()
+
     if usuario_ingresado.get()!="Nombre de usuario":
         if usuario_validado!=True:   
             usuario_ingresado.config(foreground="Black")
             advertencia_usuario.insert(END,usuario_validado) #Si el usuario no es correcto le muestro la devolucion
         else:
             #me fijo si el usuario ya estaba registrado
-            with open ("Datos_registrados.csv","r") as archivo:
-                usuario,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
-                if usuario==usuario_ingresado.get():
+            if usuario_ingresado.get() in list_usuarios:
                     advertencia_usuario.insert(END,"Usuario ya ingresado\nPruebe con otro")
                     advertencia_usuario.config(state=DISABLED)
-                while usuario!=usuario_ingresado.get() and usuario:
-                    usuario,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
-                    if usuario==usuario_ingresado.get():
-                        advertencia_usuario.insert(END,"Usuario ya ingresado\nPruebe con otro")
-                        advertencia_usuario.config(state=DISABLED)
-                if usuario=="" and contraseña=="":
-                    usuario_aprobado.set(True)
-                    usuario_ingresado.config(foreground="green")
+            else:
+                usuario_aprobado.set(True)
+                usuario_ingresado.config(foreground="green")
     else:
         usuario_ingresado.config(foreground="Black")
         advertencia_usuario.insert(END,"Ingrese un nombre de \nusuario")
@@ -683,7 +676,6 @@ def cancelar_ventana(Raiz_ventana):
         Raiz_ventana.destroy()
 
 
-
 #Cifrado/desifrado y envio de mensajes parte 1 objetivo 3 
 def Cifrar_enviar_mensajes(usuario_actual):
     """
@@ -697,7 +689,7 @@ def Cifrar_enviar_mensajes(usuario_actual):
     Raiz_ventana.iconbitmap("espadachines.ico")
     
     #frame donde se ingresa el mensaje
-    frame_mensaje = Frame(Raiz_ventana, bg=COLOR, relief=SUNKEN, bd=10)
+    frame_mensaje = Frame(Raiz_ventana, bg=COLOR,bd=8,relief= RIDGE)
     frame_mensaje.grid(row=0, column=0, sticky="nsew")
     texto_mensaje = Label(frame_mensaje, text="Mensaje",foreground= COLOR_FUENTE,bg=COLOR,font= FUENTE)
     texto_mensaje.grid(row=0, column=0, padx=5, pady=5,sticky='w')
@@ -707,12 +699,12 @@ def Cifrar_enviar_mensajes(usuario_actual):
     scroll.grid(row=1, column=2, padx=5, pady=5,sticky="nsew")
     entrada_mensaje.config(yscrollcommand=scroll.set)
 
-    boton_abrir = Button(frame_mensaje, text="Abrir Archivo '.txt'",font= FUENTE,relief=RAISED, bd=5, command=lambda:abrir_archivo(entrada_mensaje))
+    boton_abrir = Button(frame_mensaje, text="Abrir Archivo '.txt'",font=(FUENTE[0],10),anchor=CENTER,padx=40,bg=COLOR_BOTONES,foreground=COLOR_FUENTE, command=lambda:abrir_archivo(entrada_mensaje))
     boton_abrir.grid(row=0, column=1)
     
  
     #Frame donde el usuario tiene opciones de personalizacion del programa
-    frame_modos = Frame(Raiz_ventana, bg=COLOR,relief=SUNKEN,bd=10)
+    frame_modos = Frame(Raiz_ventana, bg=COLOR,bd=8,relief= RIDGE)
     frame_modos.grid(row=0, column=1, sticky="nsew")
     texto_modo = Label(frame_modos, text="Tipo de cifrado",foreground= COLOR_FUENTE,bg=COLOR,font= FUENTE)
     texto_modo.grid(row=0, column=0, columnspan=2, padx=5, pady=5)  
@@ -721,13 +713,11 @@ def Cifrar_enviar_mensajes(usuario_actual):
     variable_radiobuttons = IntVar()
     variable_radiobuttons.set(-1)
 
-    caja_cesar = Radiobutton(frame_modos,font= FUENTE, variable=variable_radiobuttons, value=1, bg=COLOR,command=lambda:Activar_desactivar_entry(entrada_clave,texto_clave,variable_radiobuttons))
+    caja_cesar = Radiobutton(frame_modos,text="Cesar",font= FUENTE, variable=variable_radiobuttons,selectcolor=COLOR,foreground=COLOR_FUENTE, value=1,activebackground=COLOR,activeforeground=COLOR_FUENTE, bg=COLOR,command=lambda:Activar_desactivar_entry(entrada_clave,texto_clave,variable_radiobuttons))
     caja_cesar.grid(row=4, column=1)
-    Label(frame_modos,text="Cesar",font= FUENTE,foreground= COLOR_FUENTE,bg=COLOR).place(x=190,y=43)
 
-    caja_atbash = Radiobutton(frame_modos,font= FUENTE, variable=variable_radiobuttons, value=2, bg=COLOR,command=lambda:Activar_desactivar_entry(entrada_clave,texto_clave,variable_radiobuttons))
+    caja_atbash = Radiobutton(frame_modos,text="Atbash",font= FUENTE, variable=variable_radiobuttons,selectcolor=COLOR,foreground=COLOR_FUENTE, value=2,activebackground=COLOR,activeforeground=COLOR_FUENTE, bg=COLOR,command=lambda:Activar_desactivar_entry(entrada_clave,texto_clave,variable_radiobuttons))
     caja_atbash.grid(row=4, column=0)
-    Label(frame_modos,text="Atbash",font= FUENTE,foreground= COLOR_FUENTE,bg=COLOR).place(x=75,y=43)
 
     texto_clave = Label(frame_modos, text="Clave: ",foreground= COLOR_FUENTE,font= FUENTE,bg=COLOR,state=DISABLED)
     texto_clave.grid(row=4, column=2, padx=5, pady=5)
@@ -768,7 +758,7 @@ def Cifrar_enviar_mensajes(usuario_actual):
 
     #frame donde se ven los mensajes recibidos
 
-    Frame_mensajes_recibidos = Frame(Raiz_ventana, bg=COLOR,relief=SUNKEN,bd=10)
+    Frame_mensajes_recibidos = Frame(Raiz_ventana, bg=COLOR,bd=8,relief= RIDGE)
     Frame_mensajes_recibidos.grid(row=1, column=0,columnspan=2,sticky="nsew")
     texto_mensaje = Label(Frame_mensajes_recibidos, text="Mensajes recibidos  ",foreground= COLOR_FUENTE,bg=COLOR,font= FUENTE)
     texto_mensaje.grid(row=0, column=0,columnspan=2, padx=5, pady=5, sticky='w')
@@ -873,30 +863,13 @@ def Enviar_mensaje(opcion_elejida,destinatario,remitente,v_radiobutton,clave_ces
             if respuesta:
                 destinatario="Todos"
                 if v_radiobutton==1:
-                    if validar_clave(clave_cesar):
-                        cifrado="C"+clave_cesar
-                        mensaje_cifrado=cifrado_cesar(mensaje,int(clave_cesar))
-
-                        mensaje_cifrado_sin_saltos=mensaje_cifrado.replace("\n","///////")
-                        mensaje_cifrado_sin_comas=mensaje_cifrado_sin_saltos.replace(",","$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-
-                        guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado_sin_comas)
-                        messagebox.showinfo("Grupo: ESPADACHINES","Mensaje enviado.")
-                    else:
-                        messagebox.showwarning("Seleccione Opción", "Debe ingresar una clave si desea usar cesar como cifrado de seguridad.")
+                    enviar_cesar(clave_cesar,mensaje,destinatario,remitente)
 
                 elif v_radiobutton==2:
-                    cifrado="A"
-                    mensaje_cifrado=cifrado_atbash(mensaje)
-
-                    mensaje_cifrado_sin_saltos=mensaje_cifrado.replace("\n","///////")
-                    mensaje_cifrado_sin_comas=mensaje_cifrado_sin_saltos.replace(",","$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-
-                    guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado_sin_comas)
-
-                    messagebox.showinfo("Grupo: ESPADACHINES","Mensaje enviado.")
+                    enviar_atbash(mensaje,destinatario,remitente)
                 else:
                     messagebox.showwarning("Seleccione Opción", "Debe seleccionar una de las opciones para realizar el cifrado de seguridad.")
+
         else:
             if  destinatario not in list_usuarios:
                 messagebox.showwarning("Usuario invalido", "Destinatario Inexistente.")
@@ -904,39 +877,54 @@ def Enviar_mensaje(opcion_elejida,destinatario,remitente,v_radiobutton,clave_ces
                 respuesta=messagebox.askyesno("Grupo: ESPADACHINES ","¨¿Seguro que desea enviar\n   el mensaje a {}?".format(destinatario))
                 if respuesta:
                     if v_radiobutton==1:
-                        cifrado="C"+str(clave_cesar)
-                        mensaje_cifrado=cifrado_cesar(mensaje, int(clave_cesar))
-
-                        mensaje_cifrado_sin_saltos=mensaje_cifrado.replace("\n","///////")
-                        mensaje_cifrado_sin_comas=mensaje_cifrado_sin_saltos.replace(",","$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-
-                        guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado_sin_comas)
-
-                        messagebox.showinfo("Grupo: ESPADACHINES","Mensaje enviado.")
+                        enviar_cesar(clave_cesar,mensaje,destinatario,remitente)
 
                     elif v_radiobutton==2:
-                        cifrado="A"
-                        mensaje_cifrado=cifrado_atbash(mensaje)
-
-                        mensaje_cifrado_sin_saltos=mensaje_cifrado.replace("\n","///////")
-                        mensaje_cifrado_sin_comas=mensaje_cifrado_sin_saltos.replace(",","$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-
-                        guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado_sin_comas)
-                        messagebox.showinfo("Grupo: ESPADACHINES","Mensaje enviado.")
-
+                        enviar_atbash(mensaje,destinatario,remitente)
                     else:
                         messagebox.showwarning("Seleccione Opción", "Debe seleccionar una de las opciones para realizar el cifrado de seguridad.")
+def enviar_cesar(clave_cesar,mensaje,destinatario,remitente):
+    if validar_clave(clave_cesar):
+        cifrado="C"+clave_cesar
+        mensaje_cifrado=cifrado_cesar(mensaje,int(clave_cesar))
+
+        mensaje_cifrado_sin_saltos=mensaje_cifrado.replace("\n","///////")
+        mensaje_cifrado_sin_comas=mensaje_cifrado_sin_saltos.replace(",","$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+
+        guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado_sin_comas)
+        messagebox.showinfo("Grupo: ESPADACHINES","Mensaje enviado.")
+    else:
+        messagebox.showwarning("Seleccione Opción", "Debe ingresar una clave valida si desea usar cesar como cifrado de seguridad.")
+def enviar_atbash(mensaje,destinatario,remitente):
+    cifrado="A"
+    mensaje_cifrado=cifrado_atbash(mensaje)
+
+    mensaje_cifrado_sin_saltos=mensaje_cifrado.replace("\n","///////")
+    mensaje_cifrado_sin_comas=mensaje_cifrado_sin_saltos.replace(",","$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+
+    guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado_sin_comas)
+
+    messagebox.showinfo("Grupo: ESPADACHINES","Mensaje enviado.")
+
 def usuario_registrados():
     USUARIO=0
     lista_usuarios=[]
-    with open ("Datos_registrados.csv","r") as archivo:
+
+    try:
+        archivo=open("Datos_registrados.csv","r")
+    except:
+        archivo=open("Datos_registrados.csv","a+")
+       
+    
+    datos=leer_archivo(archivo)
+    if datos[USUARIO]!="":
+        lista_usuarios.append(datos[USUARIO])
+    while datos[USUARIO]:
         datos=leer_archivo(archivo)
         if datos[USUARIO]!="":
             lista_usuarios.append(datos[USUARIO])
-        while datos[USUARIO]:
-            datos=leer_archivo(archivo)
-            if datos[USUARIO]!="":
-                lista_usuarios.append(datos[USUARIO])
+    archivo.close()
+
     return lista_usuarios
 def guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado):
     with open("mensajes.csv","a") as archivo:
@@ -997,6 +985,9 @@ def mensajes_recibidos(usuario_actual,pantalla_mensajes_recibidos,mostrar_total_
 
                 mensajes_para_todos.append((linea[REMITENTE],mensaje_desifrado))
 
+    mostrar_mensajes_recividos(mensajes_para_todos,mensajes_para_usuario,mostrar_total_mensajes,pantalla_mensajes_recibidos)
+
+def mostrar_mensajes_recividos(mensajes_para_todos,mensajes_para_usuario,mostrar_total_mensajes,pantalla_mensajes_recibidos):
     Total_de_mensajes=len(mensajes_para_todos)+len(mensajes_para_usuario)
     mostrar_total_mensajes.set("Total de mensajes: {}".format(Total_de_mensajes))
 
@@ -1006,20 +997,25 @@ def mensajes_recibidos(usuario_actual,pantalla_mensajes_recibidos,mostrar_total_
     mensajes_para_todos.reverse()
     mensajes_para_usuario.reverse()
     separador=("\n"+"="*105+"\n")
-
+    separador2=("\n"+"-"*105+"\n")
     
+    pantalla_mensajes_recibidos.insert(END,"\tMensajes para todos")
+    pantalla_mensajes_recibidos.insert(END,separador)
+
     for mensaje in mensajes_para_todos:
         formato="#{}:\n\t{}".format(mensaje[0],mensaje[1])
 
         pantalla_mensajes_recibidos.insert(END,formato)
-        pantalla_mensajes_recibidos.insert(END,separador)
+        pantalla_mensajes_recibidos.insert(END,separador2)
 
-    
+    pantalla_mensajes_recibidos.insert(END,"\n"+"\tMensajes particulares")
+    pantalla_mensajes_recibidos.insert(END,separador)
+
     for mensaje in mensajes_para_usuario:
         formato="{}:\n\t{}".format(mensaje[0],mensaje[1])
 
         pantalla_mensajes_recibidos.insert(END,formato)
-        pantalla_mensajes_recibidos.insert(END,separador)
+        pantalla_mensajes_recibidos.insert(END,separador2)
     
     pantalla_mensajes_recibidos.config(state=DISABLED)
 def cerrar_sesion(raiz):
