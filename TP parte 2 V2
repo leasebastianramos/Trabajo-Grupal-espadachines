@@ -1,0 +1,1139 @@
+from tkinter import *
+from tkinter import messagebox
+from tkinter import filedialog
+import doctest
+
+#los necesito para saber cuando cambia el archivo
+import time
+import os
+import threading
+
+#constantes
+COLOR = "#482b6b"   
+FUENTE=("Calibri",14) 
+COLOR_FUENTE="white"
+COLOR_BOTONES="#8f89af"
+
+#ventana presentacion
+def ventana1_programa():
+    """
+    Esta funcion se encarga de crear la primera ventana.
+    Responsable=Sebastian
+    """
+    ventana= Tk()
+    ventana.title("TP Grupal Parte 1 - Grupo: ESPADACHINES ")
+    ventana.resizable(0,0)
+    ventana.iconbitmap("espadachines.ico")
+    miFrame=Frame(ventana, width=600, height=350)
+    miFrame.pack()
+    miFrame.config(bg=COLOR)
+    miImagen=PhotoImage(file="mensajeoculto.png")
+    posicionimagen=Label(miFrame,image=miImagen)
+    posicionimagen.place(x=380,y=210)
+    texto1era_ventana(miFrame,ventana)
+    ventana.mainloop()
+def texto1era_ventana(miFrame,ventana):
+    """
+    Esta funcion muestra los mensajes de la primera ventana que ve el usuario y tiene el boton para despues de apretarlo
+    lo desplaze a la segunda ventana.
+    Responsable=Sebastian
+    """
+    texto_bienvenida= Label(miFrame, text="Bienvenido a la aplicación de mensajes secretos del grupo Espadachines.",foreground= COLOR_FUENTE,bg=COLOR,font= (FUENTE))
+    texto_bienvenida.place(x=25, y=50)
+    texto_para_cerrar= Label(miFrame, text="Para continuar presione continuar, de lo contrario cierre la ventana.",foreground= COLOR_FUENTE,bg=COLOR,font= (FUENTE))
+    texto_para_cerrar.place(x=35, y=80)
+    botonEnviar = Button(ventana,text="Continuar",font= FUENTE, relief=RAISED, bd=5, command=lambda:abrir_ventana2(ventana))
+    botonEnviar.place (x=250, y=125)
+    def pasa_botonEnviar(_):
+        botonEnviar["bg"] = "#FFFFFF"
+    def sale_botonEnviar(_):
+        botonEnviar["bg"] = "SystemButtonFace"
+    botonEnviar.bind("<Enter>", pasa_botonEnviar)
+    botonEnviar.bind("<Leave>", sale_botonEnviar)
+
+    texto= Label(miFrame, text="Construido por : Leandro Sebastian Ramos",foreground= COLOR_FUENTE,bg=COLOR,font= (FUENTE))
+    texto.place(x=20, y=200)
+    nombre2= Label(miFrame, text="Juan Martin Diaz",foreground= COLOR_FUENTE,bg=COLOR,font= (FUENTE))
+    nombre2.place(x=150, y=230)
+    nombre3= Label(miFrame, text="Ruth Giselle Duarte Orue",foreground= COLOR_FUENTE,bg=COLOR,font= (FUENTE))
+    nombre3.place(x=150, y=260)
+    nombre4= Label(miFrame, text="Iñaki Vydra",foreground= COLOR_FUENTE,bg=COLOR,font= (FUENTE))
+    nombre4.place(x=150, y=290)
+def abrir_ventana2(ventana):
+    """
+    Esta funcion hace que se cierre la primera ventana luego de apretar continuar.
+    Responsable=Juan Martin
+    """
+    ventana.destroy()
+    Ventana_inicio_sesion()
+
+#ventanas de la parte 2 obj 1
+
+#ventana iniciar sesion
+def Ventana_inicio_sesion():
+    raiz_iniciar_sesion=Tk()
+    raiz_iniciar_sesion.title("Iniciar sesion ")
+    raiz_iniciar_sesion.iconbitmap("espadachines.ico")  
+    raiz_iniciar_sesion.resizable(0,0)
+    frame_iniciar_sesion=Frame(raiz_iniciar_sesion,width=350,height=450)
+    frame_iniciar_sesion.pack()
+    frame_iniciar_sesion.config(bg=COLOR,bd=8,relief= RIDGE)
+
+
+    Label(frame_iniciar_sesion, text="Iniciar sesión",font= (FUENTE[0],22),foreground= COLOR_FUENTE,bg=COLOR).place(x=85,y=20)
+    
+    Button(frame_iniciar_sesion,text="¿No tenes cuenta? Registrate ",font= (FUENTE[0],12,UNDERLINE),foreground= COLOR_FUENTE,background=COLOR,bd=0,command= lambda:registrar_usuario(ft_usuario,ft_contraeña)).place(x=65,y=60)
+
+
+    #Esto es lo que ve el usuario en el entry si no ingresa nada
+    Text_usuario_por_defecto=StringVar(value="Nombre de usuario")
+    Text_usuario_por_defecto_top=Label(frame_iniciar_sesion,font= (FUENTE[0],12),textvariable=Text_usuario_por_defecto,background=COLOR,foreground=COLOR)
+    Text_usuario_por_defecto_top.place(x=80,y=100)
+
+    #aca quedarian los datos que ponga en usuario
+    variable_usuario=StringVar()
+    entry_usuario=Entry(frame_iniciar_sesion, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Text_usuario_por_defecto)  
+    entry_usuario.place(x=80,y=120)
+
+    #estos son elementos esteticos
+    ft_usuario=PhotoImage(file="usuario.png")
+    Label(frame_iniciar_sesion,image=ft_usuario,bg=COLOR).place(x=50,y=120)
+
+    entry_usuario.bind("<FocusIn>",lambda X : entry_focus_in(entry_usuario,Text_usuario_por_defecto,variable_usuario,Text_usuario_por_defecto_top,advertencia)) 
+    entry_usuario.bind("<FocusOut>",lambda X : entry_focus_out(entry_usuario,Text_usuario_por_defecto,Text_usuario_por_defecto_top))
+
+
+    #Esto es lo que ve el usuario en el entry si no ingresa nada
+    Text_contraseña_por_defecto=StringVar(value="Contraseña") 
+    Text_contraseña_por_defecto_top=Label(frame_iniciar_sesion,font= (FUENTE[0],12),textvariable=Text_contraseña_por_defecto,background=COLOR,foreground=COLOR)
+    Text_contraseña_por_defecto_top.place(x=80,y=160)
+
+    #aca quedarian los datos que ponga en contraseña
+    variable_contraseña=StringVar()
+    entry_contraseña=Entry(frame_iniciar_sesion, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Text_contraseña_por_defecto)
+    entry_contraseña.place(x=80,y=180)
+    
+    #estos son elementos esteticos  
+    ft_contraeña=PhotoImage(file="candado.png")
+    Label(frame_iniciar_sesion,image=ft_contraeña,bg=COLOR).place(x=50,y=180)
+    entry_contraseña.bind("<FocusIn>",lambda X : entry_focus_in(entry_contraseña,Text_contraseña_por_defecto,variable_contraseña,Text_contraseña_por_defecto_top,advertencia,control.get())) 
+    entry_contraseña.bind("<FocusOut>",lambda X : entry_focus_out(entry_contraseña,Text_contraseña_por_defecto,Text_contraseña_por_defecto_top))
+
+    
+    #Para mostrar/ocultar la contraseña ingresada
+    Label(text="Mostrar",foreground=COLOR_FUENTE,bg=COLOR).place(x=115,y=225)
+
+    control=IntVar()
+    mostrar=Checkbutton(frame_iniciar_sesion,variable=control,background=COLOR,command=lambda:mostrar_contraseña_confirmacion(control,entry_contraseña,Text_contraseña_por_defecto.get())) 
+    mostrar.place(x=80,y=215)
+
+    #aca se le avisa al usuario si hubo algun problema al iniciar
+    advertencia=Text(frame_iniciar_sesion,font=(FUENTE[0],10),background=COLOR,foreground=COLOR_FUENTE,width=25, height=2,bd=0,state=DISABLED)   
+    advertencia.place(x=80,y=250)
+
+
+    Button(frame_iniciar_sesion,text="¿Olvidaste tu contraseña?",font= (FUENTE[0],10,UNDERLINE),background=COLOR,foreground= COLOR_FUENTE,bd=0, command= lambda:abrir_recuperar(entry_usuario,advertencia,ft_usuario)).place(x=85,y=310)
+
+    Button(frame_iniciar_sesion,text="Iniciar sesion",font=(FUENTE[0],10),anchor=CENTER,padx=40,bg=COLOR_BOTONES,foreground=COLOR_FUENTE,command= lambda:Inicio_sesion(entry_usuario.get(),entry_contraseña.get(),advertencia,raiz_iniciar_sesion)) .place(x=80,y=350)
+    
+    raiz_iniciar_sesion.mainloop()
+def Inicio_sesion(usuario_ingresado,contraseña_ingresada,advertencia,raiz):
+#Esta funcion revisa si lo que fue ingresado por el usuario coincide con algun perfil que este registrado
+    advertencia.config(state=NORMAL)
+    advertencia.delete(1.0, END)
+
+    with open ("Datos_registrados.csv","r") as archivo:
+        usuario,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
+        intentos=int(intentos)
+        if usuario==usuario_ingresado:
+            if intentos<3:
+                if contraseña==contraseña_ingresada:
+                    raiz.destroy()
+                    Cifrar_enviar_mensajes(usuario)
+            else:
+                advertencia.insert(END,"El usuario esta bloqueado")
+
+        while usuario!=usuario_ingresado and usuario:
+            usuario,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
+            intentos=int(intentos)
+            if usuario==usuario_ingresado:
+                if intentos<3:
+                    if contraseña==contraseña_ingresada:
+                        raiz.destroy()
+                        Cifrar_enviar_mensajes(usuario)
+                else:
+                    advertencia.insert(END,"El usuario esta bloqueado")
+
+        if usuario=="" or contraseña!=contraseña_ingresada and intentos<3:
+            
+            advertencia.insert(END,"El usuario o la contraseña\nson invalidos")
+        advertencia.config(state=DISABLED)
+
+#ventana recuperar contraseña
+def abrir_recuperar(usuario_ingresado,advertencia_usuario,ft_usuario):
+    advertencia_usuario.config(state=NORMAL)
+    advertencia_usuario.delete(1.0, END)
+    
+    with open ("Datos_registrados.csv","r") as archivo:
+        usuario_registrado,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
+        intentos=int(intentos)
+        if usuario_registrado==usuario_ingresado.get() and usuario_ingresado.get()!="":
+            if intentos<3:
+                recuperar_contraseña(ft_usuario,usuario_ingresado.get(),pregunta,respuesta,contraseña,intentos)
+            else:
+                advertencia_usuario.insert(END,"El usuario esta bloqueado")
+
+        while usuario_registrado!=usuario_ingresado.get() and usuario_registrado:
+
+            usuario_registrado,contraseña,pregunta,respuesta,intentos=leer_archivo(archivo)
+            intentos=int(intentos)
+            if usuario_registrado==usuario_ingresado.get() and usuario_ingresado.get()!="":
+                if intentos<3:
+                    recuperar_contraseña(ft_usuario,usuario_ingresado.get(),pregunta,respuesta,contraseña,intentos)
+                else:
+                    advertencia_usuario.insert(END,"El usuario esta bloqueado")
+
+        if usuario_registrado=="":
+            advertencia_usuario.insert(END,"Ingrese un usuario registrado")
+
+    advertencia_usuario.config(state=DISABLED)
+def recuperar_contraseña(ft_usuario,usuario,pregunta,respuesta,contraseña,intentos):
+
+    raiz_recuperar_contraseña= Toplevel()
+
+    #Para congelar la otra ventana hasta que se cierre
+    raiz_recuperar_contraseña.grab_set()
+    raiz_recuperar_contraseña.focus_set()
+
+    raiz_recuperar_contraseña.title("Recuperar contraseña")
+    raiz_recuperar_contraseña.iconbitmap("espadachines.ico")
+    raiz_recuperar_contraseña.resizable(0,0)
+
+    frame_recuperar_contraseña=Frame(raiz_recuperar_contraseña,width=350, height=450)
+    frame_recuperar_contraseña.pack()
+    frame_recuperar_contraseña.config(bg=COLOR,bd=8,relief= RIDGE)
+
+    Label(frame_recuperar_contraseña, text="Recuperar contraseña",font= (FUENTE[0],20),foreground= COLOR_FUENTE,bg=COLOR).place(x=50,y=20)
+    
+    Label(frame_recuperar_contraseña,font= (FUENTE[0],12),text="Nombre de usuario",background=COLOR,foreground=COLOR_FUENTE).place(x=80,y=100)
+    Label(frame_recuperar_contraseña,image=ft_usuario,bg=COLOR).place(x=50,y=120)
+    text_usuario=StringVar(value=usuario)
+    entry_usuario=Entry(frame_recuperar_contraseña, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=text_usuario,state=DISABLED)
+    entry_usuario.place(x=80,y=120)
+
+    
+
+    Label(frame_recuperar_contraseña,font=(FUENTE[0],12),background=COLOR,foreground=COLOR_FUENTE,width=20,text="Pregunta de seguridad:").place(x=70,y=180)
+    text_pregunta=StringVar(value=pregunta)
+    pregunta_de_seguridad=Label(frame_recuperar_contraseña,font= (FUENTE[0],12),textvariable=text_pregunta,background=COLOR,foreground=COLOR_FUENTE)
+    pregunta_de_seguridad.place(x=75,y=210)
+
+
+    entry_pregunta_de_seguridad=Entry(frame_recuperar_contraseña, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20)
+    entry_pregunta_de_seguridad.place(x=80,y=240)
+    entry_pregunta_de_seguridad.bind("<Return>",lambda x: recuperar(entry_pregunta_de_seguridad.get(),respuesta,contraseña,Num_intentos,raiz_recuperar_contraseña,usuario))
+
+    Num_intentos=IntVar(value=intentos)
+
+    Button(frame_recuperar_contraseña,text="Recuperar",font=(FUENTE[0],10),anchor=CENTER,bg=COLOR_BOTONES,foreground="white",padx=20,command=lambda:recuperar(entry_pregunta_de_seguridad.get(),respuesta,contraseña,Num_intentos,raiz_recuperar_contraseña,usuario)).place(x=60,y=350)
+
+    Button(frame_recuperar_contraseña,text="Cancelar",font=(FUENTE[0],10),anchor=CENTER,bg=COLOR_BOTONES,foreground="white",padx=20,command=lambda:cancelar_ventana(raiz_recuperar_contraseña)).place(x=180,y=350)
+def recuperar(Respuesta_ingresada,respuesta,contraseña,Num_intentos,ventana_recuperar,nombre_usuario):
+    if Respuesta_ingresada!="":
+        if Respuesta_ingresada==respuesta:
+            ventana_recuperar.destroy()
+            Num_intentos.set(0)
+            actualizar_archivo(Num_intentos.get(),nombre_usuario)
+            messagebox.showinfo("Recuperar contraseña",f"Tu contraseña es {contraseña}")
+        else:
+            Num_intentos.set(Num_intentos.get()+1)
+            actualizar_archivo(Num_intentos.get(),nombre_usuario)
+            if Num_intentos.get()>2:
+                ventana_recuperar.destroy()
+                messagebox.showwarning("Respuesta incorrecta",f"Se llego al limite de 3 intentos\nEl usuario a sido bloqueado")
+            else:
+                messagebox.showwarning("Respuesta incorrecta",f"Tiene un limite de 3 intentos\nIntentos de recuperar contraseña:{Num_intentos.get()}")
+def actualizar_archivo(intentos_actualizados,usuario):
+    archivo_actualizado=open("Borrador_datos.csv","a")
+    with open("Datos_registrados.csv","r") as Datos_registrados:
+
+        for linea in Datos_registrados:
+            usuario_registrado,contraseña_registrada,pregunta,respuesta,intentos_registrados = linea.rstrip("\n").split(",")
+            if usuario_registrado==usuario:
+                intentos_registrados=intentos_actualizados
+
+            linea = "{},{},{},{},{}\n".format(usuario_registrado,contraseña_registrada,pregunta,respuesta,intentos_registrados)
+            archivo_actualizado.write(linea)
+
+    archivo_actualizado.close()
+
+    archivo_actualizado=open("Borrador_datos.csv","r")
+    with open("Datos_registrados.csv","w") as Datos_registrados:        
+        for linea in archivo_actualizado:
+            Datos_registrados.writelines(linea)
+    archivo_actualizado.close()
+
+    with open("Borrador_datos.csv","w") as Datos_para_borrar:        
+        Datos_para_borrar.write("")
+
+#Ventana registrar usuario
+def registrar_usuario(ft_usuario,ft_contraeña):
+
+    raiz_registrar_usuario= Toplevel()
+    
+    raiz_registrar_usuario.grab_set()
+    raiz_registrar_usuario.focus_set()
+
+    raiz_registrar_usuario.title("Registrar usuario")
+    raiz_registrar_usuario.iconbitmap("espadachines.ico")
+    raiz_registrar_usuario.resizable(0,0)
+
+    frame_registrar_usuario=Frame(raiz_registrar_usuario,width=575, height=450)
+    frame_registrar_usuario.pack()
+    frame_registrar_usuario.config(bg=COLOR,bd=8,relief= RIDGE)
+
+    Label(frame_registrar_usuario, text="Registrar usuario",foreground= COLOR_FUENTE,font= (FUENTE[0],22),bg=COLOR).place(x=160,y=20)
+    
+    #aca le muestro al usuario informacion de los requerimientos de el usuario y la contraseña
+    info=Text(frame_registrar_usuario,font= (FUENTE[0],10),width=30, height=8, bd=0,background=COLOR,foreground= COLOR_FUENTE,state=DISABLED)
+    info.place(x=310,y=180)
+
+    #Esto es lo que ve el usuario en el entry si no ingresa nada
+    Text_usuario_por_defecto=StringVar(value="Nombre de usuario")
+    Text_usuario_por_defecto_top=Label(frame_registrar_usuario,font= (FUENTE[0],12),textvariable=Text_usuario_por_defecto,background=COLOR,foreground=COLOR)
+    Text_usuario_por_defecto_top.place(x=60,y=70)
+
+    #aca quedan los datos que ingrese en usuario
+    variable_usuario=StringVar()
+    entry_usuario=Entry(frame_registrar_usuario, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Text_usuario_por_defecto)  
+    entry_usuario.place(x=60,y=90)
+
+    #son eventos para mostrar la info de los requerimientos del usuario
+    entry_usuario.bind("<Enter>", lambda x:mostrar_info(info,Text_usuario_por_defecto) )
+    entry_usuario.bind("<Leave>",lambda x:ocultar_info(info))
+
+    #estos son elementos esteticos  
+    Label(frame_registrar_usuario,image=ft_usuario,bg=COLOR).place(x=30,y=90)
+    entry_usuario.bind("<FocusIn>",lambda X : entry_focus_in(entry_usuario,Text_usuario_por_defecto,variable_usuario,Text_usuario_por_defecto_top,advertencia_usuario)) 
+    entry_usuario.bind("<FocusOut>",lambda X : entry_focus_out(entry_usuario,Text_usuario_por_defecto,Text_usuario_por_defecto_top))
+
+    #aca le muestro al usuario si no cumplio con algun requerimiento del usuario
+    advertencia_usuario=Text(frame_registrar_usuario,font=(FUENTE[0],10),background=COLOR,foreground=COLOR_FUENTE,width=20, height=2,bd=0,state=DISABLED)   
+    advertencia_usuario.place(x=60,y=120)
+
+    #si el usuario da ENTER le valido el usuario
+
+    bool_usuario_validado=BooleanVar(value=False)
+
+    entry_usuario.bind("<Return>",lambda x:procesar_usuario_ingresado(entry_usuario,advertencia_usuario,bool_usuario_validado))
+
+
+    #Esto es lo que ve el usuario en el entry si no ingresa nada
+    Text_contraseña_por_defecto=StringVar(value="Contraseña") 
+    Text_contraseña_por_defecto_top=Label(frame_registrar_usuario,font= (FUENTE[0],12),textvariable=Text_contraseña_por_defecto,background=COLOR,foreground=COLOR)
+    Text_contraseña_por_defecto_top.place(x=60,y=160)
+
+    #aca quedan los datos que ingrese en usuario
+    variable_contraseña=StringVar()
+    entry_contraseña=Entry(frame_registrar_usuario, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Text_contraseña_por_defecto)
+    entry_contraseña.place(x=60,y=180)
+
+    #son eventos para mostrar la info de los requerimientos de la contraseña
+    entry_contraseña.bind("<Enter>", lambda x:mostrar_info(info,Text_contraseña_por_defecto) )
+    entry_contraseña.bind("<Leave>",lambda x:ocultar_info(info))
+
+    #estos son elementos esteticos  
+    Label(frame_registrar_usuario,image=ft_contraeña,bg=COLOR).place(x=30,y=180)
+    entry_contraseña.bind("<FocusIn>",lambda X : entry_focus_in(entry_contraseña,Text_contraseña_por_defecto,variable_contraseña,Text_contraseña_por_defecto_top,advertencia_contraseña,control.get())) 
+    entry_contraseña.bind("<FocusOut>",lambda X : entry_focus_out(entry_contraseña,Text_contraseña_por_defecto,Text_contraseña_por_defecto_top))
+
+    #aca le muestro al usuario si no cumplio con algun requerimiento de la contraseña
+    advertencia_contraseña=Text(frame_registrar_usuario,font=(FUENTE[0],10),foreground=COLOR_FUENTE,background=COLOR,width=20, height=2,bd=0,state=DISABLED)   
+    advertencia_contraseña.place(x=60,y=210)
+
+    bool_contraseña_validada=BooleanVar(value=False)
+
+    entry_contraseña.bind("<Return>",lambda x:procesar_contraseña_ingresada(entry_contraseña,advertencia_contraseña,bool_contraseña_validada))
+
+
+    #Para mostrar/ocultar lo que el usuario ingrese en contraseña y confirmar 
+    control=IntVar()
+    Label(frame_registrar_usuario,text="Mostrar",foreground=COLOR_FUENTE,bg=COLOR).place(x=255,y=182)
+    mostrar=Checkbutton(frame_registrar_usuario,variable=control,background=COLOR,command=lambda:mostrar_contraseña_confirmacion(control,entry_contraseña,Text_contraseña_por_defecto.get(),confirmar_contraseña,Texto_confirmar_pordecto.get())) 
+    mostrar.place(x=230,y=180)
+
+    #Esto es lo que ve el usuario en el entry si no ingresa nada   
+    Texto_confirmar_pordecto=StringVar(value="Confirmar")
+    Texto_confirmar_pordecto_top=Label(frame_registrar_usuario,font= (FUENTE[0],12),textvariable=Texto_confirmar_pordecto,background=COLOR,foreground=COLOR)
+    Texto_confirmar_pordecto_top.place(x=60,y=250)
+
+    #aca quedan los datos que ingrese en usuario
+    variable_r_confirmar=StringVar()
+    confirmar_contraseña=Entry(frame_registrar_usuario, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=20,textvariable=Texto_confirmar_pordecto) 
+    confirmar_contraseña.place(x=60,y=270)
+
+    #estos son elementos esteticos  
+    confirmar_contraseña.bind("<FocusIn>",lambda X : entry_focus_in(confirmar_contraseña,Texto_confirmar_pordecto,variable_r_confirmar,Texto_confirmar_pordecto_top,advertencia_confirmar,control.get())) 
+    confirmar_contraseña.bind("<FocusOut>",lambda X : entry_focus_out(confirmar_contraseña,Texto_confirmar_pordecto,Texto_confirmar_pordecto_top))
+
+    #aca le muestro si no coinciden la contraseña y el confirmar o si no ingresa nada
+    advertencia_confirmar=Text(frame_registrar_usuario,font=(FUENTE[0],10),background=COLOR,foreground=COLOR_FUENTE,width=20,height=1,bd=0,state=DISABLED)
+    advertencia_confirmar.place(x=60,y=300)
+
+    bool_confirmar_validada=BooleanVar(value=False)
+
+    confirmar_contraseña.bind("<Return>",lambda x:procesar_confirmar_ingresado(confirmar_contraseña,advertencia_confirmar,entry_contraseña,bool_confirmar_validada))
+
+    Label(frame_registrar_usuario,font= (FUENTE[0],12),text="Pregunta de seguridad",background=COLOR,foreground=COLOR_FUENTE).place(x=335,y=60)
+    #estas son las opciones del menu desplegable
+    Pregunta=StringVar()
+    Pregunta.set("Elija una opción:")
+    list_preguntas=["Apellido de su abuela materna"
+                    ,"Nombre de tu mascota"
+                    ,"Nombre de tu mejor amigo/a"
+                    ,"Cantante preferido"
+                    ,"Ciudad preferida"
+                    ,"Nombre de tu primer novio/a"
+                    ,"Cual es tu deporte favorito"
+                    ,"Fecha del cumple de tu mascota"
+                    ,"Pelicula o libro favorito"
+                    ,"Comida favorita"]
+    
+    recuperar_contraseña=OptionMenu(frame_registrar_usuario,Pregunta,*list_preguntas,command=lambda x:entry_recuperar.config(state=NORMAL))
+    recuperar_contraseña.config(width=27)
+    recuperar_contraseña.place(x=310,y=90)
+    
+    #aca queda la respuesta del usuario a la pregunta
+    entry_recuperar=Entry(frame_registrar_usuario, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=25,state=DISABLED)
+    entry_recuperar.place(x=310,y=140)
+    
+
+    #este boton procesa los datos que ingreso el usuario
+    
+    Button(frame_registrar_usuario,text="Registrar",font=(FUENTE[0],10),anchor=CENTER,bg=COLOR_BOTONES,foreground="white",padx=55,command= lambda:verificar_datos(entry_usuario,bool_usuario_validado,entry_contraseña,bool_contraseña_validada,confirmar_contraseña,bool_confirmar_validada,advertencia_usuario,advertencia_contraseña,advertencia_confirmar,Pregunta,entry_recuperar,info,raiz_registrar_usuario)).place(x=80,y=350)
+
+    Button(frame_registrar_usuario,text="Cancelar",font=(FUENTE[0],10),anchor=CENTER,bg=COLOR_BOTONES,foreground="white",padx=55,command=lambda:cancelar_ventana(raiz_registrar_usuario)).place(x=290,y=350)
+def mostrar_info(text,text_por_defecto):
+    #esta funcion muestra informacion para crear el usuario y la contraseña
+    if text_por_defecto.get()=="Nombre de usuario":
+        text.config(state=NORMAL,foreground="White")
+        text.delete(1.0,END)
+        text.insert(END,"Para crear el usuario:\n*debe tener entre (5-15) caracteres \n*solo se permite letras(a-z),numeros\n(0-9) o “_” “-” “.” ")
+        text.config(state=DISABLED)
+    if text_por_defecto.get()=="Contraseña":
+        text.config(state=NORMAL,foreground="White")
+        text.delete(1.0,END)
+        text.insert(END,"La contraseña debe tener:\n*entre (4-8) caracteres\n*una mayuscula\n*una minuscula \n*un numero\n*algunos de estos caracteres \n“_” “-” “#” “*”")
+def ocultar_info(text):
+    text.config(state=NORMAL)
+    text.delete(1.0, END)
+    text.config(state=DISABLED)
+
+
+def verificar_datos(usuario_ingresado,usuario_aprobado,contraseña_ingresada,contraseña_aprobada,confirmar,confirmar_aprobado,advertencia_usuario,advertencia_contraseña,advertencia_confirmar,pregunta_seguridad,entry_recuperar,advertencia_pregunta_seguridad,raiz_registrar_usuario): 
+
+    #veo si ya aprobre los datos con el evento de ENTER
+    if not usuario_aprobado.get():
+        usuario_aprobado=procesar_usuario_ingresado(usuario_ingresado,advertencia_usuario,usuario_aprobado)
+    if not contraseña_aprobada.get():
+        contraseña_aprobada=procesar_contraseña_ingresada(contraseña_ingresada,advertencia_contraseña,contraseña_aprobada)
+    if not confirmar_aprobado.get():
+        confirmar_aprobado=procesar_confirmar_ingresado(confirmar,advertencia_confirmar,contraseña_ingresada,confirmar_aprobado)
+    
+    #chequeo si eligio una pregunta de suguridad y veo si respondio
+    advertencia_pregunta_seguridad.config(state=NORMAL,foreground=COLOR_FUENTE)
+    advertencia_pregunta_seguridad.delete(1.0, END)
+    if pregunta_seguridad.get()=="Elija una opción:":
+        advertencia_pregunta_seguridad.insert(END,"No elijio una opción")
+    if pregunta_seguridad.get()!="Elija una opción:" and entry_recuperar.get()=="":
+        advertencia_pregunta_seguridad.insert(END,"Respuesta invalida")
+    advertencia_pregunta_seguridad.config(state=DISABLED)
+
+    #si cumplen todas las condiciones guardo los datos
+    if contraseña_aprobada and confirmar_aprobado and usuario_aprobado and pregunta_seguridad!="Pregunta de seguridad" and entry_recuperar.get()!="": 
+            with open("Datos_registrados.csv","a") as archivo:
+                linea = "{},{},{},{},0\n".format(usuario_ingresado.get(),contraseña_ingresada.get(),pregunta_seguridad.get(),entry_recuperar.get())
+                archivo.write(linea)
+
+            raiz_registrar_usuario.destroy()
+            messagebox.showinfo("Registrar usuario","Usuario registrado exitosamente")      
+def procesar_usuario_ingresado(usuario_ingresado,advertencia_usuario,usuario_aprobado):
+    
+    usuario_validado=validar_usuario(usuario_ingresado.get()) #usuario_validado es TRUE o una devolucion para el usuario
+
+    advertencia_usuario.config(state=NORMAL)
+    advertencia_usuario.delete(1.0, END)
+
+    usuario_aprobado.set(False)
+
+    list_usuarios=usuario_registrados()
+
+    if usuario_ingresado.get()!="Nombre de usuario":
+        if usuario_validado!=True:   
+            usuario_ingresado.config(foreground="Black")
+            advertencia_usuario.insert(END,usuario_validado) #Si el usuario no es correcto le muestro la devolucion
+        else:
+            #me fijo si el usuario ya estaba registrado
+            if usuario_ingresado.get() in list_usuarios:
+                    advertencia_usuario.insert(END,"Usuario ya ingresado\nPruebe con otro")
+                    advertencia_usuario.config(state=DISABLED)
+            else:
+                usuario_aprobado.set(True)
+                usuario_ingresado.config(foreground="green")
+    else:
+        usuario_ingresado.config(foreground="Black")
+        advertencia_usuario.insert(END,"Ingrese un nombre de \nusuario")
+
+    advertencia_usuario.config(state=DISABLED)
+
+    return usuario_aprobado.get()
+def procesar_contraseña_ingresada(contraseña_ingresada,advertencia_contraseña,contraseña_aprobada):
+    
+    contraseña_validada=validar_contraseña(contraseña_ingresada.get())
+    contraseña_aprobada.set(False)
+
+    advertencia_contraseña.config(state=NORMAL)
+    advertencia_contraseña.delete(1.0, END)
+    if contraseña_ingresada.get()!="Contraseña":
+        if contraseña_validada!=True:
+            contraseña_ingresada.config(foreground="Black")
+            advertencia_contraseña.insert(END,contraseña_validada)
+        else:
+            contraseña_aprobada.set(True)
+            contraseña_ingresada.config(foreground="green")
+    else:
+        contraseña_ingresada.config(foreground="Black")
+        advertencia_contraseña.insert(END,"Ingrese una contraseña")
+    advertencia_contraseña.config(state=DISABLED)
+
+    return contraseña_aprobada.get()
+def procesar_confirmar_ingresado(confirmar,advertencia_confirmar,contraseña_ingresada,confirmar_aprobado):
+    confirmar_aprobado.set(False)
+
+    advertencia_confirmar.config(state=NORMAL)
+    advertencia_confirmar.delete(1.0, END)
+    if contraseña_ingresada.get()!="Contraseña":
+        if contraseña_ingresada.get()!=confirmar.get():
+            confirmar.config(foreground="Black")
+            advertencia_confirmar.insert(END,"No coinciden")
+        else:
+            confirmar_aprobado.set(True)
+            confirmar.config(foreground="green")
+    advertencia_confirmar.config(state=DISABLED)
+
+    return confirmar_aprobado.get()
+
+def validar_usuario(usuario):
+    #la variable usuario debe ser un str, devuelve una advertencia para mostrar al usuario o True en caso de estar validada
+    """
+    >>> validar_usuario("Lucas97*###")
+    'Solo se permiten letras(a-z),numeros(0-9) y “_” “-” “.” '
+    >>> validar_usuario("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    'Se excedio el limite de caracteres(15)'
+    >>> validar_usuario("Iña")
+    'Usa como minimo 5 caracteres'
+    >>> validar_usuario("Iñaki12345")
+    True
+    >>> validar_usuario("Iñaki")
+    True
+    """
+    caracteres_validos=["_","-","."]
+    if 5<=len(usuario)<=15:
+        i=0
+        respuesta=True
+
+        while respuesta==True and i<len(usuario):  #le puse respuesta==True por que quiero que pare cuando respuesta es un texto 
+            if not usuario[i].isalnum() and not usuario[i] in caracteres_validos:
+                respuesta="Usa letras(a-z),numeros\n(0-9) o “_” “-” “.” " 
+
+            else:
+                i+=1
+    else:
+        if 15<len(usuario):
+            respuesta="Se excedio el limite de\ncaracteres(15)"   
+        else:
+            respuesta="Usa como minimo 5\n caracteres"
+
+    return respuesta
+def validar_contraseña(contraseña):
+    #la variable contraseña debe ser un str, devuelve una advertencia para mostrar al usuario o True en caso de estar validada
+    """
+    >>> validar_contraseña("a1")
+    'Usa como minimo 4 caracteres'
+    >>> validar_contraseña("aaaaaaaaaaaaaaa")
+    'Se excedio el limite de caracteres(8)'
+    >>> validar_contraseña("aaaa")
+    'No puede haber caracteres repetidos adyacentes'
+    >>> validar_contraseña("abcd")
+    'Debe contener por lo menos una mayuscula'
+    >>> validar_contraseña("ABCD")
+    'Debe contener por lo menos una minuscula'
+    >>> validar_contraseña("Abcd")
+    'Debe contener por lo menos un numero'
+    >>> validar_contraseña("Abcd91")
+    'Debe contener por lo menor uno de estos caracteres “_” “-” “#” “*”'
+    >>> validar_contraseña("Abcd91#")
+    True
+    >>> validar_contraseña("Alg#rit7")
+    True
+    >>> validar_contraseña("Abcd_#99")
+    'No puede haber caracteres repetidos adyacentes'
+    """
+    if 4<=len(contraseña)<=8:
+
+        Caracteres_solicitados=["_","-",".","#","*"]
+
+        mayusculas=False
+        minusculas=False
+        num=False
+        caracteres=False
+
+        respuesta=True
+        i=0
+
+        while respuesta==True and i<len(contraseña):
+
+            if  i <len(contraseña)-1 and contraseña[i]==contraseña[i+1]:
+                respuesta="No uses caracteres\nrepetidos adyacentes"
+
+            elif contraseña[i] in Caracteres_solicitados:
+                caracteres=True
+            elif contraseña[i].isalpha():   
+                if contraseña[i].islower():
+                    minusculas=True
+                else:
+                    mayusculas=True
+            elif contraseña[i].isnumeric():
+                num=True
+            else:
+                respuesta="Alguno de los caracteres\nno fue reconocido"
+            i+=1
+        if respuesta==True and not ( mayusculas and minusculas and num and caracteres):
+            respuesta=procesar_respuesta(mayusculas,minusculas,num,caracteres)
+    else:
+        if len(contraseña)<4:
+            respuesta="Usa como minimo\n4 caracteres"
+        else:
+            respuesta="Se excedio el limite de\n caracteres(8)" 
+    return respuesta 	
+def procesar_respuesta(mayusculas,minusculas,num,caracteres):
+    """esta funcion no te da una devolucion super larga con todo lo que te equivocaste, si te equivocaste en varios campos te da una devolucion parcial """    
+
+    if not mayusculas:
+        devolucion="Debe contener una\n mayuscula"
+    elif not minusculas:
+        devolucion="Debe contener una\n minuscula"
+    elif not num:
+        devolucion="Debe contener un numero"
+    elif not caracteres:
+        devolucion="Debe contener estos\ncaracteres “_” “-” “#” “*”"
+        
+    return devolucion
+
+#funciones que se usan en varias ventanas (obj1 parte 2)
+def mostrar_contraseña_confirmacion(control,contraseña,Text_contraseña_por_defecto,confirmar=99,Texto_pordecto_confirmar=99):
+    #Esta funcion muestra o oculta el contenido de los entrys de contraseña o el de confirmacion
+
+    if contraseña.get()!=Text_contraseña_por_defecto:
+
+        if control.get()==0:
+            contraseña.config(show="*")
+        else: 
+            contraseña.config(show="")
+    
+    if confirmar!=99 and Text_contraseña_por_defecto!=99:
+        if  confirmar.get()!=Texto_pordecto_confirmar:
+            if control.get()==0:
+                confirmar.config(show="*")
+            else: 
+                confirmar.config(show="")
+def entry_focus_in(entry,text_pordefecto,variable_para_usar,text_pordefecto_top,advertencia,control_contraseña=99):
+    #Esta funcion es para borrar los textos por defecto de los entry y los muestra arriva del entry
+
+    advertencia.config(state=NORMAL)
+    advertencia.delete(1.0,END)
+    advertencia.config(state=DISABLED)
+
+    if entry.get()==text_pordefecto.get():
+        entry.config(textvariable=variable_para_usar)
+        text_pordefecto_top.config(foreground="white")
+
+    if control_contraseña==0:
+        entry.config(show="*")
+def entry_focus_out(entry,text_pordefecto,text_pordefecto_top):
+    #Esta funcion es para volver a poner los textos por defecto en los entry, si el usuario dejo vacio el espacio
+    if entry.get()=="":
+        entry.config(textvariable=text_pordefecto,show="")
+        text_pordefecto_top.config(foreground=COLOR)
+def leer_archivo(archivo):
+        linea = archivo.readline()
+        if linea:
+            devolver = linea.rstrip("\n").split(",")
+        else:
+            devolver = "","","","",0
+        return devolver
+def cancelar_ventana(Raiz_ventana):
+    respuesta=messagebox.askyesno("TP Grupal - Grupo: ESPADACHINES ","¨¿Esta seguro que desea cancelar?")
+    if respuesta:
+        Raiz_ventana.destroy()
+
+#Cifrado/desifrado y envio de mensajes parte 1 objetivo 3 
+def Cifrar_enviar_mensajes(usuario_actual):
+    """
+    Funcion que crea la segunda ventana luego de apretar continuar.
+    Responsable= Iñaki
+    """
+    Raiz_ventana = Tk()
+    Raiz_ventana.title("Cifrado y envio de mensajes-usuario: {}".format(usuario_actual))
+    Raiz_ventana.resizable(0, 0)
+    Raiz_ventana.config(bg=COLOR)
+    Raiz_ventana.iconbitmap("espadachines.ico")
+    
+    #frame donde se ingresa el mensaje
+    frame_mensaje = Frame(Raiz_ventana, bg=COLOR,bd=8,relief= RIDGE)
+    frame_mensaje.grid(row=0, column=0, sticky="nsew")
+    texto_mensaje = Label(frame_mensaje, text="Mensaje",foreground= COLOR_FUENTE,bg=COLOR,font= FUENTE)
+    texto_mensaje.grid(row=0, column=0, padx=5, pady=5,sticky='w')
+    entrada_mensaje = Text(frame_mensaje,width=33, height=12, relief=SUNKEN, bd=2)
+    entrada_mensaje.grid(row=1, column=1, padx=5, pady=5)
+    scroll=Scrollbar(frame_mensaje,command=entrada_mensaje.yview)
+    scroll.grid(row=1, column=2, padx=5, pady=5,sticky="nsew")
+    entrada_mensaje.config(yscrollcommand=scroll.set)
+
+    boton_abrir = Button(frame_mensaje, text="Abrir Archivo '.txt'",font=(FUENTE[0],10),anchor=CENTER,padx=40,bg=COLOR_BOTONES,foreground=COLOR_FUENTE, command=lambda:abrir_archivo(entrada_mensaje))
+    boton_abrir.grid(row=0, column=1)
+    
+ 
+    #Frame donde el usuario tiene opciones de personalizacion del programa
+    frame_modos = Frame(Raiz_ventana, bg=COLOR,bd=8,relief= RIDGE)
+    frame_modos.grid(row=0, column=1, sticky="nsew")
+    texto_modo = Label(frame_modos, text="Tipo de cifrado",foreground= COLOR_FUENTE,bg=COLOR,font= FUENTE)
+    texto_modo.grid(row=0, column=0, columnspan=2, padx=5, pady=5)  
+    
+
+    variable_radiobuttons = IntVar()
+    variable_radiobuttons.set(-1)
+
+    caja_cesar = Radiobutton(frame_modos,text="Cesar",font= FUENTE, variable=variable_radiobuttons,selectcolor=COLOR,foreground=COLOR_FUENTE, value=1,activebackground=COLOR,activeforeground=COLOR_FUENTE, bg=COLOR,command=lambda:Activar_desactivar_entry(entrada_clave,texto_clave,variable_radiobuttons))
+    caja_cesar.grid(row=4, column=1)
+
+    caja_atbash = Radiobutton(frame_modos,text="Atbash",font= FUENTE, variable=variable_radiobuttons,selectcolor=COLOR,foreground=COLOR_FUENTE, value=2,activebackground=COLOR,activeforeground=COLOR_FUENTE, bg=COLOR,command=lambda:Activar_desactivar_entry(entrada_clave,texto_clave,variable_radiobuttons))
+    caja_atbash.grid(row=4, column=0)
+
+    texto_clave = Label(frame_modos, text="Clave: ",foreground= COLOR_FUENTE,font= FUENTE,bg=COLOR,state=DISABLED)
+    texto_clave.grid(row=4, column=2, padx=5, pady=5)
+
+    entrada_clave=Entry(frame_modos, relief=SUNKEN, bd=2,state=DISABLED)
+    entrada_clave.grid(row=4, column=3, padx=5, pady=5)
+
+    Label(frame_modos,text="Procesar mensaje",font= FUENTE,foreground= COLOR_FUENTE,bg=COLOR).grid(row=5, column=0, columnspan=2, padx=5, pady=5)
+
+    boton_cifrar = Button(frame_modos,text="Cifrar",font=(FUENTE[0],10),anchor=CENTER,padx=30,bg=COLOR_BOTONES,foreground=COLOR_FUENTE, command= lambda: verificar_cifrado(variable_radiobuttons.get(), entrada_mensaje, entrada_clave.get()))
+    boton_cifrar.grid(row=6, column=0, padx=5, pady=5)
+   
+
+    boton_descifrar = Button(frame_modos,text="Descifrar",font=(FUENTE[0],10),anchor=CENTER,padx=30,bg=COLOR_BOTONES,foreground=COLOR_FUENTE, command= lambda: verificar_cifrado(variable_radiobuttons.get(), entrada_mensaje, entrada_clave.get(),-1))
+    boton_descifrar.grid(row=6, column=1, padx=5, pady=5)
+  
+    Label(frame_modos, text="Enviar mensajes",font= (FUENTE[0],14),foreground= COLOR_FUENTE,bg=COLOR).grid(row=5, column=2, columnspan=2,padx=5, pady=5)
+
+    opcion_elejida=StringVar()
+    opcion_elejida.set("No enviar")
+    Opciones=["Enviar a todos los usuario"
+                    ,"Enviar a un usuario"
+                    ,"No enviar"]
+
+    opciones_envio=OptionMenu(frame_modos,opcion_elejida,*Opciones,command=lambda x:destapar_entry_preguntas(entry_usuario_enviar,opcion_elejida))
+    opciones_envio.config(width=27)
+    opciones_envio.grid(row=6, column=2, columnspan=2,padx=5, pady=5)
+    
+    entry_usuario_enviar=Entry(frame_modos, relief=SUNKEN,font=(FUENTE[0],12), bd=2,width=25,state=DISABLED)
+    entry_usuario_enviar.grid(row=7, column=2, columnspan=2,padx=5, pady=5)
+
+    boton_enviar=Button(frame_modos,text="Enviar",font=(FUENTE[0],10),anchor=CENTER,padx=40,bg=COLOR_BOTONES,foreground=COLOR_FUENTE,command=lambda:Enviar_mensaje(opcion_elejida.get(),entry_usuario_enviar.get(),usuario_actual,variable_radiobuttons.get(),entrada_clave.get(),entrada_mensaje.get("1.0", "end-1c")))
+    boton_enviar.grid(row=8, column=2, columnspan=2,padx=5, pady=5)
+
+    boton_reiniciar = Button(frame_modos, text="Limpiar entadas",font=(FUENTE[0],10),anchor=CENTER,padx=20,bg=COLOR_BOTONES,foreground=COLOR_FUENTE, command=lambda: Limpiar_entradas(entrada_mensaje,entrada_clave,variable_radiobuttons,entry_usuario_enviar,opcion_elejida))
+    boton_reiniciar.grid(row=8, column=0,columnspan=2,padx=5, pady=5)
+
+
+    #frame donde se ven los mensajes recibidos
+
+    Frame_mensajes_recibidos = Frame(Raiz_ventana, bg=COLOR,bd=8,relief= RIDGE)
+    Frame_mensajes_recibidos.grid(row=1, column=0,columnspan=2,sticky="nsew")
+    texto_mensaje = Label(Frame_mensajes_recibidos, text="Mensajes recibidos  ",foreground= COLOR_FUENTE,bg=COLOR,font= FUENTE)
+    texto_mensaje.grid(row=0, column=0,columnspan=2, padx=5, pady=5, sticky='w')
+    
+    pantalla_mensajes_recibidos = Text(Frame_mensajes_recibidos,width=105, height=12, relief=SUNKEN, bd=2, state=DISABLED)
+    pantalla_mensajes_recibidos.grid(row=2, column=1,columnspan=10,padx=5, pady=5)
+    scroll=Scrollbar(Frame_mensajes_recibidos,command=pantalla_mensajes_recibidos.yview)
+    scroll.grid(row=2, column=11, padx=5, pady=5,sticky="nsew")
+    pantalla_mensajes_recibidos.config(yscrollcommand=scroll.set)
+
+    total_mensajes=IntVar(value=0)
+
+    Label(Frame_mensajes_recibidos, textvariable=total_mensajes,foreground= COLOR_FUENTE,font= FUENTE,bg=COLOR).grid(row=3, column=0,columnspan=2, padx=5, pady=5, sticky='w')
+
+    mensajes_recibidos(usuario_actual,pantalla_mensajes_recibidos,total_mensajes)
+    
+    boton_salir = Button(Frame_mensajes_recibidos, text='Cerrar sesion',font=(FUENTE[0],10),anchor=CENTER,padx=40,bg=COLOR_BOTONES,foreground=COLOR_FUENTE, command=lambda:cerrar_sesion(Raiz_ventana))
+    boton_salir.grid(row=3, column=10)
+
+    #en una ventana aparte llamada hilo se llama una funcion que chequea si hubo algun cambio en el archivo
+    hilo = threading.Thread(target=verificar_cambio_archivo, daemon=True,args=(usuario_actual, pantalla_mensajes_recibidos, total_mensajes))
+    hilo.start()
+
+    Raiz_ventana.mainloop()
+
+#funciones cifrar_enviar_mensajes
+def abrir_archivo(entrada_mensaje):
+    """
+    Esta funcion te permite abrir un archivo de texto para usar en el cifrado y la imprime en el texto de entrada
+    Responsable= Iñaki
+    """
+    archivo = filedialog.askopenfile(initialdir="/", title="Seleccionar un archivo de texto", filetypes=(("Archivos de texto", "*.txt"), ("Todos los archivos", "*.*")))
+    if archivo:
+        contenido = archivo.read()
+        entrada_mensaje.delete(1.0, END)
+        entrada_mensaje.insert(END, contenido)
+#procesar mensaje
+def validar_clave(clave):
+    """
+    Esta funcion valida que la clave que el ususario escribió sea un numero y devuelve un valor booleano.
+    Responsable= Juan Martin 
+    >>> validar_clave(''):
+    False
+    >>> validar_clave('a'):
+    False
+    >>> validar_clave('0'):
+    True
+    >>> validar_clave('1'):
+    True
+    >>> validar_clave('-1'):
+    True
+    """
+    try:
+        int(clave)
+        valida = True
+    except ValueError:
+        valida = False
+    return valida
+def Activar_desactivar_entry(entry,label,variable_radiobuttons):
+        if variable_radiobuttons.get()==2:
+            entry.config(state=DISABLED)
+            label.config(state=DISABLED)
+        else:
+            entry.config(state=NORMAL)
+            label.config(state=NORMAL)
+def destapar_entry_preguntas(entry,pregunta):
+        if pregunta.get()=="Enviar a todos los usuario" or pregunta.get()=="No enviar":
+            entry.delete(0,END)
+            entry.config(state=DISABLED)
+        else:
+             entry.config(state=NORMAL)
+def verificar_cifrado(variable_radiobuttons, entrada_mensaje, clave,descifrar=1):
+    """
+    Esta funcion imprime el mensaje segun las opcines de cifrado elegido, en caso de no elgir uno o ingresar una clave invalida muestra un mensaje de advertencia.
+    Responsable= Sebastian
+    """
+    Mensaje=entrada_mensaje.get("1.0", "end-1c")
+
+    if variable_radiobuttons==1:
+        if validar_clave(clave):
+            cifrado=cifrado_cesar(Mensaje, descifrar*int(clave))
+            entrada_mensaje.delete(1.0,END)
+            entrada_mensaje.insert(END,cifrado)
+
+        else:
+            if len(clave)==0:
+                messagebox.showwarning("Clave Inválida", "Debe ingresar una clave para el cifrado César.")
+            else:
+                messagebox.showwarning("Clave Inválida", "La clave debe ser un número entero.")
+    elif variable_radiobuttons==2:
+        cifrado=cifrado_atbash(Mensaje)
+        entrada_mensaje.delete(1.0,END)
+        entrada_mensaje.insert(END,cifrado)
+
+    else:
+        messagebox.showwarning("Seleccione Opción", "Debe seleccionar una de las opciones para realizar el cifrado.")
+#Enviar mensaje
+def Enviar_mensaje(opcion_elejida,destinatario,remitente,v_radiobutton,clave_cesar,mensaje):
+    list_usuarios=usuario_registrados()  
+    if opcion_elejida!="No enviar" and mensaje!="":
+        if opcion_elejida=="Enviar a todos los usuario":
+            respuesta=messagebox.askyesno("Grupo: ESPADACHINES ","¨¿Seguro que desea enviar\n   el mensaje a todos?")
+            if respuesta:
+                destinatario="Todos"
+                if v_radiobutton==1:
+                    enviar_cesar(clave_cesar,mensaje,destinatario,remitente)
+
+                elif v_radiobutton==2:
+                    enviar_atbash(mensaje,destinatario,remitente)
+                else:
+                    messagebox.showwarning("Seleccione Opción", "Debe seleccionar una de las opciones para realizar el cifrado de seguridad.")
+
+        else:
+            if  destinatario not in list_usuarios:
+                messagebox.showwarning("Usuario invalido", "Destinatario Inexistente.")
+            else:
+                respuesta=messagebox.askyesno("Grupo: ESPADACHINES ","¨¿Seguro que desea enviar\n   el mensaje a {}?".format(destinatario))
+                if respuesta:
+                    if v_radiobutton==1:
+                        enviar_cesar(clave_cesar,mensaje,destinatario,remitente)
+
+                    elif v_radiobutton==2:
+                        enviar_atbash(mensaje,destinatario,remitente)
+                    else:
+                        messagebox.showwarning("Seleccione Opción", "Debe seleccionar una de las opciones para realizar el cifrado de seguridad.")
+def enviar_cesar(clave_cesar,mensaje,destinatario,remitente):
+    if validar_clave(clave_cesar):
+        cifrado="C"+clave_cesar
+        mensaje_cifrado=cifrado_cesar(mensaje,int(clave_cesar))
+
+        mensaje_cifrado_sin_saltos=mensaje_cifrado.replace("\n","///////")
+        mensaje_cifrado_sin_comas=mensaje_cifrado_sin_saltos.replace(",","$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+
+        guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado_sin_comas)
+        messagebox.showinfo("Grupo: ESPADACHINES","Mensaje enviado.")
+    else:
+        messagebox.showwarning("Seleccione Opción", "Debe ingresar una clave valida si desea usar cesar como cifrado de seguridad.")
+def enviar_atbash(mensaje,destinatario,remitente):
+    cifrado="A"
+    mensaje_cifrado=cifrado_atbash(mensaje)
+
+    mensaje_cifrado_sin_saltos=mensaje_cifrado.replace("\n","///////")
+    mensaje_cifrado_sin_comas=mensaje_cifrado_sin_saltos.replace(",","$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+
+    guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado_sin_comas)
+
+    messagebox.showinfo("Grupo: ESPADACHINES","Mensaje enviado.")
+
+def usuario_registrados():
+    USUARIO=0
+    lista_usuarios=[]
+
+    try:
+        archivo=open("Datos_registrados.csv","r")
+    except:
+        archivo=open("Datos_registrados.csv","a+")
+       
+    
+    datos=leer_archivo(archivo)
+    if datos[USUARIO]!="":
+        lista_usuarios.append(datos[USUARIO])
+    while datos[USUARIO]:
+        datos=leer_archivo(archivo)
+        if datos[USUARIO]!="":
+            lista_usuarios.append(datos[USUARIO])
+    archivo.close()
+
+    return lista_usuarios
+def guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado):
+    with open("mensajes.csv","a") as archivo:
+        linea = "{},{},{},{}\n".format(destinatario,remitente,cifrado,mensaje_cifrado)
+        archivo.write(linea)     
+def Limpiar_entradas(Mensaje, Clave,radiobutton_v,Usuario_enviar,Pregunta):
+    """
+    Esta funcion borra los campos llenados por el ususario
+    Responsable= Ruth
+    """
+    cadena_vacia = ''
+    Mensaje.delete(1.0, END)
+    Mensaje.insert(END, cadena_vacia)
+    
+    Clave.config(state=NORMAL)
+    Clave.delete(0, END)
+    Clave.insert(0, cadena_vacia)
+    
+    if radiobutton_v.get()==2:
+        Clave.config(state=DISABLED)
+
+    Pregunta.set("No enviar")
+    
+    Usuario_enviar.config(state=NORMAL)
+    Usuario_enviar.delete(0, END)
+    Usuario_enviar.config(state=DISABLED)
+#Mostrar mensajes
+def mensajes_recibidos(usuario_actual,pantalla_mensajes_recibidos,mostrar_total_mensajes):
+    DESTINATARIO=0
+    REMITENTE=1
+    CIFRADO=2
+    MENSAJE_CIFRADO=3
+    mensajes_para_todos=[]
+    mensajes_para_usuario=[]
+
+    with open ("mensajes.csv","r") as archivo_mensajes:
+         for linea in archivo_mensajes:
+            linea=linea.rstrip("\n").split(",")
+
+            if linea[DESTINATARIO]==usuario_actual:
+                mensaje_con_saltos=linea[MENSAJE_CIFRADO].replace("///////","\n"+"\t")
+                mensaje_para_desifrar=mensaje_con_saltos.replace("$$$$$$$$$$$$$$$$$$$$$$$$$$$$",",")
+
+                if linea[CIFRADO][0]=="A":
+                    mensaje_desifrado=cifrado_atbash(mensaje_para_desifrar)
+                else:
+                    mensaje_desifrado=cifrado_cesar(mensaje_para_desifrar,-1*int(linea[CIFRADO][1:]))
+
+                mensajes_para_usuario.append((linea[REMITENTE],mensaje_desifrado))
+
+            elif linea[DESTINATARIO]=="Todos":
+                mensaje_con_saltos=linea[MENSAJE_CIFRADO].replace("///////","\n"+"\t")
+                mensaje_para_desifrar=mensaje_con_saltos.replace("$$$$$$$$$$$$$$$$$$$$$$$$$$$$",",")
+                if linea[CIFRADO][0]=="A":
+                    mensaje_desifrado=cifrado_atbash(mensaje_para_desifrar)
+                else:
+                    mensaje_desifrado=cifrado_cesar(mensaje_para_desifrar,-1*int(linea[CIFRADO][1:]))
+
+                mensajes_para_todos.append((linea[REMITENTE],mensaje_desifrado))
+
+    mostrar_mensajes_recividos(mensajes_para_todos,mensajes_para_usuario,mostrar_total_mensajes,pantalla_mensajes_recibidos)
+def mostrar_mensajes_recividos(mensajes_para_todos,mensajes_para_usuario,mostrar_total_mensajes,pantalla_mensajes_recibidos):
+    Total_de_mensajes=len(mensajes_para_todos)+len(mensajes_para_usuario)
+    mostrar_total_mensajes.set("Total de mensajes: {}".format(Total_de_mensajes))
+
+    pantalla_mensajes_recibidos.config(state=NORMAL)
+    pantalla_mensajes_recibidos.delete(1.0, END)
+
+    mensajes_para_todos.reverse()
+    mensajes_para_usuario.reverse()
+    separador=("\n"+"="*105+"\n")
+    separador2=("\n"+"-"*105+"\n")
+    
+    pantalla_mensajes_recibidos.insert(END,"\tMensajes para todos")
+    pantalla_mensajes_recibidos.insert(END,separador)
+
+    for mensaje in mensajes_para_todos:
+        formato="#{}:\n\t{}".format(mensaje[0],mensaje[1])
+
+        pantalla_mensajes_recibidos.insert(END,formato)
+        pantalla_mensajes_recibidos.insert(END,separador2)
+
+    pantalla_mensajes_recibidos.insert(END,"\n"+"\tMensajes particulares")
+    pantalla_mensajes_recibidos.insert(END,separador)
+
+    for mensaje in mensajes_para_usuario:
+        formato="{}:\n\t{}".format(mensaje[0],mensaje[1])
+
+        pantalla_mensajes_recibidos.insert(END,formato)
+        pantalla_mensajes_recibidos.insert(END,separador2)
+    
+    pantalla_mensajes_recibidos.config(state=DISABLED)
+def cerrar_sesion(raiz):
+    respuesta=messagebox.askyesno("Grupo: ESPADACHINES ","¨¿Seguro que desea cerrar sesion?")
+    if respuesta:
+        raiz.destroy()
+        Ventana_inicio_sesion()
+def verificar_cambio_archivo(usuario_actual,pantalla_mensajes_recibidos,mostrar_total_mensajes):
+    """Esta funcione se fija el tiempo de la ultima modificacion del archivo mensajes.csv 
+    si detecta que hubo una modificacion actualiza los mensajes"""
+
+    archivo = os.open('mensajes.csv', os.O_RDONLY)
+    informacionArchivo = os.fstat(archivo).st_mtime
+    os.close(archivo)
+    while True:
+        archivo = os.open('mensajes.csv', os.O_RDONLY)
+        lecturaArchivo = os.fstat(archivo).st_mtime
+        os.close(archivo)
+        #chequea cada 0.5
+        time.sleep(0.5)
+        if informacionArchivo != lecturaArchivo:
+            mensajes_recibidos(usuario_actual,pantalla_mensajes_recibidos,mostrar_total_mensajes)
+            informacionArchivo = lecturaArchivo
+                
+#funciones de cifrado
+def cifrado_cesar(cadena, clave):
+    """
+    Esta función recibe una cadena de caracteres y una clave numérica entera y devuelva la cadena cifrada mediante el cifrado cesar.
+    Letras con tildes, ñ y otros símbolos se mantienen igual.
+    Responsable= Juan Martin
+    >>> cifrado_cesar('az09', 0)
+    'az09'
+    >>> cifrado_cesar('abc0123', 1)
+    'bcd1234'
+    >>> cifrado_cesar('bc123', -1)
+    'ab012'
+    >>> cifrado_cesar('hola mundo', 3)
+    'krod pxqgr'
+    >>> cifrado_cesar('krod pxqgr', 23)
+    'hola mundo'
+    >>> cifrado_cesar('krod pxqgr', -3)
+    'hola mundo'
+    >>> cifrado_cesar('HOLA MUNDO', 3)
+    'KROD PXQGR'
+    >>> cifrado_cesar('hola mundo1', 33)
+    'ovsh tbukv4'
+    >>> cifrado_cesar('ñ!"·$%&/()áèü', 31)
+    'ñ!"·$%&/()áèü'
+    >>> cifrado_cesar(cifrado_cesar('abcñ$0123', 31), -31)
+    'abcñ$0123'
+    """
+    mensaje_cifrado = ""
+    
+    INICIO_NUMEROS = ord('0')
+    FIN_NUMEROS = ord('9')
+    INICIO_MAYUSCULAS = ord('A')
+    FIN_MAYUSCULAS = ord('Z')
+    INICIO_MINUSCULAS = ord('a')
+    FIN_MINUSCULAS = ord('z')
+    RANGO_NUMEROS = 10
+    RANGO_LETRAS = 26
+
+    for caracter in cadena:
+        codigo_unicode = ord(caracter)
+        if codigo_unicode >= INICIO_NUMEROS and codigo_unicode <= FIN_NUMEROS:
+            caracter_nuevo = chr(INICIO_NUMEROS+(codigo_unicode-INICIO_NUMEROS+clave)%RANGO_NUMEROS)
+        elif codigo_unicode >= INICIO_MAYUSCULAS and codigo_unicode <= FIN_MAYUSCULAS:
+            caracter_nuevo = chr(INICIO_MAYUSCULAS+(codigo_unicode-INICIO_MAYUSCULAS+clave)%RANGO_LETRAS)
+        elif codigo_unicode >= INICIO_MINUSCULAS and codigo_unicode <= FIN_MINUSCULAS:
+            caracter_nuevo = chr(INICIO_MINUSCULAS+(codigo_unicode-INICIO_MINUSCULAS+clave)%RANGO_LETRAS)
+        else:
+            caracter_nuevo = caracter
+        mensaje_cifrado += caracter_nuevo
+        
+    return mensaje_cifrado
+def cifrado_atbash(cadena):
+    """
+    Función que recibe una cadena y devuelve el mensaje codficado mediante el cifrado atbash.
+    Letras con tildes, ñ y otros símbolos se mantienen igual.
+    Responsable= Ruth
+    >>> cifrado_atbash('hola mundo')
+    'SLOZ ÑFNWL'
+    >>> cifrado_atbash('SLOZ ÑFNWL')
+    'hola mundo'
+    >>> cifrado_atbash('abcd')
+    'ZYXW'
+    >>> cifrado_atbash('0123456789')
+    '9876543210'
+    >>> cifrado_atbash('ZYWV')
+    'abde'
+    >>> cifrado_atbash('mÑ')
+    'Ñm'
+    >>> cifrado_atbash('nN')
+    'Nn'
+    >>> cifrado_atbash('hólá múndó')
+    'SóOá ÑúNWó'
+    >>> cifrado_atbash('!"·$%&/')
+    '!"·$%&/'
+    >>> cifrado_atbash(cifrado_atbash('ZZalgoritmoüÑá09$'))
+    'ZZalgoritmoüÑá09$'
+    """
+    letras = 'abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ'
+    numeros = '0123456789'
+    mensaje_cifrado = ""
+    for caracter in cadena:
+        if caracter in numeros:
+            caracter_nuevo = numeros[(len(numeros)-1)-int(caracter)]
+        elif caracter in letras:
+            caracter_nuevo = letras[(len(letras)-1)-letras.index(caracter)]
+        else:
+            caracter_nuevo = caracter
+        mensaje_cifrado += caracter_nuevo
+    return mensaje_cifrado
+
+
+#main del programa
+def main():
+    ventana1_programa()
+
+main()
