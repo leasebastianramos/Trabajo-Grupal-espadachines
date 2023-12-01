@@ -2,8 +2,6 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import filedialog
 
-import doctest
-
 COLOR = "#482b6b"   
 FUENTE=("Calibri",14) 
 COLOR_FUENTE="white"
@@ -59,7 +57,7 @@ def texto1era_ventana(miFrame,ventana):
 def abrir_ventana2(ventana):
     """
     Esta funcion hace que se cierre la primera ventana luego de apretar continuar.
-    Responsable=Juan Martin
+    Responsable= Sebastian
     """
     ventana.destroy()
     ventana_inicio_sesion()
@@ -69,7 +67,9 @@ def abrir_ventana2(ventana):
 
 #ventana iniciar sesión
 def ventana_inicio_sesion():
-    """Esta funcion se encarga de crear la ventana para el inicio de sesión del usuario"""
+    """Esta funcion se encarga de crear la ventana para el inicio de sesión del usuario
+    Responsable= Sebastian"""
+    
     raiz_iniciar_sesion=Tk()
     raiz_iniciar_sesion.title("Iniciar sesión ")
     raiz_iniciar_sesion.iconbitmap("espadachines.ico")  
@@ -138,7 +138,8 @@ def ventana_inicio_sesion():
     raiz_iniciar_sesion.mainloop()
 
 def inicio_sesion(usuario_ingresado,contraseña_ingresada,advertencia,raiz):
-    """Esta funcion revisa si lo que fue ingresado por el usuario coincide con algún perfil que esté registrado"""
+    """Esta funcion revisa si lo que fue ingresado por el usuario coincide con algún perfil que esté registrado
+    Responsable= Sebastian"""
     advertencia.config(state=NORMAL)
     advertencia.delete(1.0, END)
 
@@ -171,7 +172,8 @@ def inicio_sesion(usuario_ingresado,contraseña_ingresada,advertencia,raiz):
 
 #ventana recuperar contraseña
 def abrir_recuperar(usuario_ingresado,advertencia_usuario,ft_usuario):
-    """La función  se encarga de la recuperación de contraseña para un usuario ingresado, con un manejo de intentos y bloqueo de usuario"""
+    """La función  se encarga de la recuperación de contraseña para un usuario ingresado, con un manejo de intentos y bloqueo de usuario
+    Responsable= Sebastian"""
     advertencia_usuario.config(state=NORMAL)
     advertencia_usuario.delete(1.0, END)
     
@@ -199,7 +201,8 @@ def abrir_recuperar(usuario_ingresado,advertencia_usuario,ft_usuario):
 
     advertencia_usuario.config(state=DISABLED)
 def recuperar_contraseña(ft_usuario,usuario,pregunta,respuesta,contraseña,intentos):
-    """Esta funcion crea una ventana para poder interactuar con el usuario y asi preguntarle para poder recuperar su contraseña"""
+    """Esta funcion crea una ventana para poder interactuar con el usuario y asi preguntarle para poder recuperar su contraseña
+    Responsable= Sebastian"""
     raiz_recuperar_contraseña= Toplevel()
 
     #Para congelar la otra ventana hasta que se cierre
@@ -241,6 +244,7 @@ def recuperar_contraseña(ft_usuario,usuario,pregunta,respuesta,contraseña,inte
 def recuperar(respuesta_ingresada,respuesta,contraseña,num_intentos,ventana_recuperar,nombre_usuario):
     """la función se encarga de la recuperación de contraseña, verificando la respuesta ingresada y tomando acciones en consecuencia,
        ya sea mostrando la contraseña recuperada en caso de éxito o gestionando los intentos y bloqueando al usuario si se supera el límite de intentos permitidos.
+       Responsable= Sebastian
     """
     if respuesta_ingresada!="":
         if respuesta_ingresada==respuesta:
@@ -259,6 +263,7 @@ def recuperar(respuesta_ingresada,respuesta,contraseña,num_intentos,ventana_rec
 def actualizar_archivo(intentos_actualizados,usuario):
     """ Esta funcion se encarga de  actualizar el número de intentos para un usuario específico. Crea un archivo temporal para almacenar las actualizaciones
         y luego sobrescribe el archivo original con las modificaciones. Finalmente, limpia el archivo temporal
+        Responsable= Sebastian
     """
     archivo_actualizado=open("borrador_datos.csv","a")
     with open("datos_registrados.csv","r") as datos_registrados:
@@ -284,7 +289,8 @@ def actualizar_archivo(intentos_actualizados,usuario):
 
 #Ventana registrar usuario
 def registrar_usuario(ft_usuario,ft_contraeña):
-    """Esta funcion se encarga de crear la ventana para el registro del ususario"""
+    """Esta funcion se encarga de crear la ventana para el registro del ususario
+    Responsable= Iñaki"""
 
     raiz_registrar_usuario= Toplevel()
     
@@ -420,8 +426,10 @@ def registrar_usuario(ft_usuario,ft_contraeña):
     Button(frame_registrar_usuario,text="Registrar",font=(FUENTE[0],10),anchor=CENTER,bg=COLOR_BOTONES,foreground="white",padx=55,command= lambda:verificar_datos(entry_usuario,bool_usuario_validado,entry_contraseña,bool_contraseña_validada,confirmar_contraseña,bool_confirmar_validada,advertencia_usuario,advertencia_contraseña,advertencia_confirmar,pregunta,entry_recuperar,info,raiz_registrar_usuario)).place(x=80,y=350)
 
     Button(frame_registrar_usuario,text="Cancelar",font=(FUENTE[0],10),anchor=CENTER,bg=COLOR_BOTONES,foreground="white",padx=55,command=lambda:cancelar_ventana(raiz_registrar_usuario)).place(x=290,y=350)
+
 def mostrar_info(text,text_por_defecto):
-    """esta funcion muestra informacion para crear el usuario y la contraseña"""
+    """esta funcion muestra informacion para crear el usuario y la contraseña
+    Responsable= Iñaki"""
     if text_por_defecto.get()=="Nombre de usuario":
         text.config(state=NORMAL,foreground="White")
         text.delete(1.0,END)
@@ -431,8 +439,10 @@ def mostrar_info(text,text_por_defecto):
         text.config(state=NORMAL,foreground="White")
         text.delete(1.0,END)
         text.insert(END,"La contraseña debe tener:\n*entre (4-8) caracteres\n*una mayuscula\n*una minuscula \n*un numero\n*algunos de estos caracteres \n“_” “-” “#” “*”")
+
 def ocultar_info(text):
-    """esta funcion se encarga de ocultar la informacion para el registro del usuario"""
+    """esta funcion se encarga de ocultar la informacion para el registro del usuario
+    Responsable= Iñaki"""
     text.config(state=NORMAL)
     text.delete(1.0, END)
     text.config(state=DISABLED)
@@ -441,6 +451,7 @@ def ocultar_info(text):
 def verificar_datos(usuario_ingresado,usuario_aprobado,contraseña_ingresada,contraseña_aprobada,confirmar,confirmar_aprobado,advertencia_usuario,advertencia_contraseña,advertencia_confirmar,pregunta_seguridad,entry_recuperar,advertencia_pregunta_seguridad,raiz_registrar_usuario): 
     """esta funcion comprueba si ya aprobre los datos con el evento de ENTER,chequeasi eligio una pregunta de suguridad y veo si respondio,
        y si cumplen todas las condiciones guardo los datos.
+       Responsable= Iñaki
     """
     #veo si ya aprobre los datos con el evento de ENTER
     if not usuario_aprobado.get():
@@ -471,6 +482,7 @@ def verificar_datos(usuario_ingresado,usuario_aprobado,contraseña_ingresada,con
 def procesar_usuario_ingresado(usuario_ingresado,advertencia_usuario,usuario_aprobado):
     """ esta funcion valida y procesa el nombre de usuario ingresado, mostrando mensajes de advertencia según sea necesario y
       retorna el estado de aprobación del usuario.
+      Responsable= Iñaki
     """
     
     usuario_validado=validar_usuario(usuario_ingresado.get()) #usuario_validado es TRUE o una devolucion para el usuario
@@ -503,7 +515,8 @@ def procesar_usuario_ingresado(usuario_ingresado,advertencia_usuario,usuario_apr
     return usuario_aprobado.get()
 
 def procesar_contraseña_ingresada(contraseña_ingresada,advertencia_contraseña,contraseña_aprobada):
-    """esta funcion valida y procesa la contraseña ingresada"""
+    """esta funcion valida y procesa la contraseña ingresada
+    Responsable= Iñaki"""
     
     contraseña_validada=validar_contraseña(contraseña_ingresada.get())
     contraseña_aprobada.set(False)
@@ -527,6 +540,7 @@ def procesar_contraseña_ingresada(contraseña_ingresada,advertencia_contraseña
 def procesar_confirmar_ingresado(confirmar,advertencia_confirmar,contraseña_ingresada,confirmar_aprobado):
     """ esta funcion procesa la confirmación de contraseña ingresada, mostrando mensajes de advertencia según sea necesario y
         retornando el estado de aprobación de la confirmación.
+        Responsable= Iñaki
     """
     confirmar_aprobado.set(False)
 
@@ -545,6 +559,7 @@ def procesar_confirmar_ingresado(confirmar,advertencia_confirmar,contraseña_ing
 
 def validar_usuario(usuario):
     """esta funcion valida la variable usuario que debe ser un str, devuelve una advertencia para mostrar al usuario o True en caso de estar validada
+    Responsable= Iñaki
     
     >>> validar_usuario("Lucas97*###")
     'Solo se permiten letras(a-z),numeros(0-9) y “_” “-” “.” '
@@ -578,6 +593,7 @@ def validar_usuario(usuario):
 
 def validar_contraseña(contraseña):
     """esta funcioin valida la variable contraseña que debe ser un str, devuelve una advertencia para mostrar al usuario o True en caso de estar validada
+    Responsable= Iñaki
     
     >>> validar_contraseña("a1")
     'Usa como minimo 4 caracteres'
@@ -639,7 +655,8 @@ def validar_contraseña(contraseña):
     return respuesta
 
 def procesar_respuesta(mayusculas,minusculas,num,caracteres):
-    """esta funcion no te da una devolucion super larga con todo lo que te equivocaste, si te equivocaste en varios campos te da una devolucion parcial """    
+    """esta funcion no te da una devolucion super larga con todo lo que te equivocaste, si te equivocaste en varios campos te da una devolucion parcial 
+    Responsable= Iñaki"""    
 
     if not mayusculas:
         devolucion="Debe contener una\n mayuscula"
@@ -654,7 +671,8 @@ def procesar_respuesta(mayusculas,minusculas,num,caracteres):
 
 #funciones que se usan en varias ventanas (obj1 parte 2)
 def mostrar_contraseña_confirmacion(control,contraseña,text_contraseña_por_defecto,confirmar=99,Texto_pordecto_confirmar=99):
-    """Esta funcion muestra o oculta el contenido de los entrys de contraseña o el de confirmacion"""
+    """Esta funcion muestra o oculta el contenido de los entrys de contraseña o el de confirmacion
+    Responsable= Iñaki"""
 
     if contraseña.get()!=text_contraseña_por_defecto:
 
@@ -669,8 +687,10 @@ def mostrar_contraseña_confirmacion(control,contraseña,text_contraseña_por_de
                 confirmar.config(show="*")
             else: 
                 confirmar.config(show="")
+
 def entry_focus_in(entry,text_pordefecto,variable_para_usar,text_pordefecto_top,advertencia,control_contraseña=99):
-    """Esta funcion es para borrar los textos por defecto de los entry y los muestra arriva del entry"""
+    """Esta funcion es para borrar los textos por defecto de los entry y los muestra arriva del entry
+    Responsable= Iñaki"""
 
     advertencia.config(state=NORMAL)
     advertencia.delete(1.0,END)
@@ -682,21 +702,26 @@ def entry_focus_in(entry,text_pordefecto,variable_para_usar,text_pordefecto_top,
 
     if control_contraseña==0:
         entry.config(show="*")
+
 def entry_focus_out(entry,text_pordefecto,text_pordefecto_top):
     """Esta funcion es para volver a poner los textos por defecto en los entry, si el usuario dejo vacio el espacio"""
     if entry.get()=="":
         entry.config(textvariable=text_pordefecto,show="")
         text_pordefecto_top.config(foreground=COLOR)
+
 def leer_archivo(archivo):
-    """ esta funcion lee una línea del archivo y devulve sus elementos como una tupla.Si no hay más líneas en el archivo, devuelve una tupla vacía con valores predeterminados."""
+    """ esta funcion lee una línea del archivo y devulve sus elementos como una tupla.Si no hay más líneas en el archivo, devuelve una tupla vacía con valores predeterminados.
+    Responsable= Iñaki"""
     linea = archivo.readline()
     if linea:
         devolver = linea.rstrip("\n").split(",")
     else:
         devolver = "","","","",0
     return devolver
+
 def cancelar_ventana(raiz_ventana):
-    """esta funcion muestra un cuadro de diálogo de confirmación preguntando al usuario si está seguro de que desea cancelar. Si la respuesta es afirmativa, la función destruye la raíz de la ventana """
+    """esta funcion muestra un cuadro de diálogo de confirmación preguntando al usuario si está seguro de que desea cancelar. Si la respuesta es afirmativa, la función destrye la raíz de la ventana 
+    Responsable= Iñaki"""
     respuesta=messagebox.askyesno("TP Grupal - Grupo: ESPADACHINES ","¨¿Esta seguro que desea cancelar?")
     if respuesta:
         raiz_ventana.destroy()
@@ -706,7 +731,7 @@ def cancelar_ventana(raiz_ventana):
 def cifrar_enviar_mensajes(usuario_actual):
     """
     Funcion que crea la segunda ventana luego de apretar continuar.
-    Responsable= Iñaki
+    Responsable= Juan Martín
     """
     raiz_ventana = Tk()
     raiz_ventana.title("Cifrado y envio de mensajes-usuario: {}".format(usuario_actual))
@@ -813,7 +838,7 @@ def cifrar_enviar_mensajes(usuario_actual):
 def abrir_archivo(entrada_mensaje):
     """
     Esta funcion te permite abrir un archivo de texto para usar en el cifrado y la imprime en el texto de entrada
-    Responsable= Iñaki
+    Responsable= Juan Martín
     """
     archivo = filedialog.askopenfile(initialdir="/", title="Seleccionar un archivo de texto", filetypes=(("Archivos de texto", "*.txt"), ("Todos los archivos", "*.*")))
     if archivo:
@@ -846,6 +871,7 @@ def validar_clave(clave):
 def activar_desactivar_entry(entry,label,variable_radiobuttons):
     """esta función configura el estado (activado o desactivado) del widget Entry y la etiqueta según
       el valor de variable_radiobuttons. Si el valor es 2, se desactivan ambos; de lo contrario, se activan para permitir la edición.
+      Responsable= Juan Martín
     """
     if variable_radiobuttons.get()==2:
         entry.config(state=DISABLED)
@@ -856,7 +882,8 @@ def activar_desactivar_entry(entry,label,variable_radiobuttons):
 
 def destapar_entry_preguntas(entry,pregunta):
     """esta función configura el widget Entry de acuerdo al valor seleccionado en el StringVar pregunta.
-    Si pregunta tiene ciertos valores, se borra el contenido del Entry y se desactiva; de lo contrario, se activa para permitir la edición."""
+    Si pregunta tiene ciertos valores, se borra el contenido del Entry y se desactiva; de lo contrario, se activa para permitir la edición.
+    Responsable= Juan Martín"""
     if pregunta.get()=="Enviar a todos los usuario" or pregunta.get()=="No enviar":
         entry.delete(0,END)
         entry.config(state=DISABLED)
@@ -866,7 +893,7 @@ def destapar_entry_preguntas(entry,pregunta):
 def verificar_cifrado(variable_radiobuttons, entrada_mensaje, clave,descifrar=1):
     """
     Esta funcion imprime el mensaje segun las opciones de cifrado elegido, en caso de no elgir uno o ingresar una clave inválida, muestra un mensaje de advertencia.
-    Responsable= Sebastian
+    Responsable= Juan Martín
     """
     mensaje=entrada_mensaje.get("1.0", "end-1c")
 
@@ -892,7 +919,8 @@ def verificar_cifrado(variable_radiobuttons, entrada_mensaje, clave,descifrar=1)
 #Enviar mensaje
 def enviar_mensaje(opcion_elegida,destinatario,remitente,v_radiobutton,clave_cesar,mensaje):
     """ esta función maneja la lógica de enviar mensajes, ya sea a todos los usuarios o a un usuario específico, y dependiendo de la opción de cifrado seleccionada.
-        Utiliza funciones como enviar_cesar y enviar_atbash, y muestra mensajes de advertencia o de confirmación según sea necesario"""
+        Utiliza funciones como enviar_cesar y enviar_atbash, y muestra mensajes de advertencia o de confirmación según sea necesario
+        Responsable= Juan Martín"""
     list_usuarios=usuario_registrados()  
     if opcion_elegida!="No enviar" and mensaje!="":
         if opcion_elegida=="Enviar a todos los usuario":
@@ -923,7 +951,8 @@ def enviar_mensaje(opcion_elegida,destinatario,remitente,v_radiobutton,clave_ces
 
 def enviar_cesar(clave_cesar,mensaje,destinatario,remitente):
     """esta función cifra un mensaje usando el cifrado César si la clave proporcionada es válida, lo prepara para ser guardado en un archivo CSV y utiliza la función guardar_mensaje
-       para almacenar el mensaje cifrado en el archivo. Finalmente, muestra mensajes informativos o de advertencia según sea necesario. """
+       para almacenar el mensaje cifrado en el archivo. Finalmente, muestra mensajes informativos o de advertencia según sea necesario. 
+       Responsable= Juan Martín"""
     if validar_clave(clave_cesar):
         cifrado="C"+clave_cesar
         mensaje_cifrado=cifrado_cesar(mensaje,int(clave_cesar))
@@ -938,7 +967,8 @@ def enviar_cesar(clave_cesar,mensaje,destinatario,remitente):
 
 def enviar_atbash(mensaje,destinatario,remitente):
     """esta función cifra un mensaje usando el cifrado Atbash, lo prepara para ser guardado en un archivo CSV,
-    y luego utiliza la función guardar_mensaje para almacenar el mensaje cifrado en el archivo. Finalmente, muestra un mensaje informativo."""
+    y luego utiliza la función guardar_mensaje para almacenar el mensaje cifrado en el archivo. Finalmente, muestra un mensaje informativo.
+    Responsable= Juan Martín"""
     cifrado="A"
     mensaje_cifrado=cifrado_atbash(mensaje)
 
@@ -950,7 +980,8 @@ def enviar_atbash(mensaje,destinatario,remitente):
     messagebox.showinfo("Grupo: ESPADACHINES","Mensaje enviado.")
 
 def usuario_registrados():
-    """esta función intenta abrir el archivo "datos_registrados.csv", lee los usuarios del archivo y retorna una lista con los nombres de usuario registrados"""
+    """esta función intenta abrir el archivo "datos_registrados.csv", lee los usuarios del archivo y retorna una lista con los nombres de usuario registrados
+    Responsable= Juan Martín"""
     USUARIO=0
     lista_usuarios=[]
 
@@ -972,14 +1003,15 @@ def usuario_registrados():
     return lista_usuarios
 
 def guardar_mensaje(destinatario,remitente,cifrado,mensaje_cifrado):
-    """esta función agrega un nuevo mensaje al archivo "mensajes.csv" con la información proporcionada, incluyendo el destinatario, el remitente, el método de cifrado y el mensaje cifrado"""
+    """esta función agrega un nuevo mensaje al archivo "mensajes.csv" con la información proporcionada, incluyendo el destinatario, el remitente, el método de cifrado y el mensaje cifrado
+    Responsable= Juan Martín"""
     with open("mensajes.csv","a") as archivo:
         linea = "{},{},{},{}\n".format(destinatario,remitente,cifrado,mensaje_cifrado)
         archivo.write(linea)
 def limpiar_entradas(mensaje, clave,radiobutton_v,usuario_enviar,pregunta):
     """
     Esta funcion borra los campos llenados por el ususario
-    Responsable= Ruth
+    Responsable= Juan Martín
     """
     cadena_vacia = ''
     mensaje.delete(1.0, END)
@@ -1000,7 +1032,8 @@ def limpiar_entradas(mensaje, clave,radiobutton_v,usuario_enviar,pregunta):
 #Mostrar mensajes
 
 def mensajes_recibidos(usuario_actual,pantalla_mensajes_recibidos,mostrar_total_mensajes):
-    """ esta función procesa mensajes almacenados en un archivo, descifra los mensajes cifrados y muestra los mensajes en la pantalla de mensajes, diferenciando entre mensajes para todos y mensajes para un usuario específico."""
+    """ esta función procesa mensajes almacenados en un archivo, descifra los mensajes cifrados y muestra los mensajes en la pantalla de mensajes, diferenciando entre mensajes para todos y mensajes para un usuario específico.
+    Responsable= Juan Martín"""
     DESTINATARIO=0
     REMITENTE=1
     CIFRADO=2
@@ -1036,7 +1069,8 @@ def mensajes_recibidos(usuario_actual,pantalla_mensajes_recibidos,mostrar_total_
     mostrar_mensajes_recibidos(mensajes_para_todos,mensajes_para_usuario,mostrar_total_mensajes,pantalla_mensajes_recibidos)
 
 def mostrar_mensajes_recibidos(mensajes_para_todos,mensajes_para_usuario,mostrar_total_mensajes,pantalla_mensajes_recibidos):
-    """esta función actualiza una pantalla de mensajes con mensajes para todos y mensajes para un usuario específico, mostrando los encabezados apropiados y utilizando separadores para mejorar la legibilidad."""
+    """esta función actualiza una pantalla de mensajes con mensajes para todos y mensajes para un usuario específico, mostrando los encabezados apropiados y utilizando separadores para mejorar la legibilidad.
+    Responsable= Juan Martín"""
     total_de_mensajes=len(mensajes_para_todos)+len(mensajes_para_usuario)
     mostrar_total_mensajes.set("Total de mensajes: {}".format(total_de_mensajes))
 
@@ -1069,7 +1103,8 @@ def mostrar_mensajes_recibidos(mensajes_para_todos,mensajes_para_usuario,mostrar
     pantalla_mensajes_recibidos.config(state=DISABLED)
 
 def cerrar_sesion(raiz):
-    """esta funcion permite el cierre de sesión"""
+    """esta funcion permite el cierre de sesión
+    Responsable= Juan Martín"""
     respuesta=messagebox.askyesno("Grupo: ESPADACHINES ","¨¿Seguro que desea cerrar sesión?")
     if respuesta:
         raiz.destroy()
@@ -1126,11 +1161,12 @@ def cifrado_cesar(cadena, clave):
         mensaje_cifrado += caracter_nuevo
         
     return mensaje_cifrado
+
 def cifrado_atbash(cadena):
     """
     Función que recibe una cadena y devuelve el mensaje codficado mediante el cifrado atbash.
     Letras con tildes, ñ y otros símbolos se mantienen igual.
-    Responsable= Ruth
+    Responsable= Juan Martín
     >>> cifrado_atbash('hola mundo')
     'SLOZ ÑFNWL'
     >>> cifrado_atbash('SLOZ ÑFNWL')
